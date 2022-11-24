@@ -51,5 +51,22 @@
 .ps-button {
   padding: 5px 20px;
   font-size: 12px;
-  
+}
+
+.previewImage {
+  position: relative;
+}
+
+.previewImage > svg {
+  position: absolute;
+  cursor: pointer;
+  right: 1rem;
+  top: 0.5rem;
+}
+
+.previewImage >img{
+    width: 100%;
+    max-height: 20rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
 }
