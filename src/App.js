@@ -1,11 +1,13 @@
 import "./App.css";
+import Profile from "./pages/profile/Profile";
 import Home from "./pages/home/Home";
 function App() {
   return (
     <div className="App">
-      <Home />
       <div className="blur blur-primary"></div>
       <div className="blur blur-secondary"></div>
+      {/* <Home /> */}
+      <Profile />
     </div>
   );
 }

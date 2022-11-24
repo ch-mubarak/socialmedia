@@ -14,7 +14,9 @@ export const Post = ({ data }) => {
         <img src={Comment} alt="" />
         <img src={Share} alt="" />
       </div>
-      <span>{data.likes} Likes</span>
+      <span style={{ color: "var(--grey)", fontSize: "14px" }}>
+        {data.likes} Likes
+      </span>
       <div className="detail">
         <span>
           <b>{data.name}</b>
