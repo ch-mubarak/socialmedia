@@ -13,6 +13,7 @@
 .search input{
     background-color: transparent;
     border: none;
+    outline: none;
 }
 
 .s-icon{
