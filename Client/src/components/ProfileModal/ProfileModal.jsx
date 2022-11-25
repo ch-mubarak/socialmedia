@@ -63,10 +63,14 @@ const ProfileModal = ({ opened, onClose }) => {
           />
         </div>
         <div>
+          <div>
             Profile Image
             <input type="file" name="profileImage" />
+          </div>
+          <div>
             Cover Image
             <input type="file" name="coverImage" />
+          </div>
         </div>
         <button className="button info-button">Update</button>
       </form>
