@@ -5,8 +5,11 @@ import Notification from "../../img/noti.png";
 import Comment from "../../img/comment.png";
 import { UilSetting } from "@iconscout/react-unicons";
 import TrendCard from "../TrendCard/TrendCard";
+import { useState } from "react";
+import ShareModal from "../ShareModal/ShareModal";
 
 export const RightSide = () => {
+  const [modalOpened, setModalOpened] = useState(false);
   return (
     <div className="rightSide">
       <div className="navIcons">
@@ -16,7 +19,10 @@ export const RightSide = () => {
         <img src={Comment} alt="comment" />
       </div>
       <TrendCard />
-      <button className="button r-button">Share</button>
+      <button className="button r-button" onClick={() => setModalOpened(true)}>
+        Share
+      </button>
+      <ShareModal opened={modalOpened} onClose={() => setModalOpened(false)} />
     </div>
   );
 };
