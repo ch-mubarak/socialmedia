@@ -1,6 +1,5 @@
 import User from "../Models/userModal.js";
 import bcrypt from "bcrypt";
-import e from "express";
 
 export const getUser = async (req, res) => {
   const id = req.params.id;
