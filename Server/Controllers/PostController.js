@@ -1,5 +1,6 @@
+import mongoose from "mongoose";
 import Post from "../Models/postModal.js";
-import User from "../Models/userModal.js"
+import User from "../Models/userModal.js";
 
 export const createNewPost = async (req, res) => {
   const newPost = new Post(req.body);
@@ -63,9 +64,9 @@ export const likePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
   try {
-    const user=await User.findById(userId)
-    if(!user){
-      return res.status(404).json({message:"your not authorized"})
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "your not authorized" });
     }
     const post = await Post.findById(id);
     if (!post.likes.includes(userId)) {
@@ -76,6 +77,56 @@ export const likePost = async (req, res) => {
       res.status(201).json({ message: "Post liked unsuccessfully" });
     }
   } catch (err) {
-    res.status(500).json({ message: "Something went wrong"});
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export const getTimelinePost = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const currentUserPosts = await Post.find({ userId });
+    const followingUsersPosts = await User.aggregate([
+      {
+        $match: { _id: mongoose.Types.ObjectId(userId) },
+      },
+      {
+        $lookup: {
+          from: "posts",
+          let: { user: "$following" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $in: [
+                    "$userId",
+                    {
+                      $map: {
+                        input: "$$user",
+                        in: { $toObjectId: "$$this" },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "followingPosts",
+        },
+      },
+      {
+        $project: {
+          followingPosts: 1,
+          _id: 0,
+        },
+      },
+    ]);
+    const sortedPosts = currentUserPosts
+      .concat(followingUsersPosts[0].followingPosts)
+      .sort((a, b) => {
+        return b.createdAt - a.createdAt;
+      });
+    res.status(200).json(sortedPosts);
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong", error: error });
   }
 };
