@@ -17,6 +17,7 @@
 
 .a-left {
   gap: 2rem;
+  display: none;
 }
 
 .a-left > img {
@@ -80,4 +81,19 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+.validation{
+  color: red;
+  font-size: 12px;
+  align-self:flex-end;
+  margin-right: 15px;
+  margin-top: -10px;
+}
+
+@media (max-width: 760px){
+  .auth {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
