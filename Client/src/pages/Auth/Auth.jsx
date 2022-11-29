@@ -7,7 +7,7 @@ import { logIn, signUp } from "../../actions/AuthAction";
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [passwordMatching, setPasswordMatching] = useState(true);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -35,9 +35,9 @@ const Auth = () => {
       if (data.confirmedPassword !== data.password) {
         return setPasswordMatching(false);
       }
-      // dispatch(signUp(data));
+      dispatch(signUp(data));
     } else {
-      // dispatch(logIn(data));
+      dispatch(logIn(data));
     }
   };
 

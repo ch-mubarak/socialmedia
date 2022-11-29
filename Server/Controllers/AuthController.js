@@ -1,5 +1,5 @@
 import User from "../Models/userModal.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const registerUser = async (req, res) => {
   const { email, username, password, firstName, lastName } = req.body;
