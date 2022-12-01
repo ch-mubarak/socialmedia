@@ -51,13 +51,18 @@
   transition: all 100ms ease-out;
 }
 
+button:disabled {
+  background: #cccccc;
+  pointer-events: none;
+}
+
 .button:hover {
   cursor: pointer;
   color: var(--orange);
-  background:transparent;
+  background: transparent;
   border: 2px solid var(--orange);
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   display: none;
 }

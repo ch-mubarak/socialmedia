@@ -4,7 +4,6 @@ import User from "../Models/userModal.js";
 
 export const createNewPost = async (req, res) => {
   const newPost = new Post(req.body);
-
   try {
     await newPost.save();
     res.status(201).json({ message: "new post created" });
@@ -15,6 +14,9 @@ export const createNewPost = async (req, res) => {
 
 export const getPost = async (req, res) => {
   const id = req.params.id;
+  if (!id) {
+    res.status(401).json({ message: "Id is required" });
+  }
   try {
     const post = await Post.findById(id);
     res.status(200).json(post);
@@ -26,6 +28,9 @@ export const getPost = async (req, res) => {
 export const updatePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
+  if (!(id && userId)) {
+    res.status(401).json({ message: "all filed are required" });
+  }
   try {
     const post = await Post.findById(id);
     if (!post) {
@@ -44,6 +49,9 @@ export const updatePost = async (req, res) => {
 export const deletePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
+  if (!(id && userId)) {
+    res.status(401).json({ message: "all filed are required" });
+  }
   try {
     const post = await Post.findById(id);
     if (!post) {
@@ -63,6 +71,9 @@ export const deletePost = async (req, res) => {
 export const likePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
+  if (!(id && userId)) {
+    res.status(401).json({ message: "all filed are required" });
+  }
   try {
     const user = await User.findById(userId);
     if (!user) {
