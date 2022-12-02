@@ -30,7 +30,9 @@ function loadFromLocalStorage() {
 }
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const persistedState = loadFromLocalStorage();
+
+//initial state
+const persistedState = loadFromLocalStorage(); 
 
 const store = createStore(
   reducers,
@@ -38,6 +40,7 @@ const store = createStore(
   composeEnhancer(applyMiddleware(thunk))
 );
 
+//storing state to local storage whenever there is a change in store
 store.subscribe(() => saveToLocalStorage(store.getState()));
 
 export default store;

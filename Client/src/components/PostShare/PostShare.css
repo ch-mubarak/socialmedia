@@ -54,18 +54,21 @@
 }
 
 .previewImage {
+  margin-top: 10px;
   position: relative;
 }
 
 .previewImage > svg {
   position: absolute;
+  color: #000;
   cursor: pointer;
-  right: 1rem;
-  top: 0.5rem;
+  right: 0;
+  top: -1rem;
 }
 
 .previewImage > img {
   width: 100%;
+  margin-top: 10px;
   max-height: 20rem;
   object-fit: cover;
   border-radius: 0.5rem;

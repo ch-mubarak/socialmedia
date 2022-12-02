@@ -1,11 +1,10 @@
-const authReducer = (
-  state = {
-    authData: null,
-    loading: false,
-    error: false,
-  },
-  action
-) => {
+const initialState = {
+  authData: null,
+  loading: false,
+  error: false,
+};
+
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case "AUTH_START":
       return { ...state, loading: true, error: false };

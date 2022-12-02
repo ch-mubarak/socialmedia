@@ -20,25 +20,29 @@ export const registerUser = async (req, res) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const newUser = new User({
+    const user = new User({
       email,
       username,
       password: hashedPassword,
       firstName,
       lastName,
     });
-    await newUser.save();
+    await user.save();
     const token = jwt.sign(
       {
-        username: newUser.username,
-        email: newUser.email,
-        id: newUser.id,
+        username: user.username,
+        email: user.email,
+        id: user.id,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-    newUser.password = undefined;
-    res.status(201).json({ newUser, token });
+    user.password = undefined;
+    const options = {
+      expires: new Date(Date.now() + 60 * 60 * 1000),
+      httpOnly: true,
+    };
+    res.status(201).cookie("token", token, options).json({ user, token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -68,7 +72,13 @@ export const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-    res.status(200).json({ user, token });
+
+    //cookie section
+    const options = {
+      expires: new Date(Date.now() + 60 * 60 * 1000),
+      httpOnly: true,
+    };
+    res.status(200).cookie("token", token, options).json({ user, token });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
