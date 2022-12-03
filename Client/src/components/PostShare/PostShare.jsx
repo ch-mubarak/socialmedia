@@ -16,9 +16,10 @@ const PostShare = () => {
   const [image, setImage] = useState(null);
   const [postDescription, setPostDescription] = useState("");
   const { user } = useSelector((state) => state.authReducer.authData);
-  const loading = useSelector((state) => state.postReducer.loading);
+  const uploading = useSelector((state) => state.postReducer.uploading);
   const dispatch = useDispatch();
   const imageRef = useRef();
+  const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
@@ -52,62 +53,69 @@ const PostShare = () => {
   };
   return (
     <>
-    <form onSubmit={handlePostSubmit}>
-      <div className="postShare">
-        <img src={ProfileImage} alt="" />
-        <div>
-          <input
-            value={postDescription}
-            onChange={(e) => setPostDescription(e.target.value)}
-            required
-            type="text"
-            placeholder="What's happening"
+      <form onSubmit={handlePostSubmit}>
+        <div className="postShare">
+          <img
+            src={
+              user.profilePicture
+                ? `${serverPublic}/${user.profilePicture}`
+                : `${serverPublic}/profile.jpg`
+            }
+            alt=""
           />
-          <div className="postOptions">
-            <div
-              className="option"
-              style={{ color: "var(--photo)" }}
-              onClick={() => imageRef.current.click()}
-            >
-              <UilScenery />
-              Photo
+          <div>
+            <input
+              value={postDescription}
+              onChange={(e) => setPostDescription(e.target.value)}
+              required
+              type="text"
+              placeholder="What's happening"
+            />
+            <div className="postOptions">
+              <div
+                className="option"
+                style={{ color: "var(--photo)" }}
+                onClick={() => imageRef.current.click()}
+              >
+                <UilScenery />
+                Photo
+              </div>
+              <div className="option" style={{ color: "var(--video)" }}>
+                <UilPlayCircle />
+                Video
+              </div>
+              <div className="option" style={{ color: "var(--location)" }}>
+                <UilLocationPoint />
+                Location
+              </div>
+              <div className="option" style={{ color: "var(--schedule)" }}>
+                <UilSchedule />
+                Schedule
+              </div>
+              {(postDescription.trim() || image) && (
+                <button className="button ps-button" disabled={uploading}>
+                  {uploading ? "Uploading..." : "Share"}
+                </button>
+              )}
+              <div style={{ display: "none" }}>
+                <input
+                  type="file"
+                  name="newImage"
+                  ref={imageRef}
+                  onChange={handleImageChange}
+                />
+              </div>
             </div>
-            <div className="option" style={{ color: "var(--video)" }}>
-              <UilPlayCircle />
-              Video
-            </div>
-            <div className="option" style={{ color: "var(--location)" }}>
-              <UilLocationPoint />
-              Location
-            </div>
-            <div className="option" style={{ color: "var(--schedule)" }}>
-              <UilSchedule />
-              Schedule
-            </div>
-            {(postDescription.trim() || image) && (
-              <button className="button ps-button" disabled={loading}>
-                {loading ? "Uploading..." : "Share"}
-              </button>
+            {image && (
+              <div className="previewImage">
+                <UilTimes onClick={() => setImage(null)} />
+                <img src={URL.createObjectURL(image)} alt="" />
+              </div>
             )}
-            <div style={{ display: "none" }}>
-              <input
-                type="file"
-                name="newImage"
-                ref={imageRef}
-                onChange={handleImageChange}
-              />
-            </div>
           </div>
-          {image && (
-            <div className="previewImage">
-              <UilTimes onClick={() => setImage(null)} />
-              <img src={URL.createObjectURL(image)} alt="" />
-            </div>
-          )}
         </div>
-      </div>
-    </form>
-    <div className="spinner"></div>
+      </form>
+      <div className="spinner"></div>
     </>
   );
 };

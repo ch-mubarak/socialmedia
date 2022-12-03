@@ -1,6 +1,7 @@
 const initialState = {
   posts: [],
   loading: false,
+  uploading: false,
   error: false,
 };
 
@@ -9,20 +10,20 @@ const postReducer = (state = initialState, action) => {
     case "POST_PENDING":
       return {
         ...state,
-        loading: true,
+        uploading: true,
         error: false,
       };
     case "POST_SUCCESS":
       return {
         ...state,
         posts: [action.payload, ...state.posts],
-        loading: false,
+        uploading: false,
         error: false,
       };
     case "POST_FAIL":
       return {
         ...state,
-        loading: false,
+        uploading: false,
         error: true,
       };
     case "FETCHING_SUCCESS":

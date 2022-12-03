@@ -12,7 +12,7 @@ export const Post = ({ data }) => {
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(data.likes.length);
   const handlePostLike = (id) => {
-    dispatch(likePost(id, { userId: user._id }));
+    dispatch(likePost(id, user._id));
     setLiked((preValue) => !preValue);
     setLikeCount((oldCount) => {
       if (liked) {

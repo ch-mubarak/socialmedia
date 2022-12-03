@@ -22,10 +22,10 @@ export const getTimeLine = (id) => async (dispatch) => {
   }
 };
 
-export const likePost = (id, data) => async (dispatch) => {
+export const likePost = (id, userId) => async (dispatch) => {
   dispatch({ type: "LIKE_PENDING" });
   try {
-    await PostApi.likePost(id, data);
+    await PostApi.likePost(id, userId);
     dispatch({ type: "LIKE_SUCCESS" });
   } catch (error) {
     dispatch({ type: "LIKE_FAILED" });
