@@ -13,16 +13,21 @@ import { uploadImage } from "../../actions/UploadAction";
 import { createPost } from "../../actions/PostAction";
 
 const PostShare = () => {
-  const { user } = useSelector((state) => state.authReducer.authData);
   const [image, setImage] = useState(null);
-  const imageRef = useRef();
   const [postDescription, setPostDescription] = useState("");
+  const { user } = useSelector((state) => state.authReducer.authData);
+  const loading = useSelector((state) => state.postReducer.loading);
   const dispatch = useDispatch();
+  const imageRef = useRef();
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
       setImage(img);
     }
+  };
+  const reset = () => {
+    setImage(null);
+    setPostDescription("");
   };
   const handlePostSubmit = (event) => {
     event.preventDefault();
@@ -43,9 +48,11 @@ const PostShare = () => {
       }
     }
     dispatch(createPost(newPost));
+    reset();
   };
   return (
-    // <form onSubmit={handlePostSubmit}>
+    <>
+    <form onSubmit={handlePostSubmit}>
       <div className="postShare">
         <img src={ProfileImage} alt="" />
         <div>
@@ -78,7 +85,9 @@ const PostShare = () => {
               Schedule
             </div>
             {(postDescription.trim() || image) && (
-              <button onClick={handlePostSubmit} className="button ps-button">Share</button>
+              <button className="button ps-button" disabled={loading}>
+                {loading ? "Uploading..." : "Share"}
+              </button>
             )}
             <div style={{ display: "none" }}>
               <input
@@ -97,7 +106,9 @@ const PostShare = () => {
           )}
         </div>
       </div>
-    // </form>
+    </form>
+    <div className="spinner"></div>
+    </>
   );
 };
 

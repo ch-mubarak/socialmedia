@@ -1,27 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Post.css";
 import Like from "../../img/like.png";
 import NotLike from "../../img/notlike.png";
 import Share from "../../img/share.png";
 import Comment from "../../img/comment.png";
-
+import { useDispatch, useSelector } from "react-redux";
+import { likePost } from "../../actions/PostAction";
 export const Post = ({ data }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.authReducer.authData);
+  const [liked, setLiked] = useState(data.likes.includes(user._id));
+  const [likeCount, setLikeCount] = useState(data.likes.length);
+  const handlePostLike = (id) => {
+    dispatch(likePost(id, { userId: user._id }));
+    setLiked((preValue) => !preValue);
+    setLikeCount((oldCount) => {
+      if (liked) {
+        return oldCount - 1;
+      } else {
+        return oldCount + 1;
+      }
+    });
+  };
   return (
     <div className="post">
-      <img src={data.img} alt="" />
+      {data.image && (
+        <img
+          src={`${process.env.REACT_APP_PUBLIC_FOLDER}/${data.image}`}
+          alt=""
+        />
+      )}
       <div className="postReact">
-        <img src={data.liked ? Like : NotLike} alt="" />
+        <img
+          onClick={() => handlePostLike(data._id)}
+          src={liked ? Like : NotLike}
+          alt=""
+        />
         <img src={Comment} alt="" />
         <img src={Share} alt="" />
       </div>
       <span style={{ color: "var(--grey)", fontSize: "14px" }}>
-        {data.likes} Likes
+        {likeCount} Likes
       </span>
       <div className="detail">
         <span>
           <b>{data.name}</b>
         </span>
-        <span> {data.desc}</span>
+        <span> {data.description}</span>
       </div>
     </div>
   );

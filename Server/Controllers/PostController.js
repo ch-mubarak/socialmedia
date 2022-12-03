@@ -72,14 +72,17 @@ export const likePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
   if (!(id && userId)) {
-    res.status(401).json({ message: "all filed are required" });
+    return res.status(401).json({ message: "all filed are required" });
   }
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: "your not authorized" });
+      return res.status(401).json({ message: "your not authorized" });
     }
     const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: "post not found" });
+    }
     if (!post.likes.includes(userId)) {
       await post.updateOne({ $push: { likes: userId } });
       res.status(201).json({ message: "Post liked successfully" });
@@ -88,6 +91,7 @@ export const likePost = async (req, res) => {
       res.status(201).json({ message: "Post liked unsuccessfully" });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -136,7 +140,7 @@ export const getTimelinePost = async (req, res) => {
       .sort((a, b) => {
         return b.createdAt - a.createdAt;
       });
-    res.status(200).json(sortedPosts);
+    res.status(200).json({ posts: sortedPosts });
   } catch (error) {
     res.status(500).json({ message: "something went wrong", error: error });
   }

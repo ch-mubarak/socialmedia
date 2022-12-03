@@ -17,6 +17,8 @@ app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 connectDB();
 
+app.use(express.static("public"));
+app.use("/images", express.static("images"));
 //Routes
 app.use("/auth", AuthRoute);
 app.use("/user", UserRoute);
