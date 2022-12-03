@@ -83,9 +83,13 @@
 }
 
 .profileCard > span {
+  align-self: center;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+.profileCard > span > a {
+  text-decoration: none;
   font-weight: bold;
   align-self: center;
   color: orange;
-  margin-bottom: 1rem;
-  cursor: pointer;
 }

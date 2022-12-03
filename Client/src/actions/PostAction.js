@@ -32,3 +32,17 @@ export const likePost = (id, userId) => async (dispatch) => {
     console.log(error);
   }
 };
+
+export const getUserPosts = (id) => async (dispatch) => {
+  dispatch({ type: "FETCHING_PENDING" });
+  try {
+    const response = await PostApi.getUserPosts(id);
+    dispatch({
+      type: "FETCHING_USER_POSTS_SUCCESS",
+      payload: response.data.posts,
+    });
+  } catch (err) {
+    dispatch({ type: "FETCHING_FAIL" });
+    console.log(err);
+  }
+};

@@ -96,6 +96,19 @@ export const likePost = async (req, res) => {
   }
 };
 
+export const getUserPosts = async (req, res) => {
+  const userId = req.params.id;
+  if (!userId) {
+    return res.status(401).json({ message: "please provide userId" });
+  }
+  try {
+    const posts = await Post.find({ userId }).sort({createdAt:-1});
+    res.status(200).json({ message: "Posts fetched successfully", posts });
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" });
+  }
+};
+
 export const getTimelinePost = async (req, res) => {
   const userId = req.params.id;
   try {

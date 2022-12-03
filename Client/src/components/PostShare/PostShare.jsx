@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import "./PostShare.css";
-import ProfileImage from "../../img/profileImg.jpg";
 import {
   UilScenery,
   UilPlayCircle,

@@ -1,10 +1,11 @@
 import React from "react";
 import "./ProfileCard.css";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-const ProfileCard = () => {
+const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
-  const profilePage = false;
+  const { userPosts } = useSelector((state) => state.postReducer);
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <div className="profileCard">
@@ -28,8 +29,10 @@ const ProfileCard = () => {
       </div>
 
       <div className="profileName">
-        <span>{user.firstName + " " + user.lastName}</span>
-        <span>{user.about}</span>
+        <span>
+          {user.firstName} {user.lastName}
+        </span>
+        <span>{user.about ? user.about : "Write about yourself"}</span>
       </div>
 
       <div className="followStatus">
@@ -45,11 +48,11 @@ const ProfileCard = () => {
             <span>Followers</span>
           </div>
 
-          {profilePage && (
+          {location === "profile" && (
             <>
               <div className="vl"></div>
               <div className="follow">
-                <span>3</span>
+                <span>{userPosts?.length}</span>
                 <span>Posts</span>
               </div>
             </>
@@ -57,7 +60,11 @@ const ProfileCard = () => {
         </div>
         <hr />
       </div>
-      {!profilePage && <span>My Profile</span>}
+      {location === "home" && (
+        <span>
+          <Link to="/profile">My Profile</Link>
+        </span>
+      )}
     </div>
   );
 };

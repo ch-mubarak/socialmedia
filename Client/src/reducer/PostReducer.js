@@ -1,5 +1,6 @@
 const initialState = {
   posts: [],
+  userPosts:[],
   loading: false,
   uploading: false,
   error: false,
@@ -39,6 +40,13 @@ const postReducer = (state = initialState, action) => {
         ...state,
         error: false,
         loading: true,
+      };
+    case "FETCHING_USER_POSTS_SUCCESS":
+      return {
+        ...state,
+        userPosts: [...action.payload],
+        error: false,
+        loading: false,
       };
     default:
       return state;
