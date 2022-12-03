@@ -1,10 +1,11 @@
 import "./Posts.css";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getTimeLine, getUserPosts } from "../../actions/PostAction";
+import { getTimeLine } from "../../actions/PostAction";
 import { Post } from "../Post/Post";
 import FadeLoader from "react-spinners/FadeLoader";
 import { useLocation } from "react-router-dom";
+import { getUserPosts } from "../../actions/UserAction";
 
 const Posts = () => {
   const location = useLocation();

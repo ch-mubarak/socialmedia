@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./ProfileCard.css";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
   const { userPosts } = useSelector((state) => state.postReducer);
+  const params = useParams();
+  
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <div className="profileCard">
