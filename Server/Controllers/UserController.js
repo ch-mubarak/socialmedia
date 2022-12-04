@@ -77,7 +77,8 @@ export const getFollowers = async (req, res) => {
         },
       },
     ]);
-    res.status(200).json(followers);
+    const myFollowers=followers[0].myFollowers
+    res.status(200).json({followers:myFollowers});
   } catch (error) {
     res.status(500).json({ message: "something went wrong", error });
   }

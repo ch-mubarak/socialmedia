@@ -17,6 +17,13 @@
   display: flex;
   gap: 10px;
 }
+.followers > div >img {
+  transition: all ease-in-out 0.2s;
+}
+.followers > div >img:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
 
 .followerImg {
   width: 3.2rem;
