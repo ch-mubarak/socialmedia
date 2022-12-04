@@ -6,8 +6,8 @@ import { getUserDetails } from "../../actions/UserAction";
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
-  const { userPosts } = useSelector((state) => state.postReducer);
-  const currentUserPosts = useSelector((state) => state.userReducer.posts);
+  const { myPosts } = useSelector((state) => state.postReducer);
+  const userPosts = useSelector((state) => state.userReducer.posts);
   const userDetails = useSelector((state) => state.userReducer.details);
   const params = useParams();
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const ProfileCard = ({ location }) => {
     }
   }, [dispatch, params.id]);
 
-  const currentPosts = params.id ? currentUserPosts : userPosts;
+  const currentPosts = params.id ? userPosts : myPosts;
   const currentUser = params.id ? userDetails : user;
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   return (

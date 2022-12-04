@@ -1,48 +1,69 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./InfoCard.css";
 import { UilPen } from "@iconscout/react-unicons";
 import ProfileModal from "../ProfileModal/ProfileModal";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { getUserDetails } from "../../actions/UserAction";
 
 const InfoCard = () => {
   const [modalOpened, setModalOpened] = useState(false);
-  const {user}=useSelector(state=>state.authReducer.authData)
+  const { user } = useSelector((state) => state.authReducer.authData);
+  const { details } = useSelector((state) => state.userReducer);
+  const params = useParams();
+  const dispatch = useDispatch();
+  const currentUserDetails = params.id ? details : user;
+  let currentUserId = params.id;
+  let isUser = false;
+  if (currentUserId === user._id || !params.id) {
+    isUser = true;
+  }
+
+  useEffect(() => {
+    if (params.id) {
+      const userId=params.id
+      dispatch(getUserDetails(userId));
+    }
+  }, [params.id, dispatch]);
+
   return (
     <div className="infoCard">
       <div className="infoHead">
-        <h4>Your info</h4>
-        <div>
-          <UilPen
-            width="2rem"
-            height="1.5rem"
-            onClick={() => setModalOpened(true)}
-          />
-          <ProfileModal
-            opened={modalOpened}
-            onClose={() => setModalOpened(false)}
-          />
-        </div>
+        <h4>{isUser ? "Your info" : "User info"}</h4>
+        {isUser && (
+          <div>
+            <UilPen
+              width="2rem"
+              height="1.5rem"
+              onClick={() => setModalOpened(true)}
+            />
+            <ProfileModal
+              opened={modalOpened}
+              onClose={() => setModalOpened(false)}
+            />
+          </div>
+        )}
       </div>
       <div className="info">
         <span>
           <b>Status: </b>
         </span>
-        <span>{user.status}</span>
+        <span>{currentUserDetails?.relationShip}</span>
       </div>
       <div className="info">
         <span>
           <b>Lives in: </b>
         </span>
-        <span>{user.city}</span>
+        <span>{currentUserDetails?.livesIn}</span>
       </div>
       <div className="info">
         <span>
           <b>Works at: </b>
         </span>
-        <span>{user.worksAt}</span>
+        <span>{currentUserDetails?.worksAt}</span>
       </div>
-      <button className="button lg-button">Logout</button>
+      {isUser && <button className="button lg-button">Logout</button>}
     </div>
   );
 };
