@@ -25,6 +25,20 @@ export const getPost = async (req, res) => {
   }
 };
 
+export const getMyPosts = async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    return res.status(401).json({ message: "id not provided" });
+  }
+  try {
+    const posts = await Post.find({ userId: id });
+    res.status(200).json({ message: "data fetched successfully", posts });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "something went wrong" });
+  }
+};
+
 export const updatePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
@@ -102,7 +116,7 @@ export const getUserPosts = async (req, res) => {
     return res.status(401).json({ message: "please provide userId" });
   }
   try {
-    const posts = await Post.find({ userId }).sort({createdAt:-1});
+    const posts = await Post.find({ userId }).sort({ createdAt: -1 });
     res.status(200).json({ message: "Posts fetched successfully", posts });
   } catch (error) {
     res.status(500).json({ message: "something went wrong" });

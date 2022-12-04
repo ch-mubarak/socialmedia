@@ -1,29 +1,42 @@
 import React, { useEffect } from "react";
 import "./ProfileCard.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { getUserDetails } from "../../actions/UserAction";
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
   const { userPosts } = useSelector((state) => state.postReducer);
+  const currentUserPosts = useSelector((state) => state.userReducer.posts);
+  const userDetails = useSelector((state) => state.userReducer.details);
   const params = useParams();
-  
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (params.id) {
+      const userId = params.id;
+      dispatch(getUserDetails(userId));
+    }
+  }, [dispatch, params.id]);
+
+  const currentPosts = params.id ? currentUserPosts : userPosts;
+  const currentUser = params.id ? userDetails : user;
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <div className="profileCard">
       <div className="profileImages">
         <img
           src={
-            user.coverPicture
-              ? `${serverPublic}/${user.coverPicture}`
+            currentUser?.coverPicture
+              ? `${serverPublic}/${currentUser.coverPicture}`
               : `${serverPublic}/cover.jpg`
           }
           alt=""
         />
         <img
           src={
-            user.profilePicture
-              ? `${serverPublic}/${user.profilePicture}`
+            currentUser?.profilePicture
+              ? `${serverPublic}/${currentUser.profilePicture}`
               : `${serverPublic}/profile.jpg`
           }
           alt=""
@@ -32,21 +45,24 @@ const ProfileCard = ({ location }) => {
 
       <div className="profileName">
         <span>
-          {user.firstName} {user.lastName}
+          {currentUser?.firstName} {currentUser?.lastName}
         </span>
-        <span>{user.about ? user.about : "Write about yourself"}</span>
+        {!params.id && (
+          <span>{user?.about ? user.about : "Write about yourself"}</span>
+        )}
+        {params.id && <span>{userDetails?.about}</span>}
       </div>
 
       <div className="followStatus">
         <hr />
         <div>
           <div className="follow">
-            <span>{user.following.length}</span>
+            <span>{currentUser?.following?.length}</span>
             <span>Following</span>
           </div>
           <div className="vl"></div>
           <div className="follow">
-            <span>{user.followers.length}</span>
+            <span>{currentUser?.followers?.length}</span>
             <span>Followers</span>
           </div>
 
@@ -54,7 +70,7 @@ const ProfileCard = ({ location }) => {
             <>
               <div className="vl"></div>
               <div className="follow">
-                <span>{userPosts?.length}</span>
+                <span>{currentPosts?.length}</span>
                 <span>Posts</span>
               </div>
             </>

@@ -10,6 +10,13 @@
   justify-content: space-between;
 }
 
-.navIcons img {
+.navIcons img, .navIcons svg {
   width: 1.5rem;
+  transition: all ease-in-out .2s;
+}
+
+.navIcons img:hover, .navIcons svg:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+
 }

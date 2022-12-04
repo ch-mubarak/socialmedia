@@ -22,6 +22,16 @@ export const getTimeLine = (id) => async (dispatch) => {
   }
 };
 
+export const getMyPosts = (id) => async (dispatch) => {
+  dispatch({ type: "FETCHING_PENDING" });
+  try {
+    const response = await PostApi.getMyPosts(id);
+    dispatch({ type: "FETCHING_MY_POSTS_SUCCESS", payload: response.data.posts });
+  } catch (error) {
+    dispatch({ type: "FETCHING_FAIL" });
+  }
+};
+
 export const likePost = (id, userId) => async (dispatch) => {
   dispatch({ type: "LIKE_PENDING" });
   try {
@@ -32,5 +42,3 @@ export const likePost = (id, userId) => async (dispatch) => {
     console.log(error);
   }
 };
-
-

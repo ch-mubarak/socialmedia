@@ -1,6 +1,6 @@
 const initialState = {
   posts: [],
-  userPosts:[],
+  myPosts: [],
   loading: false,
   uploading: false,
   error: false,
@@ -18,6 +18,7 @@ const postReducer = (state = initialState, action) => {
       return {
         ...state,
         posts: [action.payload, ...state.posts],
+        myPosts: [action.payload, ...state.myPosts],
         uploading: false,
         error: false,
       };
@@ -34,6 +35,12 @@ const postReducer = (state = initialState, action) => {
         loading: false,
         error: false,
       };
+    case "FETCHING_FAIL":
+      return {
+        ...state,
+        loading: false,
+        error: true,
+      };
 
     case "FETCHING_PENDING":
       return {
@@ -41,10 +48,10 @@ const postReducer = (state = initialState, action) => {
         error: false,
         loading: true,
       };
-    case "FETCHING_USER_POSTS_SUCCESS":
+    case "FETCHING_MY_POSTS_SUCCESS":
       return {
         ...state,
-        userPosts: [...action.payload],
+        myPosts: [...action.payload],
         error: false,
         loading: false,
       };

@@ -24,6 +24,7 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
+        posts: [],
         error: true,
       };
     case "USER_DATA_PENDING":
@@ -42,6 +43,7 @@ const userReducer = (state = initialState, action) => {
     case "USER_DATA_FAIL":
       return {
         ...state,
+        details: null,
         loading: false,
         error: true,
       };
@@ -50,3 +52,5 @@ const userReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+export default userReducer;
