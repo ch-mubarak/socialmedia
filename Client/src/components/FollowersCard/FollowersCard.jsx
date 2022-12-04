@@ -2,6 +2,7 @@ import "./FollowersCard.css";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFollowers } from "../../actions/FollowAction";
+import { Link } from "react-router-dom";
 
 const FollowersCard = () => {
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -28,8 +29,16 @@ const FollowersCard = () => {
                 className="followerImg"
               />
               <div className="name">
-                <span>{follower.firstName} {follower.lastName}</span>
-                <span>@{follower.username}</span>
+                <span>
+                  <Link to={`/profile/${follower._id}`}>
+                    {follower.firstName} {follower.lastName}
+                  </Link>
+                </span>
+                <span>
+                  <Link to={`/profile/${follower._id}`}>
+                    @{follower.username}
+                  </Link>
+                </span>
               </div>
             </div>
             <button className="button fc-button">Follow</button>

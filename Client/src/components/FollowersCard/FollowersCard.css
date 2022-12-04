@@ -17,10 +17,10 @@
   display: flex;
   gap: 10px;
 }
-.followers > div >img {
+.followers > div > img {
   transition: all ease-in-out 0.2s;
 }
-.followers > div >img:hover {
+.followers > div > img:hover {
   cursor: pointer;
   transform: scale(1.2);
 }
@@ -41,10 +41,12 @@
 .name > span:first-child {
   font-weight: bold;
 }
-
-.fc-button{
-    height: 2rem;
-    padding-left: 20px;
-    padding-right: 20px;
+.name > span a {
+  text-decoration: none;
+  color: inherit;
 }
-
+.fc-button {
+  height: 2rem;
+  padding-left: 20px;
+  padding-right: 20px;
+}
