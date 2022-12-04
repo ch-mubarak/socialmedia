@@ -1,5 +1,6 @@
 import User from "../Models/userModal.js";
 import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
 export const getUser = async (req, res) => {
   const id = req.params.id;
@@ -51,6 +52,37 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+export const getFollowers = async (req, res) => {
+  const userId = req.params.id;
+  if (!userId) {
+    return res.status(401).json({ message: "please provide id" });
+  }
+  try {
+    const followers = await User.aggregate([
+      {
+        $match: { _id: mongoose.Types.ObjectId(userId) },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "followers",
+          foreignField: "_id",
+          as: "myFollowers",
+        },
+      },
+      {
+        $project: {
+          myFollowers: 1,
+          _id: 0,
+        },
+      },
+    ]);
+    res.status(200).json(followers);
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong", error });
+  }
+};
+
 export const followUser = async (req, res) => {
   const id = req.params.id;
   const { currentUserId } = req.body;
@@ -64,8 +96,12 @@ export const followUser = async (req, res) => {
       return res.status(404).json({ message: "user not found" });
     }
     if (!followUser.followers.includes(currentUserId)) {
-      await followUser.updateOne({ $push: { followers: currentUserId } });
-      await followingUser.updateOne({ $push: { following: id } });
+      await followUser.updateOne({
+        $push: { followers: mongoose.Types.ObjectId(currentUserId) },
+      });
+      await followingUser.updateOne({
+        $push: { following: mongoose.Types.ObjectId(id) },
+      });
       res.status(201).json({ message: "User followed successfully" });
     } else {
       res.status(403).json({ message: "User is already followed" });
@@ -88,8 +124,12 @@ export const unFollowUser = async (req, res) => {
       return res.status(404).json({ message: "user not found" });
     }
     if (followUser.followers.includes(currentUserId)) {
-      await followUser.updateOne({ $pull: { followers: currentUserId } });
-      await followingUser.updateOne({ $pull: { following: id } });
+      await followUser.updateOne({
+        $pull: { followers: mongoose.Types.ObjectId(currentUserId) },
+      });
+      await followingUser.updateOne({
+        $pull: { following: mongoose.Types.ObjectId(id) },
+      });
       res.status(201).json({ message: "User unFollowed successfully" });
     } else {
       res.status(403).json({ message: "user is not followed by you" });

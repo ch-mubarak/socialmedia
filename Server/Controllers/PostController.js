@@ -134,24 +134,8 @@ export const getTimelinePost = async (req, res) => {
       {
         $lookup: {
           from: "posts",
-          let: { user: "$following" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $in: [
-                    "$userId",
-                    {
-                      $map: {
-                        input: "$$user",
-                        in: { $toObjectId: "$$this" },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          ],
+          localField: "following",
+          foreignField: "userId",
           as: "followingPosts",
         },
       },
