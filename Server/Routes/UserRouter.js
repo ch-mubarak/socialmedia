@@ -5,12 +5,14 @@ import {
   getUser,
   unFollowUser,
   updateUser,
-  getFollowers
+  getFollowers,
 } from "../Controllers/UserController.js";
+import authenticate from "../middleware/Auth.js";
 const router = express.Router();
 
+router.use(authenticate);
 router.get("/:id", getUser);
-router.get("/followers/:id",getFollowers)
+router.get("/followers/:id", getFollowers);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 router.put("/:id/follow", followUser);

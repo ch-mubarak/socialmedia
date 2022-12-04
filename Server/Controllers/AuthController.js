@@ -32,7 +32,8 @@ export const registerUser = async (req, res) => {
       {
         username: user.username,
         email: user.email,
-        id: user.id,
+        userId: user.id,
+        isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
@@ -41,6 +42,7 @@ export const registerUser = async (req, res) => {
     const options = {
       expires: new Date(Date.now() + 60 * 60 * 1000),
       httpOnly: true,
+      secure: false,
     };
     res.status(201).cookie("token", token, options).json({ user, token });
   } catch (error) {
@@ -67,7 +69,8 @@ export const loginUser = async (req, res) => {
       {
         username: user.username,
         email: user.email,
-        id: user.id,
+        userId: user.id,
+        isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
@@ -75,8 +78,9 @@ export const loginUser = async (req, res) => {
 
     //cookie section
     const options = {
-      expires: new Date(Date.now() + 60 * 60 * 1000),
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       httpOnly: true,
+      secure: false,
     };
     res.status(200).cookie("token", token, options).json({ user, token });
   } catch (error) {

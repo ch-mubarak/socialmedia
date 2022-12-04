@@ -6,13 +6,14 @@ import Share from "../../img/share.png";
 import Comment from "../../img/comment.png";
 import { useDispatch, useSelector } from "react-redux";
 import { likePost } from "../../actions/PostAction";
+import { Link } from "react-router-dom";
 export const Post = ({ data }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authReducer.authData);
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(data.likes.length);
   const handlePostLike = (id) => {
-    dispatch(likePost(id, user._id));
+    dispatch(likePost(id));
     setLiked((preValue) => !preValue);
     setLikeCount((oldCount) => {
       if (liked) {
@@ -44,7 +45,11 @@ export const Post = ({ data }) => {
       </span>
       <div className="detail">
         <span>
-          <b>{data.name}</b>
+          <b>
+            <Link to={`/profile/${data.userId._id}`}>
+              {data.userId.username}
+            </Link>
+          </b>
         </span>
         <span> {data.description}</span>
       </div>

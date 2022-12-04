@@ -1,5 +1,5 @@
 import axios from "axios";
 
-const API= axios.create({baseURL:"http://localhost:5000"})
+const API = axios.create({ withCredentials: true });
 
-export const getFollowers=(id)=>API.get(`/user/followers/${id}`)
+export const getFollowers = (id) => API.get(`/user/followers/${id}`);

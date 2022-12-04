@@ -19,8 +19,8 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   const id = req.params.id;
   try {
-    const { currentUserId, currentUserAdminStatus, password } = req.body;
-    if (id === currentUserId || currentUserAdminStatus) {
+    const { password } = req.body;
+    if (id === req.user.id || currentUserAdminStatus) {
       if (password) {
         const salt = await bcrypt.genSalt(10);
         req.body.password = await bcrypt.hash(password, salt);
@@ -39,7 +39,8 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   const id = req.params.id;
-  const { currentUserId, currentUserAdminStatus } = req.body;
+  const currentUserId=req.user.userId
+  const { currentUserAdminStatus } = req.user.isAdmin;
   try {
     if (id === currentUserId || currentUserAdminStatus) {
       await User.findByIdAndDelete(id);
@@ -72,13 +73,16 @@ export const getFollowers = async (req, res) => {
       },
       {
         $project: {
-          myFollowers: 1,
+          "myFollowers.password": false,
+          "myFollowers.isAdmin": false,
+          "myFollowers.followers": false,
+          "myFollowers.following": false,
           _id: 0,
         },
       },
     ]);
-    const myFollowers=followers[0].myFollowers
-    res.status(200).json({followers:myFollowers});
+    const myFollowers = followers[0].myFollowers;
+    res.status(200).json({ followers: myFollowers });
   } catch (error) {
     res.status(500).json({ message: "something went wrong", error });
   }
@@ -86,19 +90,19 @@ export const getFollowers = async (req, res) => {
 
 export const followUser = async (req, res) => {
   const id = req.params.id;
-  const { currentUserId } = req.body;
-  if (currentUserId === id) {
+  const {userId} = req.user;
+  if (userId === id) {
     return res.status(403).json("Action forbidden");
   }
   try {
     const followUser = await User.findById(id);
-    const followingUser = await User.findById(currentUserId);
+    const followingUser = await User.findById(userId);
     if (!followUser || !followingUser) {
       return res.status(404).json({ message: "user not found" });
     }
-    if (!followUser.followers.includes(currentUserId)) {
+    if (!followUser.followers.includes(userId)) {
       await followUser.updateOne({
-        $push: { followers: mongoose.Types.ObjectId(currentUserId) },
+        $push: { followers: mongoose.Types.ObjectId(userId) },
       });
       await followingUser.updateOne({
         $push: { following: mongoose.Types.ObjectId(id) },
@@ -114,19 +118,19 @@ export const followUser = async (req, res) => {
 
 export const unFollowUser = async (req, res) => {
   const id = req.params.id;
-  const { currentUserId } = req.body;
-  if (id === currentUserId) {
+  const { userId } = req.user;
+  if (id === userId) {
     return res.status(403).json({ message: "Action forbidden" });
   }
   try {
     const followUser = await User.findById(id);
-    const followingUser = await User.findById(currentUserId);
+    const followingUser = await User.findById(userId);
     if (!followUser || !followingUser) {
       return res.status(404).json({ message: "user not found" });
     }
-    if (followUser.followers.includes(currentUserId)) {
+    if (followUser.followers.includes(userId)) {
       await followUser.updateOne({
-        $pull: { followers: mongoose.Types.ObjectId(currentUserId) },
+        $pull: { followers: mongoose.Types.ObjectId(userId) },
       });
       await followingUser.updateOne({
         $pull: { following: mongoose.Types.ObjectId(id) },

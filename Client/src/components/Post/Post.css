@@ -25,3 +25,13 @@
   cursor: pointer;
   transform: scale(1.1)
 }
+
+.detail >span >b >a{
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.detail >span >b >a::before{
+  content: "@";
+  display: inline;
+}

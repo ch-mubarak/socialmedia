@@ -12,6 +12,8 @@ import {
 import authenticate from "../middleware/Auth.js";
 const router = express.Router();
 
+router.use(authenticate)
+
 router.post("/", createNewPost);
 router.get("/myPosts/:id", getMyPosts);
 router.get("/user/:id", getUserPosts);

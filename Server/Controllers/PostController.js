@@ -30,6 +30,9 @@ export const getMyPosts = async (req, res) => {
   if (!id) {
     return res.status(401).json({ message: "id not provided" });
   }
+  if (req.user.id !== id) {
+    throw new Error("your not authorized");
+  }
   try {
     const posts = await Post.find({ userId: id });
     res.status(200).json({ message: "data fetched successfully", posts });
@@ -41,7 +44,7 @@ export const getMyPosts = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   const id = req.params.id;
-  const { userId } = req.body;
+  const {userId} = req.user;
   if (!(id && userId)) {
     res.status(401).json({ message: "all filed are required" });
   }
@@ -62,7 +65,7 @@ export const updatePost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
   const id = req.params.id;
-  const { userId } = req.body;
+  const {userId} = req.user;
   if (!(id && userId)) {
     res.status(401).json({ message: "all filed are required" });
   }
@@ -84,7 +87,7 @@ export const deletePost = async (req, res) => {
 
 export const likePost = async (req, res) => {
   const id = req.params.id;
-  const { userId } = req.body;
+  const {userId} = req.user;
   if (!(id && userId)) {
     return res.status(401).json({ message: "all filed are required" });
   }
@@ -126,7 +129,10 @@ export const getUserPosts = async (req, res) => {
 export const getTimelinePost = async (req, res) => {
   const userId = req.params.id;
   try {
-    const currentUserPosts = await Post.find({ userId });
+    const currentUserPosts = await Post.find({ userId }).populate({
+      path: "userId",
+      select: { _id: 1, username: 1 },
+    });
     const followingUsersPosts = await User.aggregate([
       {
         $match: { _id: mongoose.Types.ObjectId(userId) },
@@ -146,13 +152,20 @@ export const getTimelinePost = async (req, res) => {
         },
       },
     ]);
-    const sortedPosts = currentUserPosts
-      .concat(followingUsersPosts[0].followingPosts)
-      .sort((a, b) => {
-        return b.createdAt - a.createdAt;
-      });
+
+    //populating results to get author name
+    const populatedPosts = await User.populate(
+      followingUsersPosts[0].followingPosts,
+      {
+        path: "userId",
+        select: { _id: 1, username: 1 },
+      }
+    );
+    const sortedPosts = currentUserPosts.concat(populatedPosts).sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    });
     res.status(200).json({ posts: sortedPosts });
   } catch (error) {
-    res.status(500).json({ message: "something went wrong", error: error });
+    res.status(500).json({ message: "something went wrong", error });
   }
 };

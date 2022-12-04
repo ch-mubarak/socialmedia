@@ -26,16 +26,19 @@ export const getMyPosts = (id) => async (dispatch) => {
   dispatch({ type: "FETCHING_PENDING" });
   try {
     const response = await PostApi.getMyPosts(id);
-    dispatch({ type: "FETCHING_MY_POSTS_SUCCESS", payload: response.data.posts });
+    dispatch({
+      type: "FETCHING_MY_POSTS_SUCCESS",
+      payload: response.data.posts,
+    });
   } catch (error) {
     dispatch({ type: "FETCHING_FAIL" });
   }
 };
 
-export const likePost = (id, userId) => async (dispatch) => {
+export const likePost = (id) => async (dispatch) => {
   dispatch({ type: "LIKE_PENDING" });
   try {
-    await PostApi.likePost(id, userId);
+    await PostApi.likePost(id);
     dispatch({ type: "LIKE_SUCCESS" });
   } catch (error) {
     dispatch({ type: "LIKE_FAILED" });

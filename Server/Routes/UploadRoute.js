@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import authenticate from "../middleware/Auth.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -12,6 +13,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+router.use(authenticate)
 router.post("/image", upload.single("file"), (req, res) => {
   try {
     return res.status(200).json({ message: "File upload successfully" });

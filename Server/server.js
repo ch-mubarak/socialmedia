@@ -9,12 +9,13 @@ import AuthRoute from "./Routes/AuthRoute.js";
 import UserRoute from "./Routes/UserRouter.js";
 import PostRoute from "./Routes/PostRoute.js";
 import UploadRoute from "./Routes/UploadRoute.js";
+import {corsOptions} from "./config/cors.js"
 
 const app = express();
 app.use(cookieParser());
-app.use(cors());
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
+app.use(cors(corsOptions));
 connectDB();
 
 app.use(express.static("public"));
