@@ -30,7 +30,7 @@ export const getMyPosts = async (req, res) => {
   if (!id) {
     return res.status(401).json({ message: "id not provided" });
   }
-  if (req.user.id !== id) {
+  if (req.user.userId !== id) {
     throw new Error("your not authorized");
   }
   try {
@@ -44,7 +44,7 @@ export const getMyPosts = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   const id = req.params.id;
-  const {userId} = req.user;
+  const { userId } = req.user;
   if (!(id && userId)) {
     res.status(401).json({ message: "all filed are required" });
   }
@@ -65,7 +65,7 @@ export const updatePost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
   const id = req.params.id;
-  const {userId} = req.user;
+  const { userId } = req.user;
   if (!(id && userId)) {
     res.status(401).json({ message: "all filed are required" });
   }
@@ -87,7 +87,7 @@ export const deletePost = async (req, res) => {
 
 export const likePost = async (req, res) => {
   const id = req.params.id;
-  const {userId} = req.user;
+  const { userId } = req.user;
   if (!(id && userId)) {
     return res.status(401).json({ message: "all filed are required" });
   }
@@ -119,7 +119,9 @@ export const getUserPosts = async (req, res) => {
     return res.status(401).json({ message: "please provide userId" });
   }
   try {
-    const posts = await Post.find({ userId }).sort({ createdAt: -1 });
+    const posts = await Post.find({ userId })
+      .populate({ path: "userId", select: { username: 1 } })
+      .sort({ createdAt: -1 });
     res.status(200).json({ message: "Posts fetched successfully", posts });
   } catch (error) {
     res.status(500).json({ message: "something went wrong" });

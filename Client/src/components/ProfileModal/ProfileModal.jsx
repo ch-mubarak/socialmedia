@@ -1,8 +1,32 @@
 import { Modal, useMantineTheme } from "@mantine/core";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const ProfileModal = ({ opened, onClose }) => {
   const theme = useMantineTheme();
-
+  const { user } = useSelector((state) => state.authReducer.authData);
+  const [userData, setUserData] = useState({
+    firstName: user.firstName,
+    lastName: user.lastName,
+    profilePicture: user.profilePicture,
+    coverPicture: user.coverPicture,
+    relationship: user.relationship,
+    livesIn: user.livesIn,
+    worksAt: user.worksAt,
+  });
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setUserData((prevData) => {
+      return {
+        ...prevData,
+        [name]: value,
+      };
+    });
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
   return (
     <Modal
       opened={opened}
@@ -16,19 +40,23 @@ const ProfileModal = ({ opened, onClose }) => {
       overlayBlur={3}
       size="50%"
     >
-      <form className="infoForm">
+      <form className="infoForm" onSubmit={handleSubmit}>
         <h3>Your Info</h3>
         <div>
           <input
             type="text"
             className="infoInput"
             name="firstName"
+            onChange={handleChange}
+            value={userData.firstName}
             placeholder="First Name"
           />
           <input
             type="text"
             className="infoInput"
             name="lastName"
+            onChange={handleChange}
+            value={userData.lastName}
             placeholder="Last Name"
           />
         </div>
@@ -36,8 +64,10 @@ const ProfileModal = ({ opened, onClose }) => {
           <input
             type="text"
             className="infoInput"
-            name="worksAt"
-            placeholder="Works At"
+            name="about"
+            onChange={handleChange}
+            value={userData.about}
+            placeholder="About"
           />
         </div>
         <div>
@@ -45,13 +75,17 @@ const ProfileModal = ({ opened, onClose }) => {
             type="text"
             className="infoInput"
             name="livesIn"
+            onChange={handleChange}
+            value={userData.livesIn}
             placeholder="Lives In"
           />
           <input
             type="text"
             className="infoInput"
-            name="country"
-            placeholder="Country"
+            name="worksAt"
+            onChange={handleChange}
+            value={userData.worksAt}
+            placeholder="Works At"
           />
         </div>
         <div>
@@ -59,7 +93,9 @@ const ProfileModal = ({ opened, onClose }) => {
             type="text"
             className="infoInput"
             name="relationship"
-            placeholder="RelationShip Status"
+            onChange={handleChange}
+            value={userData.relationship}
+            placeholder="Relationship Status"
           />
         </div>
         <div>
