@@ -20,7 +20,7 @@ export const updateUser = async (req, res) => {
   const id = req.params.id;
   try {
     const { password } = req.body;
-    if (id === req.user.id || currentUserAdminStatus) {
+    if (id === req.user.userId) {
       if (password) {
         const salt = await bcrypt.genSalt(10);
         req.body.password = await bcrypt.hash(password, salt);
@@ -28,18 +28,19 @@ export const updateUser = async (req, res) => {
       const user = await User.findByIdAndUpdate(id, req.body, { new: true });
       // new:true will return updated user status
       user.password = undefined;
-      res.status(200).json(user);
+      res.status(200).json({ user });
     } else {
       res.status(403).json({ message: "You are not authorized" });
     }
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: "something went wrong" });
   }
 };
 
 export const deleteUser = async (req, res) => {
   const id = req.params.id;
-  const currentUserId=req.user.userId
+  const currentUserId = req.user.userId;
   const { currentUserAdminStatus } = req.user.isAdmin;
   try {
     if (id === currentUserId || currentUserAdminStatus) {
@@ -90,7 +91,7 @@ export const getFollowers = async (req, res) => {
 
 export const followUser = async (req, res) => {
   const id = req.params.id;
-  const {userId} = req.user;
+  const { userId } = req.user;
   if (userId === id) {
     return res.status(403).json("Action forbidden");
   }

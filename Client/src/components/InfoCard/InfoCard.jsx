@@ -19,10 +19,12 @@ const InfoCard = () => {
   if (currentUserId === user._id || !params.id) {
     isUser = true;
   }
-
+  const handleClose = () => {
+    setModalOpened(false);
+  };
   useEffect(() => {
     if (params.id) {
-      const userId=params.id
+      const userId = params.id;
       dispatch(getUserDetails(userId));
     }
   }, [params.id, dispatch]);
@@ -39,6 +41,7 @@ const InfoCard = () => {
               onClick={() => setModalOpened(true)}
             />
             <ProfileModal
+              handleClose={handleClose}
               opened={modalOpened}
               onClose={() => setModalOpened(false)}
             />
@@ -49,7 +52,7 @@ const InfoCard = () => {
         <span>
           <b>Status: </b>
         </span>
-        <span>{currentUserDetails?.relationShip}</span>
+        <span>{currentUserDetails?.relationship}</span>
       </div>
       <div className="info">
         <span>

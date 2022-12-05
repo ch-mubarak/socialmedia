@@ -3,6 +3,7 @@ import "./ProfileCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { getUserDetails } from "../../actions/UserAction";
+import { UilPen } from "@iconscout/react-unicons";
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
@@ -24,6 +25,7 @@ const ProfileCard = ({ location }) => {
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <div className="profileCard">
+      <UilPen />
       <div className="profileImages">
         <img
           src={

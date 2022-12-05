@@ -15,6 +15,18 @@
   align-items: center;
   justify-content: center;
 }
+.profileCard > svg {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  color: #000;
+  transition: all ease-in-out 0.2s;
+}
+.profileCard > svg:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
 
 .profileImages img:first-child {
   width: 100%;

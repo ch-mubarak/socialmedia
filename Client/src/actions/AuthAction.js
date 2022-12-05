@@ -20,3 +20,14 @@ export const signUp = (formData) => async (dispatch) => {
     console.log(error);
   }
 };
+
+export const updateProfile = (id, formData) => async (dispatch) => {
+  dispatch({ type: "UPDATE_PENDING" });
+  try {
+    const { data } = await AuthApi.updateProfile(id, formData);
+    dispatch({ type: "UPDATE_SUCCESS", payload: data });
+  } catch (error) {
+    dispatch({ type: "UPDATE_FAIL" });
+    console.log(error);
+  }
+};

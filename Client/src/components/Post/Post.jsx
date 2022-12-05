@@ -47,7 +47,7 @@ export const Post = ({ data }) => {
         <span>
           <b>
             <Link to={`/profile/${data.userId._id}`}>
-              {data.userId.username}
+              {data.userId.username || user.username}
             </Link>
           </b>
         </span>
