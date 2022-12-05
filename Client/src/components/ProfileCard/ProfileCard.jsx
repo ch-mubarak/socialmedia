@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "./ProfileCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { getUserDetails } from "../../actions/UserAction";
 import { UilPen } from "@iconscout/react-unicons";
+import { uploadImage } from "../../actions/UploadAction";
+import { updateProfile } from "../../actions/AuthAction";
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
@@ -12,6 +14,8 @@ const ProfileCard = ({ location }) => {
   const userDetails = useSelector((state) => state.userReducer.details);
   const params = useParams();
   const dispatch = useDispatch();
+  const coverRef = useRef();
+  const profileRef = useRef();
 
   useEffect(() => {
     if (params.id) {
@@ -20,12 +24,36 @@ const ProfileCard = ({ location }) => {
     }
   }, [dispatch, params.id]);
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const img = e.target.files[0];
+      const name = e.target.name;
+      const data = new FormData();
+      const fileName = Date.now() + img.name;
+      data.append("name", fileName);
+      data.append("file", img);
+      const userDetails = {
+        [name]: fileName,
+      };
+      try {
+        dispatch(uploadImage(data));
+        dispatch(updateProfile(user._id, userDetails));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   const currentPosts = params.id ? userPosts : myPosts;
   const currentUser = params.id ? userDetails : user;
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <div className="profileCard">
-      <UilPen />
+      {currentUser._id === user._id && (
+        <div className="editPen" onClick={() => coverRef.current.click()}>
+          <UilPen />
+        </div>
+      )}
       <div className="profileImages">
         <img
           src={
@@ -42,9 +70,13 @@ const ProfileCard = ({ location }) => {
               : `${serverPublic}/profile.jpg`
           }
           alt=""
+          onClick={() => {
+            if (currentUser._id === user._id) {
+              return profileRef.current.click();
+            }
+          }}
         />
       </div>
-
       <div className="profileName">
         <span>
           {currentUser?.firstName} {currentUser?.lastName}
@@ -54,7 +86,6 @@ const ProfileCard = ({ location }) => {
         )}
         {params.id && <span>{userDetails?.about}</span>}
       </div>
-
       <div className="followStatus">
         <hr />
         <div>
@@ -79,6 +110,20 @@ const ProfileCard = ({ location }) => {
           )}
         </div>
         <hr />
+      </div>
+      <div style={{ display: "none" }}>
+        <input
+          type="file"
+          name="profilePicture"
+          ref={profileRef}
+          onChange={handleImageChange}
+        />
+        <input
+          type="file"
+          name="coverPicture"
+          ref={coverRef}
+          onChange={handleImageChange}
+        />
       </div>
       {location === "home" && (
         <span>

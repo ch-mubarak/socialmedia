@@ -4,12 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../../actions/AuthAction";
 import { uploadImage } from "../../actions/UploadAction";
 
-const ProfileModal = ({ opened, onClose,handleClose }) => {
+const ProfileModal = ({ opened, onClose, handleClose }) => {
   const theme = useMantineTheme();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authReducer.authData);
-  const [profileImage, setProfileImage] = useState("");
-  const [coverImage, setCoverImage] = useState("");
   const [userData, setUserData] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
@@ -18,18 +16,7 @@ const ProfileModal = ({ opened, onClose,handleClose }) => {
     livesIn: user.livesIn,
     worksAt: user.worksAt,
   });
-  const handleProfileImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      let img = event.target.files[0];
-      setProfileImage(img);
-    }
-  };
-  const handleCoverImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      let img = event.target.files[0];
-      setCoverImage(img);
-    }
-  };
+
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -42,36 +29,8 @@ const ProfileModal = ({ opened, onClose,handleClose }) => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    const userDetails = { ...userData };
-    if (profileImage) {
-      const data = new FormData();
-      const profile = Date.now() + profileImage.name;
-      data.append("name", profile);
-      data.append("file", profileImage);
-      userDetails.profilePicture = profile;
-      try {
-        dispatch(uploadImage(data));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    if (coverImage) {
-      const data = new FormData();
-      const cover = Date.now() + coverImage.name;
-      data.append("name", cover);
-      data.append("file", coverImage);
-      userDetails.coverPicture = cover;
-      try {
-        dispatch(uploadImage(data));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    dispatch(updateProfile(user._id, userDetails));
-    handleClose()
-    
-    
+    dispatch(updateProfile(user._id, userData));
+    handleClose();
   };
   return (
     <Modal
@@ -143,24 +102,6 @@ const ProfileModal = ({ opened, onClose,handleClose }) => {
             value={userData.relationship}
             placeholder="Relationship Status"
           />
-        </div>
-        <div>
-          <div>
-            Profile Image
-            <input
-              onChange={handleProfileImageChange}
-              type="file"
-              name="profileImage"
-            />
-          </div>
-          <div>
-            Cover Image
-            <input
-              onChange={handleCoverImageChange}
-              type="file"
-              name="coverImage"
-            />
-          </div>
         </div>
         <button className="button info-button">Update</button>
       </form>
