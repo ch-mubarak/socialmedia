@@ -33,7 +33,7 @@ export const updateUser = async (req, res) => {
       res.status(403).json({ message: "You are not authorized" });
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).json({ message: "something went wrong" });
   }
 };

@@ -131,11 +131,7 @@ export const getUserPosts = async (req, res) => {
 export const getTimelinePost = async (req, res) => {
   const userId = req.params.id;
   try {
-    const currentUserPosts = await Post.find({ userId }).populate({
-      path: "userId",
-      select: { _id: 1, username: 1 },
-    });
-    const followingUsersPosts = await User.aggregate([
+    const timelinePosts = await User.aggregate([
       {
         $match: { _id: mongoose.Types.ObjectId(userId) },
       },
@@ -148,24 +144,35 @@ export const getTimelinePost = async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "posts",
+          localField: "_id",
+          foreignField: "userId",
+          as: "myPosts",
+        },
+      },
+      {
         $project: {
           followingPosts: 1,
+          myPosts: 1,
           _id: 0,
         },
       },
     ]);
 
     //populating results to get author name
-    const populatedPosts = await User.populate(
-      followingUsersPosts[0].followingPosts,
+    await User.populate(
+      [timelinePosts[0].followingPosts, timelinePosts[0].myPosts],
       {
         path: "userId",
         select: { _id: 1, username: 1 },
       }
     );
-    const sortedPosts = currentUserPosts.concat(populatedPosts).sort((a, b) => {
-      return b.createdAt - a.createdAt;
-    });
+    const sortedPosts = timelinePosts[0].followingPosts
+      .concat(timelinePosts[0].myPosts)
+      .sort((a, b) => {
+        return b.createdAt - a.createdAt;
+      });
     res.status(200).json({ posts: sortedPosts });
   } catch (error) {
     res.status(500).json({ message: "something went wrong", error });
