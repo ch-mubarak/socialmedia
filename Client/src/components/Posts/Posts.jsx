@@ -33,7 +33,7 @@ const Posts = () => {
     <div className="posts">
       {!loading &&
         location.pathname === "/home" &&
-        timeline &&
+        // timeline &&
         timeline.map((post) => {
           return <Post key={post._id} data={post} />;
         })}

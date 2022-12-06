@@ -103,7 +103,10 @@ export const getUserPosts = async (req, res) => {
   }
   try {
     const posts = await Post.find({ userId })
-      .populate({ path: "userId", select: { username: 1 } })
+      .populate({
+        path: "userId",
+        select: { username: 1, firstName: 1, lastName: 1, profilePicture: 1 },
+      })
       .sort({ createdAt: -1 });
     res.status(200).json({ message: "Posts fetched successfully", posts });
   } catch (error) {
@@ -148,9 +151,10 @@ export const getTimelinePost = async (req, res) => {
       [timelinePosts[0].followingPosts, timelinePosts[0].myPosts],
       {
         path: "userId",
-        select: { _id: 1, username: 1 },
+        select: { username: 1, firstName: 1, lastName: 1, profilePicture: 1 },
       }
     );
+
     const sortedPosts = timelinePosts[0].followingPosts
       .concat(timelinePosts[0].myPosts)
       .sort((a, b) => {

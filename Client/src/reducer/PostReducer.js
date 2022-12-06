@@ -30,7 +30,7 @@ const postReducer = (state = initialState, action) => {
     case "FETCHING_SUCCESS":
       return {
         ...state,
-        posts: [...action.payload],
+        timeline: [...action.payload],
         loading: false,
         error: false,
       };

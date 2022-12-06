@@ -7,6 +7,7 @@ import Comment from "../../img/comment.png";
 import { useDispatch, useSelector } from "react-redux";
 import { likePost } from "../../actions/PostAction";
 import { Link } from "react-router-dom";
+const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 export const Post = ({ data }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authReducer.authData);
@@ -25,6 +26,22 @@ export const Post = ({ data }) => {
   };
   return (
     <div className="post">
+      <div className="postAuthor">
+        <img
+          src={
+            data.userId?.profilePicture
+              ? `${serverStatic}/${data.userId.profilePicture}`
+              : `${serverStatic}/profile.jpg`
+          }
+          alt=""
+        />
+        <span>
+          <Link to={`/profile/${data.userId._id}`}>
+            {data.userId?.firstName} {data.userId?.lastName}
+          </Link>
+        </span>
+      </div>
+      <img src="" alt="" />
       {data.image && (
         <img
           src={`${process.env.REACT_APP_PUBLIC_FOLDER}/${data.image}`}
@@ -44,13 +61,6 @@ export const Post = ({ data }) => {
         {likeCount} Likes
       </span>
       <div className="detail">
-        <span>
-          <b>
-            <Link to={`/profile/${data.userId._id}`}>
-              {data.userId.username || user.username}
-            </Link>
-          </b>
-        </span>
         <span> {data.description}</span>
       </div>
     </div>
