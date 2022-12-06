@@ -11,6 +11,16 @@ export const createPost = (data) => async (dispatch) => {
   }
 };
 
+export const getUserPosts = (id) => async (dispatch) => {
+  dispatch({ type: "FETCHING_PENDING" });
+  try {
+    const response = await PostApi.getUserPosts(id);
+    dispatch({ type: "FETCHING_USER_POSTS", payload: response.data.posts });
+  } catch (error) {
+    dispatch({ type: "FETCHING_FAIL" });
+  }
+};
+
 export const getTimeLine = (id) => async (dispatch) => {
   dispatch({ type: "FETCHING_PENDING" });
   try {
@@ -19,19 +29,6 @@ export const getTimeLine = (id) => async (dispatch) => {
   } catch (err) {
     dispatch({ type: "FETCHING_FAIL" });
     console.log(err);
-  }
-};
-
-export const getMyPosts = (id) => async (dispatch) => {
-  dispatch({ type: "FETCHING_PENDING" });
-  try {
-    const response = await PostApi.getMyPosts(id);
-    dispatch({
-      type: "FETCHING_MY_POSTS_SUCCESS",
-      payload: response.data.posts,
-    });
-  } catch (error) {
-    dispatch({ type: "FETCHING_FAIL" });
   }
 };
 

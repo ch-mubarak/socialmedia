@@ -9,21 +9,24 @@ import { updateProfile } from "../../actions/AuthAction";
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
-  const { myPosts } = useSelector((state) => state.postReducer);
-  const userPosts = useSelector((state) => state.userReducer.posts);
+  const { userPosts } = useSelector((state) => state.postReducer);
   const userDetails = useSelector((state) => state.userReducer.details);
   const params = useParams();
   const dispatch = useDispatch();
   const coverRef = useRef();
   const profileRef = useRef();
 
+  let isUser = false;
+  if (!params.id || params.id === user._id) {
+    isUser = true;
+  }
   useEffect(() => {
-    if (params.id) {
+    console.log("profile card");
+    if (params.id && params.id !== user._id) {
       const userId = params.id;
       dispatch(getUserDetails(userId));
     }
-  }, [dispatch, params.id]);
-
+  }, [dispatch, params.id, user._id]);
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const img = e.target.files[0];
@@ -44,60 +47,84 @@ const ProfileCard = ({ location }) => {
     }
   };
 
-  const currentPosts = params.id ? userPosts : myPosts;
-  const currentUser = params.id ? userDetails : user;
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
   return (
     <div className="profileCard">
-      {currentUser._id === user._id && (
+      {params.id === user._id && (
         <div className="editPen" onClick={() => coverRef.current.click()}>
           <UilPen />
         </div>
       )}
       <div className="profileImages">
-        <img
-          src={
-            currentUser?.coverPicture
-              ? `${serverPublic}/${currentUser.coverPicture}`
-              : `${serverStatic}/cover.jpg`
-          }
-          alt=""
-        />
-        <img
-          src={
-            currentUser?.profilePicture
-              ? `${serverPublic}/${currentUser.profilePicture}`
-              : `${serverStatic}/profile.jpg`
-          }
-          alt=""
-          onClick={() => {
-            if (currentUser._id === user._id) {
-              return profileRef.current.click();
+        {isUser && (
+          <img
+            src={
+              user?.coverPicture
+                ? `${serverPublic}/${user.coverPicture}`
+                : `${serverStatic}/cover.jpg`
             }
-          }}
-        />
+            alt=""
+          />
+        )}
+        {!isUser && (
+          <img
+            src={
+              userDetails?.coverPicture
+                ? `${serverPublic}/${userDetails.coverPicture}`
+                : `${serverStatic}/cover.jpg`
+            }
+            alt=""
+          />
+        )}
+        {isUser && (
+          <img
+            src={
+              user?.profilePicture
+                ? `${serverPublic}/${user.profilePicture}`
+                : `${serverStatic}/profile.jpg`
+            }
+            alt=""
+            onClick={() => profileRef.current.click()}
+          />
+        )}
+        {!isUser && (
+          <img
+            src={
+              userDetails?.profilePicture
+                ? `${serverPublic}/${userDetails.profilePicture}`
+                : `${serverStatic}/profile.jpg`
+            }
+            alt=""
+          />
+        )}
       </div>
       <div className="profileName">
         <span>
-          {currentUser?.firstName} {currentUser?.lastName}
+          {isUser ? user.firstName : userDetails.firstName}{" "}
+          {isUser ? user.lastName : userDetails.lastName}
         </span>
-        {!params.id && (
-          <span>{user?.about ? user.about : "Write about yourself"}</span>
-        )}
-        {params.id && <span>{userDetails?.about}</span>}
+        <span>{isUser ? user.about : userDetails.about}</span>
       </div>
       <div className="followStatus">
         <hr />
         <div>
           <div className="follow">
-            <span>{currentUser?.following?.length}</span>
+            <span>
+              {isUser
+                ? user?.following?.length
+                : userDetails?.following?.length}
+            </span>
             <span>Following</span>
           </div>
           <div className="vl"></div>
           <div className="follow">
-            <span>{currentUser?.followers?.length}</span>
+            <span>
+              {isUser
+                ? user?.followers?.length
+                : userDetails?.followers?.length}
+            </span>
             <span>Followers</span>
           </div>
 
@@ -105,7 +132,7 @@ const ProfileCard = ({ location }) => {
             <>
               <div className="vl"></div>
               <div className="follow">
-                <span>{currentPosts?.length}</span>
+                <span>{userPosts?.length}</span>
                 <span>Posts</span>
               </div>
             </>
@@ -113,23 +140,25 @@ const ProfileCard = ({ location }) => {
         </div>
         <hr />
       </div>
-      <div style={{ display: "none" }}>
-        <input
-          type="file"
-          name="profilePicture"
-          ref={profileRef}
-          onChange={handleImageChange}
-        />
-        <input
-          type="file"
-          name="coverPicture"
-          ref={coverRef}
-          onChange={handleImageChange}
-        />
-      </div>
+      {isUser && (
+        <div style={{ display: "none" }}>
+          <input
+            type="file"
+            name="profilePicture"
+            ref={profileRef}
+            onChange={handleImageChange}
+          />
+          <input
+            type="file"
+            name="coverPicture"
+            ref={coverRef}
+            onChange={handleImageChange}
+          />
+        </div>
+      )}
       {location === "home" && (
         <span>
-          <Link to="/profile">My Profile</Link>
+          <Link to={`/profile/${user._id}`}>My Profile</Link>
         </span>
       )}
     </div>

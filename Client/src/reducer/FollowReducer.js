@@ -7,14 +7,14 @@ const initialState = {
 
 const followReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "FETCHING_FOLLOWERS_PENDING":
+    case "FOLLOWERS_PENDING":
       return {
         ...state,
         loading: true,
         error: false,
       };
 
-    case "FETCHING_FOLLOWERS_SUCCESS":
+    case "FOLLOWERS_SUCCESS":
       return {
         ...state,
         followers: [...action.payload],
@@ -22,7 +22,7 @@ const followReducer = (state = initialState, action) => {
         error: false,
       };
 
-    case "FETCHING_FOLLOWERS_FAIL":
+    case "FOLLOWERS_FAIL":
       return {
         ...state,
         loading: false,

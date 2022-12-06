@@ -39,6 +39,8 @@
   border-radius: 50%;
   position: absolute;
   bottom: -3rem;
+  object-fit: cover;
+  object-position: center;
   transition: all ease-in-out 0.2s;
   box-shadow: var(--profileShadow);
 }

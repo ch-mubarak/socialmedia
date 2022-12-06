@@ -1,33 +1,25 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./InfoCard.css";
 import { UilPen } from "@iconscout/react-unicons";
 import ProfileModal from "../ProfileModal/ProfileModal";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getUserDetails } from "../../actions/UserAction";
 
 const InfoCard = () => {
   const [modalOpened, setModalOpened] = useState(false);
   const { user } = useSelector((state) => state.authReducer.authData);
-  const { details } = useSelector((state) => state.userReducer);
-  const params = useParams();
-  const dispatch = useDispatch();
-  const currentUserDetails = params.id ? details : user;
-  let currentUserId = params.id;
+  const { userDetail } = useSelector((state) => state.userReducer);
   let isUser = false;
-  if (currentUserId === user._id || !params.id) {
+  const params = useParams();
+  if (params.id === user._id) {
     isUser = true;
   }
+  console.log("info card");
+
   const handleClose = () => {
     setModalOpened(false);
   };
-  useEffect(() => {
-    if (params.id) {
-      const userId = params.id;
-      dispatch(getUserDetails(userId));
-    }
-  }, [params.id, dispatch]);
 
   return (
     <div className="infoCard">
@@ -52,19 +44,19 @@ const InfoCard = () => {
         <span>
           <b>Status: </b>
         </span>
-        <span>{currentUserDetails?.relationship}</span>
+        <span>{isUser ? user?.relationship : userDetail?.relationship}</span>
       </div>
       <div className="info">
         <span>
           <b>Lives in: </b>
         </span>
-        <span>{currentUserDetails?.livesIn}</span>
+        <span>{isUser ? user?.livesIn : userDetail?.livesIn}</span>
       </div>
       <div className="info">
         <span>
           <b>Works at: </b>
         </span>
-        <span>{currentUserDetails?.worksAt}</span>
+        <span>{isUser ? user?.worksAt : userDetail?.worksAt}</span>
       </div>
       {isUser && <button className="button lg-button">Logout</button>}
     </div>

@@ -25,23 +25,6 @@ export const getPost = async (req, res) => {
   }
 };
 
-export const getMyPosts = async (req, res) => {
-  const id = req.params.id;
-  if (!id) {
-    return res.status(401).json({ message: "id not provided" });
-  }
-  if (req.user.userId !== id) {
-    throw new Error("your not authorized");
-  }
-  try {
-    const posts = await Post.find({ userId: id });
-    res.status(200).json({ message: "data fetched successfully", posts });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "something went wrong" });
-  }
-};
-
 export const updatePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.user;
