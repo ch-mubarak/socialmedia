@@ -47,6 +47,8 @@ const ProfileCard = ({ location }) => {
   const currentPosts = params.id ? userPosts : myPosts;
   const currentUser = params.id ? userDetails : user;
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+  const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
+
   return (
     <div className="profileCard">
       {currentUser._id === user._id && (
@@ -59,7 +61,7 @@ const ProfileCard = ({ location }) => {
           src={
             currentUser?.coverPicture
               ? `${serverPublic}/${currentUser.coverPicture}`
-              : `${serverPublic}/cover.jpg`
+              : `${serverStatic}/cover.jpg`
           }
           alt=""
         />
@@ -67,7 +69,7 @@ const ProfileCard = ({ location }) => {
           src={
             currentUser?.profilePicture
               ? `${serverPublic}/${currentUser.profilePicture}`
-              : `${serverPublic}/profile.jpg`
+              : `${serverStatic}/profile.jpg`
           }
           alt=""
           onClick={() => {

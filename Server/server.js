@@ -9,7 +9,7 @@ import AuthRoute from "./Routes/AuthRoute.js";
 import UserRoute from "./Routes/UserRouter.js";
 import PostRoute from "./Routes/PostRoute.js";
 import UploadRoute from "./Routes/UploadRoute.js";
-import {corsOptions} from "./config/cors.js"
+import { corsOptions } from "./config/cors.js";
 
 const app = express();
 app.use(cookieParser());
@@ -20,6 +20,7 @@ connectDB();
 
 app.use(express.static("public"));
 app.use("/images", express.static("images"));
+app.use("/static", express.static("static"));
 //Routes
 app.use("/auth", AuthRoute);
 app.use("/user", UserRoute);

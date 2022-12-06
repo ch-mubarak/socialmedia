@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 const FollowersCard = () => {
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+  const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
   const dispatch = useDispatch();
   const { followers } = useSelector((state) => state.followReducer);
   const { user } = useSelector((state) => state.authReducer.authData);
@@ -23,7 +24,7 @@ const FollowersCard = () => {
                 src={
                   follower?.profilePicture
                     ? `${serverPublic}/${follower.profilePicture}`
-                    : `${serverPublic}/profile.jpg`
+                    : `${serverStatic}/profile.jpg`
                 }
                 alt=""
                 className="followerImg"

@@ -44,6 +44,7 @@ const Posts = () => {
         })}
       {!loading &&
         location.pathname === "/profile" &&
+        myPosts &&
         myPosts.map((post) => {
           return <Post key={post._id} data={post} />;
         })}

@@ -19,6 +19,7 @@ const PostShare = () => {
   const dispatch = useDispatch();
   const imageRef = useRef();
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+  const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
@@ -58,7 +59,7 @@ const PostShare = () => {
             src={
               user.profilePicture
                 ? `${serverPublic}/${user.profilePicture}`
-                : `${serverPublic}/profile.jpg`
+                : `${serverStatic}/profile.jpg`
             }
             alt=""
           />
