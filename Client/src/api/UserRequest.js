@@ -10,4 +10,4 @@ const API = axios.create(config);
 
 export const getUserDetails = (id) => API.get(`/user/${id}`);
 export const updateProfile = (id, formData) => API.put(`/user/${id}`, formData);
-
+export const getAllUsers=()=>API.get("/user")

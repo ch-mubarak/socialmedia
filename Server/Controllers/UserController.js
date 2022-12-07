@@ -16,6 +16,18 @@ export const getUser = async (req, res) => {
   }
 };
 
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({ _id: { $ne: req.user.userId } }).select({
+      password: 0,
+      isAdmin: 0,
+    });
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json("something went wrong");
+  }
+};
+
 export const updateUser = async (req, res) => {
   const id = req.params.id;
   try {
@@ -108,12 +120,15 @@ export const followUser = async (req, res) => {
       await followingUser.updateOne({
         $push: { following: mongoose.Types.ObjectId(id) },
       });
-      res.status(201).json({ message: "User followed successfully" });
+      res
+        .status(201)
+        .json({ message: "User followed successfully", id: followUser.id });
     } else {
       res.status(403).json({ message: "User is already followed" });
     }
   } catch (error) {
-    res.status(500).json({ message: "something went wrong" });
+    console.log(error);
+    res.status(500).json({ message: "something went wrong", error });
   }
 };
 
@@ -136,7 +151,9 @@ export const unFollowUser = async (req, res) => {
       await followingUser.updateOne({
         $pull: { following: mongoose.Types.ObjectId(id) },
       });
-      res.status(201).json({ message: "User unFollowed successfully" });
+      res
+        .status(201)
+        .json({ message: "User unFollowed successfully", id: followUser.id });
     } else {
       res.status(403).json({ message: "user is not followed by you" });
     }

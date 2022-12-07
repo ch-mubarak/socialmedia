@@ -20,6 +20,9 @@ export const getUserPosts = (id) => async (dispatch) => {
     const response = await PostApi.getUserPosts(id);
     dispatch({ type: "FETCHING_USER_POSTS", payload: response.data.posts });
   } catch (error) {
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
+    }
     dispatch({ type: "FETCHING_FAIL" });
   }
 };

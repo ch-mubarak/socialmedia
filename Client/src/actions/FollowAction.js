@@ -1,15 +1,28 @@
 import * as FollowersApi from "../api/FollowRequest";
 
-export const getFollowers = (id) => async (dispatch) => {
-  dispatch({ type: "FOLLOWERS_PENDING" });
+export const followUser = (id) => async (dispatch) => {
+  dispatch({ type: "FOLLOW_PENDING" });
   try {
-    const response = await FollowersApi.getFollowers(id);
-    dispatch({ type: "FOLLOWERS_SUCCESS", payload: response.data.followers });
-  } catch (err) {
-    dispatch({ type: "FOLLOWERS_FAIL" });
-    if (err.response?.data?.expired) {
+    const response = await FollowersApi.followUser(id);
+    dispatch({ type: "FOLLOW_SUCCESS", payload: response.data.id });
+  } catch (error) {
+    if (error.response?.data?.expired) {
+      dispatch({ type: "LOGOUT" });
+    }
+    dispatch({ type: "FOLLOW_FAIL" });
+    console.log(error);
+  }
+};
+export const unFollowUser = (id) => async (dispatch) => {
+  dispatch({ type: "FOLLOW_PENDING" });
+  try {
+    const response = await FollowersApi.unFollowUser(id);
+    dispatch({ type: "UN_FOLLOW_SUCCESS", payload: response.data.id });
+  } catch (error) {
+    if (error.response?.data?.expired) {
       return dispatch({ type: "LOGOUT" });
     }
-    console.log(err);
+    dispatch({ type: "FOLLOW_FAIL" });
+    console.log(error);
   }
 };

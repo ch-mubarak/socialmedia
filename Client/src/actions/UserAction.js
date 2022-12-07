@@ -20,8 +20,8 @@ export const updateProfile = (id, formData) => async (dispatch) => {
     const { data } = await UserApi.updateProfile(id, formData);
     dispatch({ type: "UPDATE_SUCCESS", payload: data });
   } catch (error) {
-    if (error.response.data.expired) {
-      return dispatch({ type: "LOGOUT" });
+    if (error.response?.data?.expired) {
+      dispatch({ type: "LOGOUT" });
     }
     dispatch({ type: "UPDATE_FAIL" });
     console.log(error);
