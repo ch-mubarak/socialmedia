@@ -8,7 +8,7 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [passwordMatching, setPasswordMatching] = useState(true);
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.authReducer.loading);
+  const { loading, message } = useSelector((state) => state.authReducer);
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -19,6 +19,7 @@ const Auth = () => {
   });
 
   const handleChange = (e) => {
+    dispatch({type:"RESET"})
     const name = e.target.name;
     const value = e.target.value;
     setPasswordMatching(true);
@@ -43,6 +44,7 @@ const Auth = () => {
   };
 
   const resetForm = () => {
+    dispatch({type:'RESET'})
     setData({
       firstName: "",
       lastName: "",
@@ -63,91 +65,99 @@ const Auth = () => {
         </div>
       </div>
       <div className="a-right">
-        <form className="infoForm authForm" onSubmit={handleSubmit}>
-          <h3>{isSignUp ? "Sign up" : "Sign In"}</h3>
-          {isSignUp && (
-            <div>
-              <input
-                type="text"
-                placeholder="First Name"
-                className="infoInput"
-                name="firstName"
-                onChange={handleChange}
-                value={data.firstName}
-              />
-              <input
-                type="text"
-                placeholder="Last Name"
-                className="infoInput"
-                name="lastName"
-                onChange={handleChange}
-                value={data.lastName}
-              />
-            </div>
-          )}
-          {isSignUp && (
-            <div>
-              <input
-                type="email"
-                className="infoInput"
-                name="email"
-                placeholder="email"
-                onChange={handleChange}
-                value={data.email}
-              />
-            </div>
-          )}
-          <div>
-            <input
-              type="text"
-              className="infoInput"
-              name="username"
-              placeholder="username"
-              onChange={handleChange}
-              value={data.username}
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="password"
-              className="infoInput"
-              onChange={handleChange}
-              value={data.password}
-            />
+        <div className="">
+          <form className="infoForm authForm" onSubmit={handleSubmit}>
+            <h3>{isSignUp ? "Sign up" : "Sign In"}</h3>
             {isSignUp && (
+              <div>
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  className="infoInput"
+                  name="firstName"
+                  onChange={handleChange}
+                  value={data.firstName}
+                />
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  className="infoInput"
+                  name="lastName"
+                  onChange={handleChange}
+                  value={data.lastName}
+                />
+              </div>
+            )}
+            {isSignUp && (
+              <div>
+                <input
+                  type="email"
+                  className="infoInput"
+                  name="email"
+                  placeholder="email"
+                  onChange={handleChange}
+                  value={data.email}
+                />
+              </div>
+            )}
+            <div>
+              <input
+                type="text"
+                className="infoInput"
+                name="username"
+                placeholder="username"
+                onChange={handleChange}
+                value={data.username}
+              />
+            </div>
+            <div>
               <input
                 type="password"
-                name="confirmedPassword"
+                name="password"
+                placeholder="password"
                 className="infoInput"
-                placeholder="Confirm Password"
                 onChange={handleChange}
-                value={data.confirmedPassword}
+                value={data.password}
               />
+              {isSignUp && (
+                <input
+                  type="password"
+                  name="confirmedPassword"
+                  className="infoInput"
+                  placeholder="Confirm Password"
+                  onChange={handleChange}
+                  value={data.confirmedPassword}
+                />
+              )}
+            </div>
+            {!passwordMatching && (
+              <span className="validation">* Password not matching *</span>
             )}
-          </div>
-          {!passwordMatching && (
-            <span className="validation">* Password not matching *</span>
-          )}
-          <div>
-            <span
-              style={{ fontSize: "12px", cursor: "pointer" }}
-              onClick={() => {
-                setIsSignUp((pre) => !pre);
-                resetForm();
-              }}
-            >
-              {isSignUp
-                ? "Already have an account?. Sign in"
-                : "Don't have an account?. Sign up"}
-            </span>
+            <div>
+              <span
+                style={{ fontSize: "12px", cursor: "pointer" }}
+                onClick={() => {
+                  setIsSignUp((pre) => !pre);
+                  resetForm();
+                }}
+              >
+                {isSignUp
+                  ? "Already have an account?. Sign in"
+                  : "Don't have an account?. Sign up"}
+              </span>
 
-            <button disabled={loading} className="button info-button">
-              {loading ? "Loading..." : isSignUp ? "Sign up" : "Login"}
-            </button>
+              <button disabled={loading} className="button info-button">
+                {loading ? "Loading..." : isSignUp ? "Sign up" : "Login"}
+              </button>
+            </div>
+          </form>
+        </div>
+        {message && (
+          <div className="alert-box">
+            <p className="alert">{message}</p>
+            <span onClick={()=>dispatch({type:"RESET"})}>x</span>
           </div>
-        </form>
+        )}
       </div>
     </div>
   );

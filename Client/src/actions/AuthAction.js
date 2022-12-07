@@ -6,7 +6,7 @@ export const logIn = (formData) => async (dispatch) => {
     const { data } = await AuthApi.logIn(formData);
     dispatch({ type: "AUTH_SUCCESS", payload: data });
   } catch (error) {
-    dispatch({ type: "AUTH_FAIL" });
+    dispatch({ type: "AUTH_FAIL", payload: error.response.data });
     console.log(error);
   }
 };
@@ -17,7 +17,7 @@ export const signUp = (formData) => async (dispatch) => {
     const { data } = await AuthApi.signUp(formData);
     dispatch({ type: "AUTH_SUCCESS", payload: data });
   } catch (error) {
-    dispatch({ type: "AUTH_FAIL" });
+    dispatch({ type: "AUTH_FAIL", payload: error.response.data });
     console.log(error);
   }
 };

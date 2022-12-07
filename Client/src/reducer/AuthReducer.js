@@ -2,12 +2,13 @@ const initialState = {
   authData: null,
   loading: false,
   error: false,
+  message: null,
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case "AUTH_START":
-      return { ...state, loading: true, error: false };
+      return { ...state, loading: true, error: false, message: null };
 
     case "AUTH_SUCCESS":
       localStorage.setItem("token", JSON.stringify(action?.payload.token));
@@ -16,9 +17,23 @@ const authReducer = (state = initialState, action) => {
         authData: action.payload,
         loading: false,
         error: false,
+        message: null,
       };
     case "AUTH_FAIL":
-      return { ...state, loading: false, error: true };
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        message: action.payload.message,
+      };
+
+    case "RESET":
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        message: null,
+      };
 
     case "UPDATE_PENDING":
       return {
