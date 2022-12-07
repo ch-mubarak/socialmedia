@@ -4,6 +4,7 @@ import Home from "./pages/home/Home";
 import Auth from "./pages/Auth/Auth";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Error } from "./pages/404/Error";
 function App() {
   const user = useSelector((state) => state.authReducer.authData);
   return (
@@ -31,6 +32,8 @@ function App() {
           path="/login"
           element={!user ? <Auth /> : <Navigate to="/home" />}
         />
+        <Route path="/error" element={<Error />} />
+        <Route path="/*" element={<Navigate to="/error" />} />
       </Routes>
     </div>
   );
