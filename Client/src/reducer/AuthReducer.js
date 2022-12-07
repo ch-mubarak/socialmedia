@@ -10,7 +10,7 @@ const authReducer = (state = initialState, action) => {
       return { ...state, loading: true, error: false };
 
     case "AUTH_SUCCESS":
-      localStorage.setItem("profile", JSON.stringify({ ...action?.payload }));
+      localStorage.setItem("token", JSON.stringify(action?.payload.token));
       return {
         ...state,
         authData: action.payload,

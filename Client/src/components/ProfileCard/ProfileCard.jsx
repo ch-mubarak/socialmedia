@@ -2,15 +2,15 @@ import React, { useEffect, useRef } from "react";
 import "./ProfileCard.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { getUserDetails } from "../../actions/UserAction";
+import { getUserDetails, updateProfile } from "../../actions/UserAction";
 import { UilPen } from "@iconscout/react-unicons";
 import { uploadImage } from "../../actions/UploadAction";
-import { updateProfile } from "../../actions/AuthAction";
+
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
   const { userPosts } = useSelector((state) => state.postReducer);
-  const userDetails = useSelector((state) => state.userReducer.details);
+  const {userDetails} = useSelector((state) => state.userReducer);
   const params = useParams();
   const dispatch = useDispatch();
   const coverRef = useRef();
@@ -52,7 +52,7 @@ const ProfileCard = ({ location }) => {
 
   return (
     <div className="profileCard">
-      {params.id === user._id && (
+      {(params.id === user._id || location === "home") && (
         <div className="editPen" onClick={() => coverRef.current.click()}>
           <UilPen />
         </div>
@@ -102,10 +102,10 @@ const ProfileCard = ({ location }) => {
       </div>
       <div className="profileName">
         <span>
-          {isUser ? user.firstName : userDetails.firstName}{" "}
-          {isUser ? user.lastName : userDetails.lastName}
+          {isUser ? user.firstName : userDetails?.firstName}{" "}
+          {isUser ? user.lastName : userDetails?.lastName}
         </span>
-        <span>{isUser ? user.about : userDetails.about}</span>
+        <span>{isUser ? user.about : userDetails?.about}</span>
       </div>
       <div className="followStatus">
         <hr />

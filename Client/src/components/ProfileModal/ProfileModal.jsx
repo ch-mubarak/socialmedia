@@ -1,7 +1,7 @@
 import { Modal, useMantineTheme } from "@mantine/core";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProfile } from "../../actions/AuthAction";
+import { updateProfile } from "../../actions/UserAction";
 
 const ProfileModal = ({ opened, onClose, handleClose }) => {
   const theme = useMantineTheme();

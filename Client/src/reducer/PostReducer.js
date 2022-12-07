@@ -17,7 +17,7 @@ const postReducer = (state = initialState, action) => {
     case "POST_SUCCESS":
       return {
         ...state,
-        timeline: [action.payload, ...state.posts],
+        timeline: [action.payload, ...state.timeline],
         uploading: false,
         error: false,
       };

@@ -11,7 +11,7 @@ const InfoCard = () => {
   const dispatch = useDispatch();
   const [modalOpened, setModalOpened] = useState(false);
   const { user } = useSelector((state) => state.authReducer.authData);
-  const { userDetail } = useSelector((state) => state.userReducer);
+  const { userDetails } = useSelector((state) => state.userReducer);
   let isUser = false;
   const params = useParams();
   if (params.id === user._id) {
@@ -50,19 +50,19 @@ const InfoCard = () => {
         <span>
           <b>Status: </b>
         </span>
-        <span>{isUser ? user?.relationship : userDetail?.relationship}</span>
+        <span>{isUser ? user?.relationship : userDetails?.relationship}</span>
       </div>
       <div className="info">
         <span>
           <b>Lives in: </b>
         </span>
-        <span>{isUser ? user?.livesIn : userDetail?.livesIn}</span>
+        <span>{isUser ? user?.livesIn : userDetails?.livesIn}</span>
       </div>
       <div className="info">
         <span>
           <b>Works at: </b>
         </span>
-        <span>{isUser ? user?.worksAt : userDetail?.worksAt}</span>
+        <span>{isUser ? user?.worksAt : userDetails?.worksAt}</span>
       </div>
       {isUser && (
         <button onClick={handleLogout} className="button lg-button">

@@ -22,20 +22,6 @@ export const signUp = (formData) => async (dispatch) => {
   }
 };
 
-export const updateProfile = (id, formData) => async (dispatch) => {
-  dispatch({ type: "UPDATE_PENDING" });
-  try {
-    const { data } = await AuthApi.updateProfile(id, formData);
-    dispatch({ type: "UPDATE_SUCCESS", payload: data });
-  } catch (error) {
-    if (error.response.data.expired) {
-      return dispatch({ type: "LOGOUT" });
-    }
-    dispatch({ type: "UPDATE_FAIL" });
-    console.log(error);
-  }
-};
-
 export const logout = () => async (dispatch) => {
   dispatch({ type: "LOGOUT" });
 };
