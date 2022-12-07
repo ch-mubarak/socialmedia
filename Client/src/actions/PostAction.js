@@ -5,9 +5,12 @@ export const createPost = (data) => async (dispatch) => {
   try {
     const response = await PostApi.createPost(data);
     dispatch({ type: "POST_SUCCESS", payload: response.data.newPost });
-  } catch (error) {
+  } catch (err) {
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
+    }
     dispatch({ type: "POST_FAIL" });
-    console.log(error);
+    console.log(err);
   }
 };
 
@@ -27,6 +30,9 @@ export const getTimeLine = (id) => async (dispatch) => {
     const response = await PostApi.getTimeLine(id);
     dispatch({ type: "FETCHING_SUCCESS", payload: response.data.posts });
   } catch (err) {
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
+    }
     dispatch({ type: "FETCHING_FAIL" });
     console.log(err);
   }
@@ -37,8 +43,11 @@ export const likePost = (id) => async (dispatch) => {
   try {
     await PostApi.likePost(id);
     dispatch({ type: "LIKE_SUCCESS" });
-  } catch (error) {
+  } catch (err) {
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
+    }
     dispatch({ type: "LIKE_FAILED" });
-    console.log(error);
+    console.log(err);
   }
 };

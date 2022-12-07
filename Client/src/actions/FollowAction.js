@@ -5,8 +5,11 @@ export const getFollowers = (id) => async (dispatch) => {
   try {
     const response = await FollowersApi.getFollowers(id);
     dispatch({ type: "FOLLOWERS_SUCCESS", payload: response.data.followers });
-  } catch (error) {
+  } catch (err) {
     dispatch({ type: "FOLLOWERS_FAIL" });
-    console.log(error);
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
+    }
+    console.log(err);
   }
 };

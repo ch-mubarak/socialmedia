@@ -3,10 +3,12 @@ import "./InfoCard.css";
 import { UilPen } from "@iconscout/react-unicons";
 import ProfileModal from "../ProfileModal/ProfileModal";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { logout } from "../../actions/AuthAction";
 
 const InfoCard = () => {
+  const dispatch = useDispatch();
   const [modalOpened, setModalOpened] = useState(false);
   const { user } = useSelector((state) => state.authReducer.authData);
   const { userDetail } = useSelector((state) => state.userReducer);
@@ -19,6 +21,10 @@ const InfoCard = () => {
 
   const handleClose = () => {
     setModalOpened(false);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -58,7 +64,11 @@ const InfoCard = () => {
         </span>
         <span>{isUser ? user?.worksAt : userDetail?.worksAt}</span>
       </div>
-      {isUser && <button className="button lg-button">Logout</button>}
+      {isUser && (
+        <button onClick={handleLogout} className="button lg-button">
+          Logout
+        </button>
+      )}
     </div>
   );
 };

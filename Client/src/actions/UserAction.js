@@ -6,8 +6,11 @@ export const getUserDetails = (id) => async (dispatch) => {
   try {
     const response = await UserApi.getUserDetails(id);
     dispatch({ type: "USER_DATA_SUCCESS", payload: response.data });
-  } catch (error) {
+  } catch (err) {
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
+    }
     dispatch({ type: "USER_DATA_FAIL" });
-    console.log(error);
+    console.log(err);
   }
 };
