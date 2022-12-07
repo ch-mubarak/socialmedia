@@ -3,9 +3,14 @@ import Post from "../Models/postModal.js";
 import User from "../Models/userModal.js";
 
 export const createNewPost = async (req, res) => {
+  req.body.userId = req.user.userId;
   const newPost = new Post(req.body);
   try {
     await newPost.save();
+    await Post.populate(newPost, {
+      path: "userId",
+      select: { firstName: 1, lastName: 1, profilePicture: 1 },
+    });
     res.status(201).json({ message: "new post created", newPost });
   } catch (error) {
     res.status(500).json({ message: "something went wrong" });

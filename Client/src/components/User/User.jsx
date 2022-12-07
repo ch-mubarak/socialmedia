@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { followUser, unFollowUser } from "../../actions/FollowAction";
+import { followUser, unFollowUser } from "../../api/FollowRequest";
 
 const User = ({ user }) => {
   const dispatch = useDispatch();
@@ -10,11 +10,21 @@ const User = ({ user }) => {
   const myFollowings = useSelector(
     (state) => state.authReducer.authData.user.following
   );
-  const handleFollow = (id) => {
-    dispatch(followUser(id));
+  const handleFollow = async (id) => {
+    try {
+      const response = await followUser(id);
+      dispatch({ type: "FOLLOW_SUCCESS", payload: response.data.id });
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const handleUnFollow = (id) => {
-    dispatch(unFollowUser(id));
+  const handleUnFollow = async (id) => {
+    try {
+      const response = await unFollowUser(id);
+      dispatch({ type: "UN_FOLLOW_SUCCESS", payload: response.data.id });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="followers">

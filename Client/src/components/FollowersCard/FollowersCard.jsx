@@ -2,12 +2,11 @@ import "./FollowersCard.css";
 import React, { useEffect } from "react";
 import User from "../User/User";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { getAllUsers } from "../../api/UserRequest";
 
 const FollowersCard = () => {
+  console.log("follower card")
   const [users, setUsers] = useState([]);
-  const { user } = useSelector((state) => state.authReducer.authData);
   useEffect(() => {
     const fetchUsers = async () => {
       const { data } = await getAllUsers();

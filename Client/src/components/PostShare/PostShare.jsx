@@ -33,7 +33,6 @@ const PostShare = () => {
   const handlePostSubmit = (event) => {
     event.preventDefault();
     const newPost = {
-      userId: user._id,
       description: postDescription,
     };
     if (image) {
