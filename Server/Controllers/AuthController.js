@@ -73,7 +73,7 @@ export const loginUser = async (req, res) => {
         isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "3000" }
     );
 
     //cookie section

@@ -15,6 +15,7 @@ const postReducer = (state = initialState, action) => {
         error: false,
       };
     case "POST_SUCCESS":
+      console.log(action.payload)
       return {
         ...state,
         timeline: [action.payload, ...state.timeline],

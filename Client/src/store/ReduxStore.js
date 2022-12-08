@@ -5,7 +5,7 @@ import {
 } from "redux";
 
 import thunk from "redux-thunk";
-import { reducers } from "../reducer";
+import rootReducer from "../reducer";
 
 function saveToLocalStorage(store) {
   try {
@@ -32,10 +32,10 @@ function loadFromLocalStorage() {
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 //initial state
-const persistedState = loadFromLocalStorage(); 
+const persistedState = loadFromLocalStorage();
 
 const store = createStore(
-  reducers,
+  rootReducer,
   persistedState,
   composeEnhancer(applyMiddleware(thunk))
 );
