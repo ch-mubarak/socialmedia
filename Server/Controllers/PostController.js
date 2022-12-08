@@ -103,6 +103,8 @@ export const likePost = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
   const userId = req.params.id;
+  const LIMIT = 2;
+  const skip = Number(req?.query?.skip) || 0;
   if (!userId) {
     return res.status(401).json({ message: "please provide userId" });
   }
@@ -112,6 +114,8 @@ export const getUserPosts = async (req, res) => {
         path: "userId",
         select: { username: 1, firstName: 1, lastName: 1, profilePicture: 1 },
       })
+      .skip(skip)
+      .limit(LIMIT)
       .sort({ createdAt: -1 });
     res.status(200).json({ message: "Posts fetched successfully", posts });
   } catch (error) {
@@ -121,6 +125,8 @@ export const getUserPosts = async (req, res) => {
 
 export const getTimelinePost = async (req, res) => {
   const userId = req.params.id;
+  const LIMIT = 2;
+  const skip = Number(req.query.skip) || 0;
   try {
     const timelinePosts = await User.aggregate([
       {
@@ -167,6 +173,7 @@ export const getTimelinePost = async (req, res) => {
       });
     res.status(200).json({ posts: sortedPosts });
   } catch (error) {
-    res.status(500).json({ message: "something went wrong", error });
+    console.log(error);
+    res.status(500).json({ message: "something went wrong" });
   }
 };

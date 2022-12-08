@@ -1,70 +1,68 @@
 import "./Posts.css";
-import React, { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getTimeLine, getUserPosts } from "../../actions/PostAction";
-import { Post } from "../Post/Post";
+import React, { useEffect, useRef, useCallback } from "react";
+import Post from "../Post/Post";
 import FadeLoader from "react-spinners/FadeLoader";
 import { useLocation, useParams } from "react-router-dom";
-import { useCallback } from "react";
+import useFetchPosts from "../../hooks/useFetchPosts";
 import { useState } from "react";
-
+import AllCaughtUp from "../AllCaughtUp/AllCaughtUp";
+import { useSelector } from "react-redux";
+const override = {
+  display: "block",
+  margin: "0 auto",
+};
 const Posts = () => {
   console.log("posts");
-
+  const [skip, setSkip] = useState(0);
+  const [isTimeline, setIsTimeline] = useState(true);
   const location = useLocation();
   const params = useParams();
-  const dispatch = useDispatch();
-  const [hasNextPage, setHasNextPage] = useState(true);
-  const { user } = useSelector((state) => state.authReducer.authData);
-  const { timeline, userPosts, loading } = useSelector(
-    (state) => state.postReducer
+  const { posts } = useSelector((state) => state.postReducer);
+  const { loading, hasMore } = useFetchPosts(params.id, isTimeline, skip);
+  const observer = useRef();
+  const lastPostRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setSkip((pre) => pre + 2);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
   );
 
-  const intObserver = useRef();
-  const lastPostRef = useCallback((post) => {
-    if (loading) return;
-
-    if (intObserver.current) intObserver.current.disconnect();
-
-    intObserver.current = new IntersectionObserver((posts) => {
-      if (posts[0].isIntersecting && hasNextPage) {
-        console.log("we are near last post");
-      }
-    });
-  });
-  const override = {
-    display: "block",
-    margin: "0 auto",
-  };
   useEffect(() => {
+    setSkip(0);
     if (location.pathname === "/home") {
-      const id = user._id;
-      dispatch(getTimeLine(id));
+      setIsTimeline(true);
     } else {
-      const id = params?.id;
-      dispatch(getUserPosts(id));
+      setIsTimeline(false);
     }
-  }, [dispatch, location, user._id, params.id]);
+  }, [location]);
+
+  // useEffect(() => {
+  //   if (location.pathname === "/home") {
+  //     const id = user._id;
+  //     dispatch(getTimeLine(id));
+  //   } else {
+  //     const id = params?.id;
+  //     dispatch(getUserPosts(id));
+  //   }
+  // }, [dispatch, location, user._id, params.id]);
 
   return (
     <div className="posts">
-      {!loading &&
-        location.pathname === "/home" &&
-        // timeline &&
-        timeline.map((post) => {
-          return <Post key={post._id} data={post} />;
-        })}
-      {!loading &&
-        params.id &&
-        userPosts &&
-        userPosts.map((post, index) => {
-          if (userPosts.length === index + 1) {
-            return <Post key={post._id} ref={lastPostRef} data={post} />;
-          }
-          return <Post key={post._id} data={post} />;
-        })}
-
+      {posts?.map((post, index) => {
+        if (posts.length === index + 1) {
+          return <Post ref={lastPostRef} key={post._id} data={post} />;
+        }
+        return <Post key={post._id} data={post} />;
+      })}
       <FadeLoader color="orange" cssOverride={override} loading={loading} />
+      {!loading && !hasMore && <AllCaughtUp />}
     </div>
   );
 };

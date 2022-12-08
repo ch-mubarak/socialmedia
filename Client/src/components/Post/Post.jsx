@@ -7,9 +7,9 @@ import Comment from "../../img/comment.png";
 import { useDispatch, useSelector } from "react-redux";
 import { likePost } from "../../actions/PostAction";
 import { Link } from "react-router-dom";
-export const Post = ({ data }) => {
+const Post = React.forwardRef(({ data }, ref) => {
   const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
-  const serverPublic =process.env.REACT_APP_PUBLIC_FOLDER
+  const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authReducer.authData);
   const [liked, setLiked] = useState(data.likes.includes(user._id));
@@ -26,7 +26,7 @@ export const Post = ({ data }) => {
     });
   };
   return (
-    <div className="post">
+    <div ref={ref} className="post">
       <div className="postAuthor">
         <img
           src={
@@ -66,4 +66,6 @@ export const Post = ({ data }) => {
       </div>
     </div>
   );
-};
+});
+
+export default Post;

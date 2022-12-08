@@ -15,7 +15,7 @@ const authenticate = (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    if (error.message === "jwt expired") {
+    if (error.expiredAt) {
       return res.status(401).json({ message: "token expired", expired: true });
     }
     console.log(error.message);

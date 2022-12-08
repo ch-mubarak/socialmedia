@@ -1,17 +1,21 @@
 import User from "../Models/userModal.js";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import Post from "../Models/postModal.js";
 
 export const getUser = async (req, res) => {
   const id = req.params.id;
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id).lean();
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    const totalPosts = await Post.find({ userId: user._id }).countDocuments();
+    user.totalPosts = totalPosts;
     user.password = undefined;
     res.status(200).json(user);
   } catch (err) {
+    console.log(err);
     res.status(500).json("something went wrong");
   }
 };

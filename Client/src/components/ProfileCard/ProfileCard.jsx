@@ -9,7 +9,6 @@ import { uploadImage } from "../../actions/UploadAction";
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
-  const { userPosts } = useSelector((state) => state.postReducer);
   const {userDetails} = useSelector((state) => state.userReducer);
   const params = useParams();
   const dispatch = useDispatch();
@@ -132,7 +131,7 @@ const ProfileCard = ({ location }) => {
             <>
               <div className="vl"></div>
               <div className="follow">
-                <span>{userPosts?.length}</span>
+                <span>{userDetails?.totalPosts||0}</span>
                 <span>Posts</span>
               </div>
             </>
