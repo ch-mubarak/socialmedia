@@ -4,15 +4,22 @@ import User from "../Models/userModal.js";
 
 export const createNewPost = async (req, res) => {
   req.body.userId = req.user.userId;
-  const newPost = new Post(req.body);
   try {
-    await newPost.save();
-    await Post.populate(newPost, {
-      path: "userId",
-      select: { firstName: 1, lastName: 1, profilePicture: 1 },
-    });
+    const post = new Post(req.body);
+    await post.save();
+    const user = await User.findById(req.body.userId)
+      .select({
+        username: 1,
+        firstName: 1,
+        lastName: 1,
+        profilePicture: 1,
+      })
+      .lean();
+
+    const newPost = { post: post, user: user };
     res.status(201).json({ message: "new post created", newPost });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "something went wrong" });
   }
 };
@@ -54,8 +61,8 @@ export const updatePost = async (req, res) => {
 export const deletePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.user;
-  if (!(id && userId)) {
-    res.status(401).json({ message: "all filed are required" });
+  if (!id) {
+    res.status(401).json({ message: "Plead provide post Id" });
   }
   try {
     const post = await Post.findById(id);
@@ -64,10 +71,14 @@ export const deletePost = async (req, res) => {
     }
 
     if (post.userId.toString() !== userId) {
-      return res.status(403).json({ message: "your not authorized" });
+      return res.status(403).json({
+        message: "your not authorized, you cant delete someone else post.",
+      });
     }
     await post.deleteOne();
-    res.status(201).json({ message: "post deleted successfully" });
+    res
+      .status(201)
+      .json({ message: "post deleted successfully", id: post._id });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
@@ -120,24 +131,24 @@ export const getUserPosts = async (req, res) => {
           from: "posts",
           localField: "_id",
           foreignField: "userId",
-          as: "posts",
+          as: "post",
         },
       },
       {
         $project: {
           _id: 0,
-          posts: 1,
+          post: 1,
         },
       },
       {
         $unwind: {
-          path: "$posts",
+          path: "$post",
         },
       },
       {
         $lookup: {
           from: "users",
-          localField: "posts.userId",
+          localField: "post.userId",
           foreignField: "_id",
           as: "user",
         },
@@ -149,7 +160,7 @@ export const getUserPosts = async (req, res) => {
       },
       {
         $project: {
-          posts: 1,
+          post: 1,
           "user._id": 1,
           "user.username": 1,
           "user.firstName": 1,
@@ -159,7 +170,7 @@ export const getUserPosts = async (req, res) => {
       },
       {
         $sort: {
-          "posts.createdAt": -1,
+          "post.createdAt": -1,
         },
       },
       {
@@ -172,7 +183,7 @@ export const getUserPosts = async (req, res) => {
 
     res.status(200).json({ message: "Posts fetched successfully", posts });
   } catch (error) {
-    console.log (error)
+    console.log(error);
     res.status(500).json({ message: "something went wrong" });
   }
 };
@@ -207,20 +218,20 @@ export const getTimelinePost = async (req, res) => {
       {
         $project: {
           _id: 0,
-          posts: {
+          post: {
             $concatArrays: ["$userPosts", "$myPosts"],
           },
         },
       },
       {
         $unwind: {
-          path: "$posts",
+          path: "$post",
         },
       },
       {
         $lookup: {
           from: "users",
-          localField: "posts.userId",
+          localField: "post.userId",
           foreignField: "_id",
           as: "user",
         },
@@ -232,7 +243,7 @@ export const getTimelinePost = async (req, res) => {
       },
       {
         $project: {
-          posts: 1,
+          post: 1,
           "user._id": 1,
           "user.username": 1,
           "user.firstName": 1,
@@ -242,7 +253,7 @@ export const getTimelinePost = async (req, res) => {
       },
       {
         $sort: {
-          "posts.createdAt": -1,
+          "post.createdAt": -1,
         },
       },
       {

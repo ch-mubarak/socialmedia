@@ -14,6 +14,20 @@ export const createPost = (data) => async (dispatch) => {
   }
 };
 
+export const deletePost = (id) => async (dispatch) => {
+  dispatch({ type: "POST_PENDING" });
+  try {
+    console.log("deleting in action")
+    const response = await PostApi.deletePost(id);
+    dispatch({ type: "POST_DELETE_SUCCESS", payload: response.data.id });
+  } catch (err) {
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
+    }
+    dispatch({ type: "POST_FAIL" });
+    console.log(err);
+  }
+};
 export const likePost = (id) => async (dispatch) => {
   dispatch({ type: "LIKE_PENDING" });
   try {
@@ -23,7 +37,7 @@ export const likePost = (id) => async (dispatch) => {
     if (err.response?.data?.expired) {
       return dispatch({ type: "LOGOUT" });
     }
-    dispatch({ type: "LIKE_FAILED" });
+    dispatch({ type: "LIKE_FAIL" });
     console.log(err);
   }
 };

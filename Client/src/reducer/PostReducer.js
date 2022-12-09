@@ -14,7 +14,6 @@ const postReducer = (state = initialState, action) => {
         error: false,
       };
     case "POST_SUCCESS":
-      console.log(action.payload);
       return {
         ...state,
         posts: [action.payload, ...state.posts],
@@ -28,6 +27,15 @@ const postReducer = (state = initialState, action) => {
         error: true,
       };
 
+    case "POST_DELETE_SUCCESS":
+      return {
+        ...state,
+        posts: [
+          ...state.posts.filter((post) => post.post._id !== action.payload),
+        ],
+        uploading: false,
+        error: false,
+      };
     case "RESET_POSTS":
       return initialState;
 

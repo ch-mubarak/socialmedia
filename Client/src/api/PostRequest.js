@@ -9,4 +9,5 @@ const config = {
 const API = axios.create(config);
 
 export const createPost = (data) => API.post("/post", data);
+export const deletePost = (id) => API.delete(`/post/${id}`);
 export const likePost = (id) => API.put(`/post/${id}/like`);
