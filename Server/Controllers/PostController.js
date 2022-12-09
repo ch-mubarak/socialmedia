@@ -103,41 +103,97 @@ export const likePost = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
   const userId = req.params.id;
-  const LIMIT = 2;
+  const LIMIT = 3;
   const skip = Number(req?.query?.skip) || 0;
   if (!userId) {
     return res.status(401).json({ message: "please provide userId" });
   }
   try {
-    const posts = await Post.find({ userId })
-      .populate({
-        path: "userId",
-        select: { username: 1, firstName: 1, lastName: 1, profilePicture: 1 },
-      })
-      .skip(skip)
-      .limit(LIMIT)
-      .sort({ createdAt: -1 });
+    const posts = await User.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $lookup: {
+          from: "posts",
+          localField: "_id",
+          foreignField: "userId",
+          as: "posts",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          posts: 1,
+        },
+      },
+      {
+        $unwind: {
+          path: "$posts",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "posts.userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: {
+          path: "$user",
+        },
+      },
+      {
+        $project: {
+          posts: 1,
+          "user._id": 1,
+          "user.username": 1,
+          "user.firstName": 1,
+          "user.lastName": 1,
+          "user.profilePicture": 1,
+        },
+      },
+      {
+        $sort: {
+          "posts.createdAt": -1,
+        },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: LIMIT,
+      },
+    ]);
+
     res.status(200).json({ message: "Posts fetched successfully", posts });
   } catch (error) {
+    console.log (error)
     res.status(500).json({ message: "something went wrong" });
   }
 };
 
 export const getTimelinePost = async (req, res) => {
   const userId = req.params.id;
-  const LIMIT = 2;
+  const LIMIT = 3;
   const skip = Number(req.query.skip) || 0;
   try {
     const timelinePosts = await User.aggregate([
       {
-        $match: { _id: mongoose.Types.ObjectId(userId) },
+        $match: {
+          _id: mongoose.Types.ObjectId(userId),
+        },
       },
       {
         $lookup: {
           from: "posts",
           localField: "following",
           foreignField: "userId",
-          as: "followingPosts",
+          as: "userPosts",
         },
       },
       {
@@ -150,28 +206,54 @@ export const getTimelinePost = async (req, res) => {
       },
       {
         $project: {
-          followingPosts: 1,
-          myPosts: 1,
           _id: 0,
+          posts: {
+            $concatArrays: ["$userPosts", "$myPosts"],
+          },
         },
+      },
+      {
+        $unwind: {
+          path: "$posts",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "posts.userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: {
+          path: "$user",
+        },
+      },
+      {
+        $project: {
+          posts: 1,
+          "user._id": 1,
+          "user.username": 1,
+          "user.firstName": 1,
+          "user.lastName": 1,
+          "user.profilePicture": 1,
+        },
+      },
+      {
+        $sort: {
+          "posts.createdAt": -1,
+        },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: LIMIT,
       },
     ]);
 
-    //populating results to get author name
-    await User.populate(
-      [timelinePosts[0].followingPosts, timelinePosts[0].myPosts],
-      {
-        path: "userId",
-        select: { username: 1, firstName: 1, lastName: 1, profilePicture: 1 },
-      }
-    );
-
-    const sortedPosts = timelinePosts[0].followingPosts
-      .concat(timelinePosts[0].myPosts)
-      .sort((a, b) => {
-        return b.createdAt - a.createdAt;
-      });
-    res.status(200).json({ posts: sortedPosts });
+    res.status(200).json({ posts: timelinePosts });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "something went wrong" });

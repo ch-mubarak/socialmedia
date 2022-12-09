@@ -12,8 +12,8 @@ const Post = React.forwardRef(({ data }, ref) => {
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authReducer.authData);
-  const [liked, setLiked] = useState(data.likes.includes(user._id));
-  const [likeCount, setLikeCount] = useState(data.likes.length);
+  const [liked, setLiked] = useState(data.posts.likes.includes(user._id));
+  const [likeCount, setLikeCount] = useState(data.posts.likes.length);
   const handlePostLike = (id) => {
     dispatch(likePost(id));
     setLiked((preValue) => !preValue);
@@ -30,28 +30,28 @@ const Post = React.forwardRef(({ data }, ref) => {
       <div className="postAuthor">
         <img
           src={
-            data.userId?.profilePicture
-              ? `${serverPublic}/${data.userId.profilePicture}`
+            data.user?.profilePicture
+              ? `${serverPublic}/${data.user.profilePicture}`
               : `${serverStatic}/profile.jpg`
           }
           alt=""
         />
         <span>
-          <Link to={`/profile/${data.userId._id}`}>
-            {data.userId?.firstName} {data.userId?.lastName}
+          <Link to={`/profile/${data.user._id}`}>
+            {data.user?.firstName} {data.user?.lastName}
           </Link>
         </span>
       </div>
       <img src="" alt="" />
-      {data.image && (
+      {data.posts.image && (
         <img
-          src={`${process.env.REACT_APP_PUBLIC_FOLDER}/${data.image}`}
+          src={`${process.env.REACT_APP_PUBLIC_FOLDER}/${data.posts.image}`}
           alt=""
         />
       )}
       <div className="postReact">
         <img
-          onClick={() => handlePostLike(data._id)}
+          onClick={() => handlePostLike(data.posts._id)}
           src={liked ? Like : NotLike}
           alt=""
         />
@@ -62,7 +62,7 @@ const Post = React.forwardRef(({ data }, ref) => {
         {likeCount} Likes
       </span>
       <div className="detail">
-        <span> {data.description}</span>
+        <span> {data.posts.description}</span>
       </div>
     </div>
   );
