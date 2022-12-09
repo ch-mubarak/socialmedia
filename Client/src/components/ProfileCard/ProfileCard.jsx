@@ -6,10 +6,9 @@ import { getUserDetails, updateProfile } from "../../actions/UserAction";
 import { UilPen } from "@iconscout/react-unicons";
 import { uploadImage } from "../../actions/UploadAction";
 
-
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
-  const {userDetails} = useSelector((state) => state.userReducer);
+  const { userDetails } = useSelector((state) => state.userReducer);
   const params = useParams();
   const dispatch = useDispatch();
   const coverRef = useRef();
@@ -131,7 +130,8 @@ const ProfileCard = ({ location }) => {
             <>
               <div className="vl"></div>
               <div className="follow">
-                <span>{userDetails?.totalPosts||0}</span>
+                {isUser && <span>{user?.totalPosts || 0}</span>}
+                {!isUser && <span>{userDetails?.totalPosts || 0}</span>}
                 <span>Posts</span>
               </div>
             </>

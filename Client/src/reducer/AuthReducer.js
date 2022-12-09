@@ -57,6 +57,18 @@ const authReducer = (state = initialState, action) => {
         error: true,
       };
 
+    case "UPDATE_POST_COUNT":
+      return {
+        ...state,
+        authData: {
+          ...state.authData,
+          user: {
+            ...state.authData.user,
+            totalPosts: state.authData.user.totalPosts + action.payload,
+          },
+        },
+      };
+
     case "FOLLOW_SUCCESS":
       return {
         ...state,

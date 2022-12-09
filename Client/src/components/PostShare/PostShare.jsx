@@ -10,6 +10,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { uploadImage } from "../../actions/UploadAction";
 import { createPost } from "../../actions/PostAction";
+const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
 const PostShare = () => {
   const [image, setImage] = useState(null);
@@ -18,8 +20,6 @@ const PostShare = () => {
   const uploading = useSelector((state) => state.postReducer.uploading);
   const dispatch = useDispatch();
   const imageRef = useRef();
-  const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
-  const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];

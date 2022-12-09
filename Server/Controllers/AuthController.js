@@ -1,6 +1,7 @@
 import User from "../Models/userModal.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import Post from "../Models/postModal.js";
 
 export const registerUser = async (req, res) => {
   const { email, username, password, firstName, lastName } = req.body;
@@ -56,7 +57,7 @@ export const loginUser = async (req, res) => {
     return res.status(401).json({ message: "all filed are required" });
   }
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).lean();
     if (!user) {
       return res.status(400).json({ message: "Invalid credential" });
     }
@@ -64,12 +65,12 @@ export const loginUser = async (req, res) => {
     if (!isValid) {
       return res.status(400).json({ message: "Invalid credential" });
     }
-    user.password = undefined;
+    const totalPosts = await Post.find({ userId: user._id }).countDocuments();
     const token = jwt.sign(
       {
         username: user.username,
         email: user.email,
-        userId: user.id,
+        userId: user._id,
         isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET,
@@ -82,8 +83,11 @@ export const loginUser = async (req, res) => {
       httpOnly: true,
       secure: false,
     };
+    user.totalPosts = totalPosts;
+    user.password = undefined;
     res.status(200).cookie("token", token, options).json({ user, token });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };

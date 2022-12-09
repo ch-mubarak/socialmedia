@@ -5,6 +5,7 @@ export const createPost = (data) => async (dispatch) => {
   try {
     const response = await PostApi.createPost(data);
     dispatch({ type: "POST_SUCCESS", payload: response.data.newPost });
+    dispatch({ type: "UPDATE_POST_COUNT", payload: 1 });
   } catch (err) {
     if (err.response?.data?.expired) {
       return dispatch({ type: "LOGOUT" });
@@ -17,9 +18,9 @@ export const createPost = (data) => async (dispatch) => {
 export const deletePost = (id) => async (dispatch) => {
   dispatch({ type: "POST_PENDING" });
   try {
-    console.log("deleting in action")
     const response = await PostApi.deletePost(id);
     dispatch({ type: "POST_DELETE_SUCCESS", payload: response.data.id });
+    dispatch({ type: "UPDATE_POST_COUNT", payload: -1 });
   } catch (err) {
     if (err.response?.data?.expired) {
       return dispatch({ type: "LOGOUT" });

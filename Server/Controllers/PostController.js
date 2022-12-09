@@ -5,17 +5,15 @@ import User from "../Models/userModal.js";
 export const createNewPost = async (req, res) => {
   req.body.userId = req.user.userId;
   try {
+    console.log(req.body);
     const post = new Post(req.body);
     await post.save();
-    const user = await User.findById(req.body.userId)
-      .select({
-        username: 1,
-        firstName: 1,
-        lastName: 1,
-        profilePicture: 1,
-      })
-      .lean();
-
+    const user = await User.findById(req.body.userId).select({
+      username: 1,
+      firstName: 1,
+      lastName: 1,
+      profilePicture: 1,
+    });
     const newPost = { post: post, user: user };
     res.status(201).json({ message: "new post created", newPost });
   } catch (error) {
