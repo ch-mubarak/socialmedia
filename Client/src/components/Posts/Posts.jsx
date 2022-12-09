@@ -48,9 +48,9 @@ const Posts = () => {
     <div className="posts">
       {posts?.map((post, index) => {
         if (posts.length === index + 1) {
-          return <Post ref={lastPostRef} key={post.post._id} data={post} />;
+          return <Post ref={lastPostRef} key={post._id} data={post} />;
         }
-        return <Post key={post.post._id} data={post} />;
+        return <Post key={post._id} data={post} />;
       })}
       <FadeLoader color="orange" cssOverride={override} loading={loading} />
       {posts.length === 0 && !loading && !hasMore && <NoPost /> }

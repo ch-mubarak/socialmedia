@@ -12,13 +12,12 @@ import Actions from "../Actions/Actions";
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
 
-
 const Post = React.forwardRef(({ data }, ref) => {
   const [showOptions, setShowOptions] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authReducer.authData);
-  const [liked, setLiked] = useState(data.post.likes.includes(user._id));
-  const [likeCount, setLikeCount] = useState(data.post.likes.length);
+  const [liked, setLiked] = useState(data.likes.includes(user._id));
+  const [likeCount, setLikeCount] = useState(data.likes.length);
   const handlePostLike = (id) => {
     dispatch(likePost(id));
     setLiked((preValue) => !preValue);
@@ -36,35 +35,35 @@ const Post = React.forwardRef(({ data }, ref) => {
         <img
           src={
             data.user?.profilePicture
-              ? `${serverPublic}/${data.user.profilePicture}`
+              ? `${serverPublic}/${data.profilePicture}`
               : `${serverStatic}/profile.jpg`
           }
           alt=""
         />
         <span>
-          <Link to={`/profile/${data.user._id}`}>
-            {data.user?.firstName} {data.user?.lastName}
+          <Link to={`/profile/${data.userId}`}>
+            {data.firstName} {data.lastName}
           </Link>
         </span>
         <div className="more-options">
           <div onClick={() => setShowOptions((pre) => !pre)}>
             <UilEllipsisH />
           </div>
-          {showOptions && (
-            <Actions userId={data.user._id} postId={data.post._id} />
+          {showOptions &&  (
+            <Actions userId={data?.userId} postId={data?._id} />
           )}
         </div>
       </div>
       <img src="" alt="" />
-      {data.post?.image && (
+      {data.image && (
         <img
-          src={`${process.env.REACT_APP_PUBLIC_FOLDER}/${data.post.image}`}
+          src={`${process.env.REACT_APP_PUBLIC_FOLDER}/${data.image}`}
           alt=""
         />
       )}
       <div className="postReact">
         <img
-          onClick={() => handlePostLike(data.post._id)}
+          onClick={() => handlePostLike(data._id)}
           src={liked ? Like : NotLike}
           alt=""
         />
@@ -75,7 +74,7 @@ const Post = React.forwardRef(({ data }, ref) => {
         {likeCount} Likes
       </span>
       <div className="detail">
-        <span> {data.post.description}</span>
+        <span> {data.description}</span>
       </div>
     </div>
   );

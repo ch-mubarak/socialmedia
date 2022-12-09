@@ -18,8 +18,13 @@ export const RightSide = () => {
           <img src={Home} alt="Home" />
         </Link>
         <UilSetting />
-        <img src={Notification} alt="notification" />
-        <img src={Comment} alt="comment" />
+        <div className="notification">
+          <img src={Notification} alt="notification" />
+          <span>9</span>
+        </div>
+        <div>
+          <img src={Comment} alt="comment" />
+        </div>
       </div>
       <TrendCard />
       <button className="button r-button" onClick={() => setModalOpened(true)}>

@@ -5,16 +5,20 @@ import User from "../Models/userModal.js";
 export const createNewPost = async (req, res) => {
   req.body.userId = req.user.userId;
   try {
-    console.log(req.body);
     const post = new Post(req.body);
     await post.save();
-    const user = await User.findById(req.body.userId).select({
-      username: 1,
-      firstName: 1,
-      lastName: 1,
-      profilePicture: 1,
+    await User.populate(post, {
+      path: "userId",
+      select: { username: 1, firstName: 1, lastName: 1, profilePicture: 1 },
     });
-    const newPost = { post: post, user: user };
+    const newPost = {
+      ...post._doc,
+      userId: post.userId._id,
+      username: post.userId.username,
+      firstName: post.userId.firstName,
+      lastName: post.userId.lastName,
+      profilePicture: post.userId.profilePicture,
+    };
     res.status(201).json({ message: "new post created", newPost });
   } catch (error) {
     console.log(error);
@@ -125,50 +129,46 @@ export const getUserPosts = async (req, res) => {
         },
       },
       {
+        $project: {
+          username: 1,
+          firstName: 1,
+          lastName: 1,
+          profilePicture: 1,
+        },
+      },
+      {
         $lookup: {
           from: "posts",
           localField: "_id",
           foreignField: "userId",
-          as: "post",
+          as: "posts",
+        },
+      },
+      {
+        $unwind: {
+          path: "$posts",
         },
       },
       {
         $project: {
           _id: 0,
-          post: 1,
         },
       },
       {
-        $unwind: {
-          path: "$post",
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "post.userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: {
-          path: "$user",
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ["$$ROOT", "$posts"],
+          },
         },
       },
       {
         $project: {
-          post: 1,
-          "user._id": 1,
-          "user.username": 1,
-          "user.firstName": 1,
-          "user.lastName": 1,
-          "user.profilePicture": 1,
+          posts: 0,
         },
       },
       {
         $sort: {
-          "post.createdAt": -1,
+          createdAt: -1,
         },
       },
       {
@@ -202,7 +202,7 @@ export const getTimelinePost = async (req, res) => {
           from: "posts",
           localField: "following",
           foreignField: "userId",
-          as: "userPosts",
+          as: "timeline",
         },
       },
       {
@@ -216,20 +216,20 @@ export const getTimelinePost = async (req, res) => {
       {
         $project: {
           _id: 0,
-          post: {
-            $concatArrays: ["$userPosts", "$myPosts"],
+          allPosts: {
+            $concatArrays: ["$timeline", "$myPosts"],
           },
         },
       },
       {
         $unwind: {
-          path: "$post",
+          path: "$allPosts",
         },
       },
       {
         $lookup: {
           from: "users",
-          localField: "post.userId",
+          localField: "allPosts.userId",
           foreignField: "_id",
           as: "user",
         },
@@ -241,8 +241,7 @@ export const getTimelinePost = async (req, res) => {
       },
       {
         $project: {
-          post: 1,
-          "user._id": 1,
+          allPosts: 1,
           "user.username": 1,
           "user.firstName": 1,
           "user.lastName": 1,
@@ -250,8 +249,15 @@ export const getTimelinePost = async (req, res) => {
         },
       },
       {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ["$allPosts", "$user"],
+          },
+        },
+      },
+      {
         $sort: {
-          "post.createdAt": -1,
+          createdAt: -1,
         },
       },
       {
