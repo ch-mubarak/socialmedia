@@ -10,10 +10,10 @@ const ProfileModal = ({ opened, onClose, handleClose }) => {
   const [userData, setUserData] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
-    about: user.about,
-    relationship: user.relationship,
-    livesIn: user.livesIn,
-    worksAt: user.worksAt,
+    about: user.about || "",
+    relationship: user.relationship || "",
+    livesIn: user.livesIn || "",
+    worksAt: user.worksAt || "",
   });
 
   const handleChange = (e) => {
