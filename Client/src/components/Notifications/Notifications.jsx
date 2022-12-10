@@ -1,3 +1,4 @@
+import React from "react";
 import "./Notifications.css";
 import { UilTrashAlt } from "@iconscout/react-unicons";
 import moment from "moment";
@@ -5,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearNotifications } from "../../actions/UserAction";
 const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
 
-const Notifications = ({ notifications }) => {
+const Notifications = React.forwardRef(({ notifications }, ref) => {
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.authReducer.authData.user._id);
   const handleClearNotification = () => {
@@ -13,7 +14,7 @@ const Notifications = ({ notifications }) => {
   };
 
   return (
-    <div className="notification-list">
+    <div ref={ref} className="notification-list">
       {notifications.map((notification) => {
         return (
           <div key={notification.id} className="notification-item">
@@ -34,6 +35,6 @@ const Notifications = ({ notifications }) => {
       </button>
     </div>
   );
-};
+});
 
 export default Notifications;

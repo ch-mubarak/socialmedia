@@ -12,18 +12,19 @@ import Notifications from "../Notifications/Notifications";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getNotifications } from "../../actions/UserAction";
+import useComponentVisible from "../../hooks/useComponentVisible";
 
 export const RightSide = () => {
   const [modalOpened, setModalOpened] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
   const dispatch = useDispatch();
   const { notifications } = useSelector((state) => state.userReducer);
-  
+  const { dropdownRef, isComponentVisible, setIsComponentVisible } =
+    useComponentVisible(false);
+
   useEffect(() => {
     dispatch(getNotifications());
   }, []);
 
-  console.log("right side")
   return (
     <div className="rightSide">
       <div className="navIcons">
@@ -35,11 +36,11 @@ export const RightSide = () => {
           <img
             src={bell}
             alt="notification"
-            onClick={() => setShowNotification((pre) => !pre)}
+            onClick={() => setIsComponentVisible(true)}
           />
           {notifications.length > 0 && <span>{notifications.length}</span>}
-          {showNotification && notifications.length > 0 && (
-            <Notifications notifications={notifications} />
+          {isComponentVisible && notifications.length > 0 && (
+            <Notifications ref={dropdownRef} notifications={notifications} />
           )}
         </div>
         <div>

@@ -46,7 +46,7 @@
   transition: all 0.2s ease-in-out;
 }
 
-.postReact img:hover {
+.postReact > img:hover {
   cursor: pointer;
   transform: scale(1.1);
 }

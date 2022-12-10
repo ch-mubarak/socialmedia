@@ -7,7 +7,7 @@ import {
 import "./Actions.css";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost } from "../../actions/PostAction";
-const Actions = ({ postId, userId }) => {
+const Actions = React.forwardRef(({ postId, userId }, ref) => {
   const currentUserId = useSelector(
     (state) => state.authReducer.authData.user._id
   );
@@ -17,7 +17,7 @@ const Actions = ({ postId, userId }) => {
     dispatch(deletePost(postId));
   };
   return (
-    <div className="actions">
+    <div ref={ref} className="actions">
       <ul>
         {currentUserId === userId && (
           <li>
@@ -36,6 +36,6 @@ const Actions = ({ postId, userId }) => {
       </ul>
     </div>
   );
-};
+});
 
 export default Actions;

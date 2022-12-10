@@ -3,14 +3,13 @@
   display: flex;
   flex-direction: column;
   top: 2rem;
-  right: 0;
+  right: 10px;
   background-color: rgb(255, 254, 254);
   max-height: 30rem;
-  width: 18rem;
+  width: 20rem;
   box-shadow: 0 0 3px rgb(161, 161, 161);
   overflow: auto;
-  border-radius: 1rem;
-  /* padding-bottom: 10px; */
+  border-radius: 1rem 0 1rem 1rem;
 }
 
 .notification-item {
@@ -28,6 +27,9 @@
 
 .notification-item:first-child {
   border-top: none;
+}
+.notification-item:last-child {
+  padding-bottom: 1rem;
 }
 
 .notification-item > img {
@@ -53,6 +55,7 @@
 
 .button-notification {
   position: sticky;
+  width: 100%;
   color: var(--orange);
   border: 2px solid var(--orange);
   bottom: 0;
@@ -61,7 +64,7 @@
   background: #fff;
   background-color: #fff;
   border-radius: 0 0 1rem 1rem;
-  margin: 0;
+  margin-top: 2rem;
 }
 
 .button-notification:hover {

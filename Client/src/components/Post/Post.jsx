@@ -9,15 +9,18 @@ import { likePost } from "../../actions/PostAction";
 import { Link } from "react-router-dom";
 import { UilEllipsisH } from "@iconscout/react-unicons";
 import Actions from "../Actions/Actions";
+import useComponentVisible from "../../hooks/useComponentVisible";
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
 
 const Post = React.forwardRef(({ data }, ref) => {
-  const [showOptions, setShowOptions] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authReducer.authData);
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(data.likes.length);
+  const { dropdownRef, isComponentVisible, setIsComponentVisible } =
+    useComponentVisible(false);
+
   const handlePostLike = (id) => {
     dispatch(likePost(id));
     setLiked((preValue) => !preValue);
@@ -46,11 +49,15 @@ const Post = React.forwardRef(({ data }, ref) => {
           </Link>
         </span>
         <div className="more-options">
-          <div onClick={() => setShowOptions((pre) => !pre)}>
+          <div onClick={() => setIsComponentVisible(true)}>
             <UilEllipsisH />
           </div>
-          {showOptions &&  (
-            <Actions userId={data?.userId} postId={data?._id} />
+          {isComponentVisible && (
+            <Actions
+              ref={dropdownRef}
+              userId={data?.userId}
+              postId={data?._id}
+            />
           )}
         </div>
       </div>
