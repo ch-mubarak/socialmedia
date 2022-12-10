@@ -34,7 +34,7 @@ const Post = React.forwardRef(({ data }, ref) => {
       <div className="postAuthor">
         <img
           src={
-            data.user?.profilePicture
+            data.profilePicture
               ? `${serverPublic}/${data.profilePicture}`
               : `${serverStatic}/profile.jpg`
           }

@@ -2,6 +2,7 @@ import User from "../Models/userModal.js";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import Post from "../Models/postModal.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const getUser = async (req, res) => {
   const id = req.params.id;
@@ -118,8 +119,24 @@ export const followUser = async (req, res) => {
       return res.status(404).json({ message: "user not found" });
     }
     if (!followUser.followers.includes(userId)) {
+      const notification = {
+        id: uuidv4(),
+        title: "New Follower",
+        profilePicture: followingUser.profilePicture,
+        message: `${followingUser.firstName} ${followingUser.lastName} started following you.`,
+        link: `/user/${followingUser._id}`,
+        time: Date.now(),
+      };
       await followUser.updateOne({
-        $push: { followers: mongoose.Types.ObjectId(userId) },
+        $push: {
+          followers: mongoose.Types.ObjectId(userId),
+        },
+      });
+      await followUser.updateOne({
+        $push: {
+          notifications: { $each: [notification] },
+          $position: 0,
+        },
       });
       await followingUser.updateOne({
         $push: { following: mongoose.Types.ObjectId(id) },
@@ -163,5 +180,30 @@ export const unFollowUser = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: "something went wrong" });
+  }
+};
+
+export const getNotifications = async (req, res) => {
+  const { userId } = req.user;
+  try {
+    const notifications = await User.findById(userId).select({
+      notifications: 1,
+      _id: 0,
+    });
+    res.status(200).json(notifications);
+  } catch (error) {
+    res.status(500).json("something went wrong");
+  }
+};
+
+export const clearNotifications = async (req, res) => {
+  const { userId } = req.user;
+  try {
+    await User.findByIdAndUpdate(userId, {
+      notifications: [],
+    });
+    res.status(200).json("notification cleared successfully");
+  } catch (error) {
+    res.status(500).json("something went wrong");
   }
 };

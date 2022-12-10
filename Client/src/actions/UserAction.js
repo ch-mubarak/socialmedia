@@ -19,11 +19,35 @@ export const updateProfile = (id, formData) => async (dispatch) => {
   try {
     const { data } = await UserApi.updateProfile(id, formData);
     dispatch({ type: "UPDATE_SUCCESS", payload: data });
-  } catch (error) {
-    if (error.response?.data?.expired) {
-      dispatch({ type: "LOGOUT" });
+  } catch (err) {
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
     }
     dispatch({ type: "UPDATE_FAIL" });
-    console.log(error);
+    console.log(err);
+  }
+};
+
+export const getNotifications = () => async (dispatch) => {
+  try {
+    const response = await UserApi.getNotifications();
+    dispatch({ type: "FETCH_NOTIFICATIONS", payload: response.data });
+  } catch (err) {
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
+    }
+    console.log(err);
+  }
+};
+
+export const clearNotifications = (id) => async (dispatch) => {
+  try {
+    await UserApi.clearNotifications(id);
+    dispatch({ type: "CLEAR_NOTIFICATIONS" });
+  } catch (err) {
+    if (err.response?.data?.expired) {
+      return dispatch({ type: "LOGOUT" });
+    }
+    console.log(err);
   }
 };

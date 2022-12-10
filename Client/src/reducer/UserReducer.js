@@ -1,5 +1,6 @@
 const initialState = {
   userDetails: null,
+  notifications: [],
   error: false,
   loading: false,
 };
@@ -27,6 +28,16 @@ const userReducer = (state = initialState, action) => {
         error: true,
       };
 
+    case "FETCH_NOTIFICATIONS":
+      return {
+        ...state,
+        notifications: [...action.payload.notifications],
+      };
+    case "CLEAR_NOTIFICATIONS":
+      return {
+        ...state,
+        notifications: [],
+      };
     default:
       return state;
   }

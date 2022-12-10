@@ -19,7 +19,12 @@ const Posts = () => {
   const location = useLocation();
   const params = useParams();
   const { posts } = useSelector((state) => state.postReducer);
-  const { loading, hasMore } = useFetchPosts(params.id, isTimeline, skip);
+  const { loading, hasMore } = useFetchPosts(
+    params.id,
+    isTimeline,
+    skip,
+    location
+  );
   const observer = useRef();
   const lastPostRef = useCallback(
     (node) => {
@@ -53,7 +58,7 @@ const Posts = () => {
         return <Post key={post._id} data={post} />;
       })}
       <FadeLoader color="orange" cssOverride={override} loading={loading} />
-      {posts.length === 0 && !loading && !hasMore && <NoPost /> }
+      {posts.length === 0 && !loading && !hasMore && <NoPost />}
       {posts.length > 0 && !loading && !hasMore && <AllCaughtUp />}
     </div>
   );

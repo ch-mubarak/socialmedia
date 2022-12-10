@@ -1,0 +1,69 @@
+.notification-list {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 2rem;
+  right: 0;
+  background-color: rgb(255, 254, 254);
+  max-height: 30rem;
+  width: 18rem;
+  box-shadow: 0 0 3px rgb(161, 161, 161);
+  overflow: auto;
+  border-radius: 1rem;
+  /* padding-bottom: 10px; */
+}
+
+.notification-item {
+  cursor: pointer;
+  position: relative;
+  text-align: left;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid rgba(184, 175, 175, 0.877);
+  width: 100%;
+}
+
+.notification-item:first-child {
+  border-top: none;
+}
+
+.notification-item > img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+}
+
+.notification-item h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.notification-item p {
+  margin: 0;
+  width: 90%;
+  font-size: 1rem;
+}
+
+.notification-item p:last-child {
+  color: #808080;
+}
+
+.button-notification {
+  position: sticky;
+  color: var(--orange);
+  border: 2px solid var(--orange);
+  bottom: 0;
+  padding: 8px;
+  border-radius: 0;
+  background: #fff;
+  background-color: #fff;
+  border-radius: 0 0 1rem 1rem;
+  margin: 0;
+}
+
+.button-notification:hover {
+  background-color: #fff;
+}

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Post from "../Models/postModal.js";
 import User from "../Models/userModal.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const createNewPost = async (req, res) => {
   req.body.userId = req.user.userId;
@@ -89,8 +90,8 @@ export const deletePost = async (req, res) => {
 export const likePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.user;
-  if (!(id && userId)) {
-    return res.status(401).json({ message: "all filed are required" });
+  if (!id) {
+    return res.status(401).json({ message: "post id is required" });
   }
   try {
     const user = await User.findById(userId);
@@ -103,10 +104,29 @@ export const likePost = async (req, res) => {
     }
     if (!post.likes.includes(userId)) {
       await post.updateOne({ $push: { likes: userId } });
+
+      //check whether the post is belongs to same user
+      if (post.userId.toString() !== userId) {
+        const notification = {
+          id: uuidv4(),
+          title: "Like",
+          profilePicture: user.profilePicture,
+          message: `${user.firstName} ${user.lastName} liked your post`,
+          time: Date.now(),
+          link: `/user/${user._id}`,
+        };
+        await User.findByIdAndUpdate(post.userId, {
+          $push: {
+            notifications: { $each: [notification] },
+            $position: 0,
+          },
+        });
+      }
+
       res.status(201).json({ message: "Post liked successfully" });
     } else {
       await post.updateOne({ $pull: { likes: userId } });
-      res.status(201).json({ message: "Post liked unsuccessfully" });
+      res.status(201).json({ message: "Post unlike successfully" });
     }
   } catch (err) {
     console.log(err);

@@ -10,14 +10,16 @@
   justify-content: space-between;
 }
 
-.navIcons img,
-.navIcons svg {
+.navIcons > a > img,
+.navIcons > svg,
+.navIcons > div > img {
   width: 1.5rem;
   transition: all ease-in-out 0.2s;
 }
 
-.navIcons img:hover,
-.navIcons svg:hover {
+.navIcons > a > img:hover,
+.navIcons > div > img:hover,
+.navIcons > svg:hover {
   cursor: pointer;
   transform: scale(1.1);
 }
@@ -30,7 +32,7 @@
   position: absolute;
   color: #ffff;
   text-align: center;
-  top:-9px;
+  top: -9px;
   right: -10px;
   font-size: 0.9rem;
   font-weight: 600;

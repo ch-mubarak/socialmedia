@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 const token = localStorage.getItem("token");
-export default function useFetchPosts(id, isTimeline, skip) {
+const useFetchPosts = (id, isTimeline, skip, location) => {
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.authReducer.authData.user._id);
   const [loading, setLoading] = useState(true);
@@ -10,8 +10,8 @@ export default function useFetchPosts(id, isTimeline, skip) {
   const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
-    dispatch({type:'RESET_POSTS'})
-  }, [id, isTimeline]);
+    dispatch({ type: "RESET_POSTS" });
+  }, [id, isTimeline, location]);
 
   const url = isTimeline ? `/post/${userId}/timeline` : `/post/user/${id}`;
 
@@ -37,16 +37,17 @@ export default function useFetchPosts(id, isTimeline, skip) {
       .catch((err) => {
         if (axios.isCancel(err)) return;
         if (err?.response?.data?.expired) {
-          console.log(err);
-          localStorage.clear();
-          dispatch({ type: "LOGOUT" });
+          return dispatch({ type: "LOGOUT" });
         }
+        console.log(err);
         setError(true);
       });
 
     //cleanup function
     return () => cancel();
-  }, [id, skip, isTimeline]);
+  }, [id, skip, isTimeline, location]);
 
   return { loading, error, hasMore };
-}
+};
+
+export default useFetchPosts;
