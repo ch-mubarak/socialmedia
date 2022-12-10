@@ -115,12 +115,9 @@ export const likePost = async (req, res) => {
           time: Date.now(),
           link: `/user/${user._id}`,
         };
-        await User.findByIdAndUpdate(post.userId, {
-          $push: {
-            notifications: { $each: [notification] },
-            $position: 0,
-          },
-        });
+        const postAuthor = await User.findById(post.userId);
+        postAuthor.notifications.unshift(notification);
+        await postAuthor.save();
       }
 
       res.status(201).json({ message: "Post liked successfully" });

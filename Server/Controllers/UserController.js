@@ -132,12 +132,8 @@ export const followUser = async (req, res) => {
           followers: mongoose.Types.ObjectId(userId),
         },
       });
-      await followUser.updateOne({
-        $push: {
-          notifications: { $each: [notification] },
-          $position: 0,
-        },
-      });
+      followUser.notifications.unshift(notification);
+      await followUser.save();
       await followingUser.updateOne({
         $push: { following: mongoose.Types.ObjectId(id) },
       });
