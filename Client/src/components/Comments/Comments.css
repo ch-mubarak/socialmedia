@@ -1,0 +1,95 @@
+.comments {
+  display: flex;
+  flex-direction: column;
+  max-height: 20rem;
+  background: inherit;
+  position: relative;
+  overflow: scroll;
+}
+.comments > p {
+  font-size: 0.9rem;
+  font-weight: 600;
+  align-self: center;
+  margin: 0;
+}
+.comment-body {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.comment-body img {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  padding: 1.3px;
+  border: 2px solid rgb(97, 96, 96);
+}
+
+.comment-content {
+  width: 100%;
+}
+.comment-content hr {
+  color: #808080;
+  height: 2px;
+}
+
+.comment-content h2 {
+  font-size: 0.8rem;
+  display: inline;
+  margin-right: 5px;
+}
+
+.comment-content > span {
+  font-size: 0.6rem;
+}
+
+.comment-content p {
+  font-size: 0.75rem;
+  margin: 0;
+}
+.comment-like {
+  margin-top: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.comment-like svg {
+  cursor: pointer;
+}
+
+.comment-like > span {
+  color: #808080;
+  font-size: 0.65rem;
+  font-weight: 400;
+}
+
+.comment-box {
+  background-color: #fff;
+  width: 96%;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  align-self: center;
+  bottom: 0;
+  position: sticky;
+}
+
+.comment-box input {
+  padding: 10px 5px;
+  border: none;
+  outline: 2px solid rgb(97, 96, 96);
+  border-radius: 10px;
+  width: 100%;
+  text-align: left;
+}
+.comment-box svg {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  color: rgb(97, 96, 96);
+  top: 0.5rem;
+}

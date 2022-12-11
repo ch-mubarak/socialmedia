@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { UilEllipsisH } from "@iconscout/react-unicons";
 import Actions from "../Actions/Actions";
 import useComponentVisible from "../../hooks/useComponentVisible";
+import Comments from "../Comments/Comments";
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
 
@@ -18,6 +19,7 @@ const Post = React.forwardRef(({ data }, ref) => {
   const { user } = useSelector((state) => state.authReducer.authData);
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(data.likes.length);
+  const [showComments, setShowComments] = useState(false);
   const { dropdownRef, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
@@ -61,7 +63,6 @@ const Post = React.forwardRef(({ data }, ref) => {
           )}
         </div>
       </div>
-      <img src="" alt="" />
       {data.image && (
         <img
           src={`${process.env.REACT_APP_PUBLIC_FOLDER}/${data.image}`}
@@ -74,7 +75,11 @@ const Post = React.forwardRef(({ data }, ref) => {
           src={liked ? Like : NotLike}
           alt=""
         />
-        <img src={Comment} alt="" />
+        <img
+          src={Comment}
+          alt=""
+          onClick={() => setShowComments((pre) => !pre)}
+        />
         <img src={Share} alt="" />
       </div>
       <span style={{ color: "var(--grey)", fontSize: "14px" }}>
@@ -83,6 +88,11 @@ const Post = React.forwardRef(({ data }, ref) => {
       <div className="detail">
         <span> {data.description}</span>
       </div>
+      {showComments && (
+        <div>
+          <Comments />
+        </div>
+      )}
     </div>
   );
 });

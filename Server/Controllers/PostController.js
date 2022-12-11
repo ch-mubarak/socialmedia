@@ -291,3 +291,4 @@ export const getTimelinePost = async (req, res) => {
     res.status(500).json({ message: "something went wrong" });
   }
 };
+
