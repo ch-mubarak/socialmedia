@@ -10,7 +10,7 @@ const Comment = () => {
       <p>Comments (23)</p>
       {comments.map((comment) => {
         return (
-          <div className="comment-body">
+          <div key={comment.id} className="comment-body">
             <div className="comment-author">
               <img src={comment.profilePicture} alt="" />
             </div>

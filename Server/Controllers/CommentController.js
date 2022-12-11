@@ -68,7 +68,6 @@ export const getComments = async (req, res) => {
 
 export const postComment = async (req, res) => {
   const { userId } = req.user;
-  console.log(req.user);
   const postId = req.params.id;
   const { comment } = req.body;
   try {
@@ -77,12 +76,24 @@ export const postComment = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: "no post found to comment" });
     }
-    const newComment = new Comment({
+    const myComment = new Comment({
       userId,
       postId,
       comment,
     });
-    await newComment.save();
+    await myComment.save();
+    await User.populate(myComment, {
+      path: "userId",
+      select: { username: 1, profilePicture: 1 },
+    });
+
+    //converting newComment to in aggregated formate to use in frontend
+    const newComment = {
+      ...myComment._doc,
+      userId: myComment.userId._id,
+      username: myComment.userId.username,
+      profilePicture: myComment.userId.profilePicture,
+    };
     if (post.userId.toString() !== userId) {
       const notification = {
         id: uuidv4(),
