@@ -28,7 +28,7 @@
   position: relative;
 }
 
-.notification span {
+.notification > span {
   position: absolute;
   color: #ffff;
   text-align: center;

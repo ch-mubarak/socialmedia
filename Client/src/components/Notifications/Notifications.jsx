@@ -27,12 +27,10 @@ const Notifications = React.forwardRef(({ notifications }, ref) => {
           </div>
         );
       })}
-      <button
-        className="button button-notification"
-        onClick={handleClearNotification}
-      >
-        <UilTrashAlt /> clear
-      </button>
+      <div className="notification-clear" onClick={handleClearNotification}>
+        <UilTrashAlt />
+        {/* <span>clear</span> */}
+      </div>
     </div>
   );
 });
