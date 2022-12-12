@@ -34,6 +34,9 @@ const Post = React.forwardRef(({ data }, ref) => {
       }
     });
   };
+
+
+ 
   return (
     <div ref={ref} className="post">
       <div className="postAuthor">
@@ -90,7 +93,7 @@ const Post = React.forwardRef(({ data }, ref) => {
       </div>
       {showComments && (
         <div>
-          <Comments />
+          <Comments postId={data._id} />
         </div>
       )}
     </div>
