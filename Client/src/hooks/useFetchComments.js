@@ -1,8 +1,7 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-const token = localStorage.getItem("token");
+import { fetchComments } from "../api/CommentRequest";
 const useFetchComments = (postId) => {
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
@@ -12,14 +11,7 @@ const useFetchComments = (postId) => {
   useEffect(() => {
     setLoading(true);
     setError(false);
-    axios({
-      method: "GET",
-      url: `/comment/${postId}`,
-      withCredentials: true,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetchComments(postId)
       .then((response) => {
         setComments(response.data);
         setLoading(false);
@@ -34,7 +26,7 @@ const useFetchComments = (postId) => {
       });
   }, []);
 
-  return { loading, error, setComments, comments };
+  return { loading, error, setComments, comments, setLoading };
 };
 
 export default useFetchComments;
