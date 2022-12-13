@@ -1,27 +1,24 @@
 import "./Comments.css";
 import React from "react";
-import moment from "moment";
 import { UilCommentAdd } from "@iconscout/react-unicons";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useFetchComments from "../../hooks/useFetchComments";
 import { useState } from "react";
-import axios from "axios";
 import { FadeLoader } from "react-spinners";
 import { useSelector } from "react-redux";
+import Comment from "../Comment/Comment";
 import {
   deleteComment,
   likeComment,
   postComment,
 } from "../../api/CommentRequest";
-const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+
 const override = {
   display: "block",
   margin: "0 auto",
 };
 
-const Comment = ({ postId }) => {
+const Comments = ({ postId }) => {
   const [newComment, setNewComment] = useState("");
-  const [loadingLike, setLoadingLike] = useState(false);
   const userId = useSelector((state) => state.authReducer.authData.user._id);
   const { comments, setComments, loading, setLoading } =
     useFetchComments(postId);
@@ -75,31 +72,11 @@ const Comment = ({ postId }) => {
       {comments &&
         comments.map((comment) => {
           return (
-            <div key={comment._id} className="comment-body">
-              <div className="comment-author">
-                <img src={`${serverPublic}/${comment.profilePicture}`} alt="" />
-              </div>
-              <div className="comment-content">
-                <h2>@{comment.username}</h2>
-                <span>{moment(comment.createdAt).fromNow()}</span>
-                <p>{comment.comment}</p>
-                <div className="comment-like">
-                  <div onClick={() => handleLikeComment(comment._id)}>
-                    {comment.likes.includes(userId) ? (
-                      <AiFillHeart />
-                    ) : (
-                      <AiOutlineHeart />
-                    )}{" "}
-                    <span>{comment?.likes.length}</span>
-                  </div>
-                  {comment.userId === userId && (
-                    <p onClick={() => handleDeleteComment(comment._id)}>
-                      Delete
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
+            <Comment
+              key={comment._id}
+              comment={comment}
+              onDelete={handleDeleteComment}
+            />
           );
         })}
 
@@ -118,4 +95,4 @@ const Comment = ({ postId }) => {
   );
 };
 
-export default Comment;
+export default Comments;

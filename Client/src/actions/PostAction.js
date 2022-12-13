@@ -29,16 +29,3 @@ export const deletePost = (id) => async (dispatch) => {
     console.log(err);
   }
 };
-export const likePost = (id) => async (dispatch) => {
-  dispatch({ type: "LIKE_PENDING" });
-  try {
-    await PostApi.likePost(id);
-    dispatch({ type: "LIKE_SUCCESS" });
-  } catch (err) {
-    if (err.response?.data?.expired) {
-      return dispatch({ type: "LOGOUT" });
-    }
-    dispatch({ type: "LIKE_FAIL" });
-    console.log(err);
-  }
-};

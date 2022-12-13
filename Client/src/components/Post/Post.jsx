@@ -5,12 +5,12 @@ import NotLike from "../../img/notlike.png";
 import Share from "../../img/share.png";
 import Comment from "../../img/comment.png";
 import { useDispatch, useSelector } from "react-redux";
-import { likePost } from "../../actions/PostAction";
 import { Link } from "react-router-dom";
 import { UilEllipsisH } from "@iconscout/react-unicons";
 import Actions from "../Actions/Actions";
 import useComponentVisible from "../../hooks/useComponentVisible";
 import Comments from "../Comments/Comments";
+import { likePost } from "../../api/PostRequest";
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
 
@@ -23,20 +23,25 @@ const Post = React.forwardRef(({ data }, ref) => {
   const { dropdownRef, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
-  const handlePostLike = (id) => {
-    dispatch(likePost(id));
-    setLiked((preValue) => !preValue);
-    setLikeCount((oldCount) => {
-      if (liked) {
-        return oldCount - 1;
-      } else {
-        return oldCount + 1;
+  const handlePostLike = async (id) => {
+    try {
+      await likePost(id);
+      setLiked((preValue) => !preValue);
+      setLikeCount((oldCount) => {
+        if (liked) {
+          return oldCount - 1;
+        } else {
+          return oldCount + 1;
+        }
+      });
+    } catch (err) {
+      if (err.response?.data?.expired) {
+        return dispatch({ type: "LOGOUT" });
       }
-    });
+      console.log(err);
+    }
   };
 
-
- 
   return (
     <div ref={ref} className="post">
       <div className="postAuthor">

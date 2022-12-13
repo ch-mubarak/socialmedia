@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getNotifications } from "../../actions/UserAction";
 import useComponentVisible from "../../hooks/useComponentVisible";
+import FollowersCard from "../FollowersCard/FollowersCard";
 
 export const RightSide = () => {
   const [modalOpened, setModalOpened] = useState(false);
@@ -47,11 +48,11 @@ export const RightSide = () => {
           <img src={Comment} alt="comment" />
         </div>
       </div>
-      <TrendCard />
-      <button className="button r-button" onClick={() => setModalOpened(true)}>
+      <FollowersCard />
+      {/* <button className="button r-button" onClick={() => setModalOpened(true)}>
         Share
       </button>
-      <ShareModal opened={modalOpened} onClose={() => setModalOpened(false)} />
+      <ShareModal opened={modalOpened} onClose={() => setModalOpened(false)} /> */}
     </div>
   );
 };
