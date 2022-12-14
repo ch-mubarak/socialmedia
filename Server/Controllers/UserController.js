@@ -124,7 +124,7 @@ export const followUser = async (req, res) => {
         title: "New Follower",
         profilePicture: followingUser.profilePicture,
         message: `${followingUser.firstName} ${followingUser.lastName} started following you.`,
-        link: `/user/${followingUser._id}`,
+        link: `/profile/${followingUser._id}`,
         time: Date.now(),
       };
       await followUser.updateOne({

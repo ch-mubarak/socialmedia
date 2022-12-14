@@ -113,7 +113,7 @@ export const likePost = async (req, res) => {
           profilePicture: user.profilePicture,
           message: `${user.firstName} ${user.lastName} liked your post`,
           time: Date.now(),
-          link: `/user/${user._id}`,
+          link: `/profile/${user._id}`,
         };
         const postAuthor = await User.findById(post.userId);
         postAuthor.notifications.unshift(notification);

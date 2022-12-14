@@ -4,6 +4,7 @@ import { UilTrashAlt } from "@iconscout/react-unicons";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { clearNotifications } from "../../actions/UserAction";
+import { Link } from "react-router-dom";
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 
 const Notifications = React.forwardRef(({ notifications }, ref) => {
@@ -18,7 +19,9 @@ const Notifications = React.forwardRef(({ notifications }, ref) => {
       {notifications.map((notification) => {
         return (
           <div key={notification.id} className="notification-item">
-            <img src={`${serverImages}/${notification.profilePicture}`} />
+            <Link to={notification.link}>
+              <img src={`${serverImages}/${notification.profilePicture}`} />
+            </Link>
             <div>
               <h2>{notification.title}</h2>
               <p>{notification.message}</p>

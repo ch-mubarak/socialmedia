@@ -34,7 +34,10 @@
   color: #808080;
   height: 2px;
 }
-
+.comment-content > a {
+  text-decoration: none;
+  color: inherit;
+}
 .comment-content h2 {
   font-size: 0.8rem;
   display: inline;

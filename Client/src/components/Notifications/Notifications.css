@@ -26,7 +26,7 @@
   width: 100%;
 }
 
-.notification-item > img {
+.notification-item > a > img {
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
@@ -77,8 +77,7 @@
   color: #808080;
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
-  box-shadow: 0px -1px 0px rgb(230, 216, 216)
-  
+  box-shadow: 0px -1px 0px rgb(230, 216, 216);
 }
 
 .notification-clear > svg {

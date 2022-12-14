@@ -2,6 +2,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { likeComment } from "../../api/CommentRequest";
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 
@@ -34,7 +35,9 @@ const Comment = ({ comment, onDelete }) => {
         <img src={`${serverImages}/${comment.profilePicture}`} alt="" />
       </div>
       <div className="comment-content">
-        <h2>@{comment.username}</h2>
+        <Link to={`/profile/${comment.userId}`}>
+          <h2>@{comment.username}</h2>
+        </Link>
         <span>{moment(comment.createdAt).fromNow()}</span>
         <p>{comment.comment}</p>
         <div className="comment-like">

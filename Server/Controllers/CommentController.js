@@ -101,7 +101,7 @@ export const postComment = async (req, res) => {
         profilePicture: commentAuthor.profilePicture,
         message: `${commentAuthor.firstName} ${commentAuthor.lastName} commented on your post`,
         time: Date.now(),
-        link: `/user/${commentAuthor._id}`,
+        link: `/profile/${commentAuthor._id}`,
       };
       const postAuthor = await User.findById(post.userId);
       postAuthor.notifications.unshift({ notification });
@@ -156,7 +156,7 @@ export const likeComment = async (req, res) => {
         profilePicture: user.profilePicture,
         message: `${user.firstName} ${user.lastName} liked your comment`,
         time: Date.now(),
-        link: `/user/${user._id}`,
+        link: `/profile/${user._id}`,
       };
       commentAuthor.notifications.unshift(notification);
       await commentAuthor.save();
