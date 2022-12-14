@@ -8,8 +8,9 @@ import {
   UilTimes,
 } from "@iconscout/react-unicons";
 import { useDispatch, useSelector } from "react-redux";
-import { uploadImage } from "../../actions/UploadAction";
+
 import { createPost } from "../../actions/PostAction";
+import { uploadImage } from "../../api/UploadRequest";
 const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
@@ -30,7 +31,7 @@ const PostShare = () => {
     setImage(null);
     setPostDescription("");
   };
-  const handlePostSubmit = (event) => {
+  const handlePostSubmit = async (event) => {
     event.preventDefault();
     const newPost = {
       description: postDescription,
@@ -42,7 +43,7 @@ const PostShare = () => {
       data.append("file", image);
       newPost.image = fileName;
       try {
-        dispatch(uploadImage(data));
+        await uploadImage(data);
       } catch (err) {
         console.log(err);
       }

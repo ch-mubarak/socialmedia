@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { getUserDetails, updateProfile } from "../../actions/UserAction";
 import { UilPen } from "@iconscout/react-unicons";
-import { uploadImage } from "../../actions/UploadAction";
+import { uploadImage } from "../../api/UploadRequest";
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
@@ -25,7 +25,7 @@ const ProfileCard = ({ location }) => {
       dispatch(getUserDetails(userId));
     }
   }, [dispatch, params.id, user._id]);
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     if (e.target.files && e.target.files[0]) {
       const img = e.target.files[0];
       const name = e.target.name;
@@ -37,7 +37,7 @@ const ProfileCard = ({ location }) => {
         [name]: fileName,
       };
       try {
-        dispatch(uploadImage(data));
+        await uploadImage(data);
         dispatch(updateProfile(user._id, userDetails));
       } catch (err) {
         console.log(err);
