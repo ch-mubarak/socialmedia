@@ -10,6 +10,7 @@ const postModal = new mongoose.Schema(
     description: String,
     likes: [],
     image: String,
+    video: String,
   },
   { timestamps: true }
 );

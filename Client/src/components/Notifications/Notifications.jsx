@@ -4,7 +4,7 @@ import { UilTrashAlt } from "@iconscout/react-unicons";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { clearNotifications } from "../../actions/UserAction";
-const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 
 const Notifications = React.forwardRef(({ notifications }, ref) => {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const Notifications = React.forwardRef(({ notifications }, ref) => {
       {notifications.map((notification) => {
         return (
           <div key={notification.id} className="notification-item">
-            <img src={`${serverPublic}/${notification.profilePicture}`} />
+            <img src={`${serverImages}/${notification.profilePicture}`} />
             <div>
               <h2>{notification.title}</h2>
               <p>{notification.message}</p>
@@ -29,7 +29,6 @@ const Notifications = React.forwardRef(({ notifications }, ref) => {
       })}
       <div className="notification-clear" onClick={handleClearNotification}>
         <UilTrashAlt />
-        {/* <span>clear</span> */}
       </div>
     </div>
   );

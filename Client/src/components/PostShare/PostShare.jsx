@@ -8,27 +8,38 @@ import {
   UilTimes,
 } from "@iconscout/react-unicons";
 import { useDispatch, useSelector } from "react-redux";
-
 import { createPost } from "../../actions/PostAction";
-import { uploadImage } from "../../api/UploadRequest";
-const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+import ProgressBar from "../ProgressBar/ProgressBar";
+import axios from "axios";
+const token = localStorage.getItem("token");
+const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
 const PostShare = () => {
   const [image, setImage] = useState(null);
+  const [video, setVideo] = useState(null);
   const [postDescription, setPostDescription] = useState("");
   const { user } = useSelector((state) => state.authReducer.authData);
-  const uploading = useSelector((state) => state.postReducer.uploading);
+  const [uploading, setUploading] = useState(null);
   const dispatch = useDispatch();
   const imageRef = useRef();
+  const videoRef = useRef();
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
       setImage(img);
     }
   };
+  const handleVideoChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let myVideo = event.target.files[0];
+      setVideo(myVideo);
+    }
+  };
   const reset = () => {
     setImage(null);
+    setVideo(null);
+    setUploading(null);
     setPostDescription("");
   };
   const handlePostSubmit = async (event) => {
@@ -41,15 +52,50 @@ const PostShare = () => {
       const fileName = Date.now() + image.name;
       data.append("name", fileName);
       data.append("file", image);
-      newPost.image = fileName;
+
       try {
-        await uploadImage(data);
+        await axios.post(`/upload/image`, data, {
+          withCredentials: true,
+          headers: `Bearer ${token}`,
+          onUploadProgress: (uploadEvent) =>
+            setUploading(
+              parseInt(
+                Math.round((uploadEvent.loaded * 100) / uploadEvent.total)
+              )
+            ),
+        });
+        newPost.image = fileName;
+        dispatch(createPost(newPost));
+        reset();
       } catch (err) {
-        console.log(err);
+        return console.log(err);
       }
+    } else if (video) {
+      const data = new FormData();
+      const fileName = Date.now() + video.name.replaceAll(" ", "");
+      data.append("name", fileName);
+      data.append("file", video);
+      try {
+        await axios.post(`/upload/video`, data, {
+          withCredentials: true,
+          headers: `Bearer ${token}`,
+          onUploadProgress: (uploadEvent) =>
+            setUploading(
+              parseInt(
+                Math.round((uploadEvent.loaded * 100) / uploadEvent.total)
+              )
+            ),
+        });
+        newPost.video = fileName;
+        dispatch(createPost(newPost));
+        reset();
+      } catch (err) {
+        return console.log(err);
+      }
+    } else {
+      dispatch(createPost(newPost));
+      reset();
     }
-    dispatch(createPost(newPost));
-    reset();
   };
   return (
     <>
@@ -58,7 +104,7 @@ const PostShare = () => {
           <img
             src={
               user.profilePicture
-                ? `${serverPublic}/${user.profilePicture}`
+                ? `${serverImages}/${user.profilePicture}`
                 : `${serverStatic}/profile.jpg`
             }
             alt=""
@@ -80,7 +126,11 @@ const PostShare = () => {
                 <UilScenery />
                 Photo
               </div>
-              <div className="option" style={{ color: "var(--video)" }}>
+              <div
+                className="option"
+                style={{ color: "var(--video)" }}
+                onClick={() => videoRef.current.click()}
+              >
                 <UilPlayCircle />
                 Video
               </div>
@@ -104,12 +154,32 @@ const PostShare = () => {
                   ref={imageRef}
                   onChange={handleImageChange}
                 />
+                <input
+                  type="file"
+                  name="newVideo"
+                  accept="video/*"
+                  ref={videoRef}
+                  onChange={handleVideoChange}
+                />
               </div>
             </div>
-            {image && (
+            {(image || video) && (
               <div className="previewImage">
-                <UilTimes onClick={() => setImage(null)} />
-                <img src={URL.createObjectURL(image)} alt="" />
+                <UilTimes
+                  onClick={() => {
+                    setImage(null);
+                    setVideo(null);
+                  }}
+                />
+                {image && <img src={URL.createObjectURL(image)} alt="" />}
+                {video && (
+                  <video controls>
+                    <source src={URL.createObjectURL(video)} />
+                  </video>
+                )}
+                {uploading && (
+                  <ProgressBar completed={uploading} bgColor={"#6a1b9a"} />
+                )}
               </div>
             )}
           </div>

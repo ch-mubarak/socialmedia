@@ -4,11 +4,9 @@ import { UilCommentAdd } from "@iconscout/react-unicons";
 import useFetchComments from "../../hooks/useFetchComments";
 import { useState } from "react";
 import { FadeLoader } from "react-spinners";
-import { useSelector } from "react-redux";
 import Comment from "../Comment/Comment";
 import {
   deleteComment,
-  likeComment,
   postComment,
 } from "../../api/CommentRequest";
 
@@ -19,7 +17,6 @@ const override = {
 
 const Comments = ({ postId }) => {
   const [newComment, setNewComment] = useState("");
-  const userId = useSelector((state) => state.authReducer.authData.user._id);
   const { comments, setComments, loading, setLoading } =
     useFetchComments(postId);
 
@@ -47,23 +44,6 @@ const Comments = ({ postId }) => {
     setLoading(false);
   };
 
-  const handleLikeComment = async (commentId) => {
-    try {
-      setLoadingLike(true);
-      await likeComment(commentId);
-      setComments((preComments) => [
-        ...preComments.map((comment) => {
-          if (comment._id === commentId) {
-            return { ...comment, likes: [...comment.likes, userId] };
-          }
-          return comment;
-        }),
-      ]);
-    } catch (err) {
-      console.log(err);
-    }
-    setLoadingLike(false);
-  };
   return (
     <div className="comments">
       <p>Comments {comments.length > 0 ? `(${comments.length})` : ""}</p>

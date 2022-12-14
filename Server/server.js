@@ -20,8 +20,10 @@ app.use(cors(corsOptions));
 connectDB();
 
 app.use(express.static("public"));
-app.use("/images", express.static("images"));
 app.use("/static", express.static("static"));
+app.use("/images", express.static("images"));
+app.use("/videos", express.static("videos"));
+
 //Routes
 app.use("/auth", AuthRoute);
 app.use("/user", UserRoute);

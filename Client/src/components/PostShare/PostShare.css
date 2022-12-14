@@ -51,7 +51,7 @@
 }
 
 .option:hover {
-  transform:  scale(1.1);
+  transform: scale(1.1);
   cursor: pointer;
 }
 
@@ -63,6 +63,11 @@
 .previewImage {
   margin-top: 10px;
   position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  max-width:50rem;
 }
 
 .previewImage > svg {
@@ -77,10 +82,18 @@
   transform: scale(1.2);
 }
 
-.previewImage > img {
+.previewImage > img,
+.previewImage > video {
   width: 100%;
   margin-top: 10px;
   max-height: 20rem;
   object-fit: cover;
   border-radius: 0.5rem;
+}
+
+.uploading {
+  /* position: absolute; */
+
+  width: 5rem;
+  height: 5rem;
 }

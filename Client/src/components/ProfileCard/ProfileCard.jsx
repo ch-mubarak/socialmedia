@@ -5,6 +5,8 @@ import { Link, useParams } from "react-router-dom";
 import { getUserDetails, updateProfile } from "../../actions/UserAction";
 import { UilPen } from "@iconscout/react-unicons";
 import { uploadImage } from "../../api/UploadRequest";
+const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
+const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
@@ -45,9 +47,6 @@ const ProfileCard = ({ location }) => {
     }
   };
 
-  const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
-  const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
-
   return (
     <div className="profileCard">
       {(params.id === user._id || location === "home") && (
@@ -60,7 +59,7 @@ const ProfileCard = ({ location }) => {
           <img
             src={
               user?.coverPicture
-                ? `${serverPublic}/${user.coverPicture}`
+                ? `${serverImages}/${user.coverPicture}`
                 : `${serverStatic}/cover.jpg`
             }
             alt=""
@@ -70,7 +69,7 @@ const ProfileCard = ({ location }) => {
           <img
             src={
               userDetails?.coverPicture
-                ? `${serverPublic}/${userDetails.coverPicture}`
+                ? `${serverImages}/${userDetails.coverPicture}`
                 : `${serverStatic}/cover.jpg`
             }
             alt=""
@@ -80,7 +79,7 @@ const ProfileCard = ({ location }) => {
           <img
             src={
               user?.profilePicture
-                ? `${serverPublic}/${user.profilePicture}`
+                ? `${serverImages}/${user.profilePicture}`
                 : `${serverStatic}/profile.jpg`
             }
             alt=""
@@ -91,7 +90,7 @@ const ProfileCard = ({ location }) => {
           <img
             src={
               userDetails?.profilePicture
-                ? `${serverPublic}/${userDetails.profilePicture}`
+                ? `${serverImages}/${userDetails.profilePicture}`
                 : `${serverStatic}/profile.jpg`
             }
             alt=""

@@ -12,7 +12,8 @@ import useComponentVisible from "../../hooks/useComponentVisible";
 import Comments from "../Comments/Comments";
 import { likePost } from "../../api/PostRequest";
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
-const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
+const serverVideos = process.env.REACT_APP_PUBLIC_VIDEOS;
 
 const Post = React.forwardRef(({ data }, ref) => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const Post = React.forwardRef(({ data }, ref) => {
         <img
           src={
             data.profilePicture
-              ? `${serverPublic}/${data.profilePicture}`
+              ? `${serverImages}/${data.profilePicture}`
               : `${serverStatic}/profile.jpg`
           }
           alt=""
@@ -71,11 +72,11 @@ const Post = React.forwardRef(({ data }, ref) => {
           )}
         </div>
       </div>
-      {data.image && (
-        <img
-          src={`${process.env.REACT_APP_PUBLIC_FOLDER}/${data.image}`}
-          alt=""
-        />
+      {data.image && <img src={`${serverImages}/${data.image}`} alt="" />}
+      {data.video && (
+        <video loop controls autoPlay="">
+          <source src={`${serverVideos}/${data.video}`} type="video/mp4" />
+        </video>
       )}
       <div className="postReact">
         <img

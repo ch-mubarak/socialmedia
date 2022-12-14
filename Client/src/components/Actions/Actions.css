@@ -1,6 +1,7 @@
 .actions {
   position: absolute;
   right: 0; 
+  z-index: 100;
   top: 20px;
   background-color: #fff;
   box-shadow: 0 0 5px gray;

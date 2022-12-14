@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { likeComment } from "../../api/CommentRequest";
-const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 
 const Comment = ({ comment, onDelete }) => {
   const userId = useSelector((state) => state.authReducer.authData.user._id);
@@ -31,7 +31,7 @@ const Comment = ({ comment, onDelete }) => {
   return (
     <div className="comment-body">
       <div className="comment-author">
-        <img src={`${serverPublic}/${comment.profilePicture}`} alt="" />
+        <img src={`${serverImages}/${comment.profilePicture}`} alt="" />
       </div>
       <div className="comment-content">
         <h2>@{comment.username}</h2>

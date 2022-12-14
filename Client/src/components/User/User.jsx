@@ -5,8 +5,8 @@ import { followUser, unFollowUser } from "../../api/FollowRequest";
 
 const User = ({ user }) => {
   const dispatch = useDispatch();
+  const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
   const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
-  const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   const myFollowings = useSelector(
     (state) => state.authReducer.authData.user.following
   );
@@ -32,7 +32,7 @@ const User = ({ user }) => {
         <img
           src={
             user?.profilePicture
-              ? `${serverPublic}/${user.profilePicture}`
+              ? `${serverImages}/${user.profilePicture}`
               : `${serverStatic}/profile.jpg`
           }
           alt=""

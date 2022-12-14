@@ -9,3 +9,4 @@ const config = {
 const API = axios.create(config);
 
 export const uploadImage = (data) => API.post("/upload/image", data);
+export const uploadVideo = (data) => API.post("/upload/video", data);
