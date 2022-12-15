@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { getUserDetails, updateProfile } from "../../actions/UserAction";
 import { UilPen } from "@iconscout/react-unicons";
 import { uploadImage } from "../../api/UploadRequest";
+import { followUser, unFollowUser } from "../../api/FollowRequest";
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
@@ -44,6 +45,23 @@ const ProfileCard = ({ location }) => {
       } catch (err) {
         console.log(err);
       }
+    }
+  };
+
+  const handleFollow = async (id) => {
+    try {
+      const response = await followUser(id);
+      dispatch({ type: "FOLLOW_SUCCESS", payload: response.data.id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleUnFollow = async (id) => {
+    try {
+      const response = await unFollowUser(id);
+      dispatch({ type: "UN_FOLLOW_SUCCESS", payload: response.data.id });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -103,6 +121,24 @@ const ProfileCard = ({ location }) => {
           {isUser ? user.lastName : userDetails?.lastName}
         </span>
         <span>{isUser ? user.about : userDetails?.about}</span>
+        <div>
+          {!isUser && user.following.includes(userDetails._id) && (
+            <button
+              className="button unfollow-button"
+              onClick={() => handleUnFollow(userDetails._id)}
+            >
+              Unfollow
+            </button>
+          )}
+          {!isUser && !user.following.includes(userDetails._id) && (
+            <button
+              className="button fc-button"
+              onClick={() => handleFollow(userDetails._id)}
+            >
+              follow
+            </button>
+          )}
+        </div>
       </div>
       <div className="followStatus">
         <hr />
