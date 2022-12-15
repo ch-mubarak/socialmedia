@@ -203,3 +203,19 @@ export const clearNotifications = async (req, res) => {
     res.status(500).json("something went wrong");
   }
 };
+
+export const searchUser = async (req, res) => {
+  try {
+    const keyword = req.query.name || "";
+    const users = await User.find({
+      $or: [
+        { username: { $regex: keyword, $options: "i" } },
+        { firstName: { $regex: keyword, $options: "i" } },
+        { lastName: { $regex: keyword, $options: "i" } },
+      ],
+    }).select({ username: 1, firstName: 1, lastName: 1, profilePicture: 1 });
+    res.status(200).json(users);
+  } catch (err) {
+    console.log(err);
+  }
+};

@@ -9,12 +9,14 @@ import {
   getAllUsers,
   getNotifications,
   clearNotifications,
+  searchUser,
 } from "../Controllers/UserController.js";
 import authenticate from "../middleware/Auth.js";
 const router = express.Router();
 
 router.use(authenticate);
 router.get("/", getAllUsers);
+router.get("/search", searchUser);
 router.get("/notifications", getNotifications);
 router.get("/:id", getUser);
 router.get("/followers/:id", getFollowers);

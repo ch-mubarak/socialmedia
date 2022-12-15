@@ -5,27 +5,31 @@ import img4 from "../img/img4.jpg";
 
 export const followers = [
   {
-    id: "f1",
-    name: "Mubarak CH",
+    _id: "f1",
+    firstName: "Mubarak",
     username: "chmubarak",
-    img: img1,
+    lastName: "CH",
+    // profilePicture: img1,
   },
   {
-    id: "f2",
-    name: "Jaseem",
+    _id: "f2",
+    firstName: "Jaseem",
+    lastName: "js",
     username: "jassy",
-    img: img2,
+    // profilePicture: img2,
   },
   {
-    id: "f3",
-    name: "Naji Kp",
+    _id: "f3",
+    firstName: "Naji",
+    lastName: "Kp",
     username: "naji",
-    img: img3,
+    // profilePicture: img3,
   },
   {
-    id: "f4",
-    name: "Althaf",
+    _id: "f4",
+    firstName: "Althaf",
+    lastName: "k",
     username: "althaf",
-    img: img4,
+    // profilePicture: img4,
   },
 ];

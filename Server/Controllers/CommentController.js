@@ -104,7 +104,7 @@ export const postComment = async (req, res) => {
         link: `/profile/${commentAuthor._id}`,
       };
       const postAuthor = await User.findById(post.userId);
-      postAuthor.notifications.unshift({ notification });
+      postAuthor.notifications.unshift(notification);
       await postAuthor.save();
     }
     res

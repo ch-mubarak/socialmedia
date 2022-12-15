@@ -7,7 +7,9 @@
   background-color: rgb(255, 254, 254);
   max-height: 30rem;
   width: 14rem;
-  box-shadow: 0 0 3px rgb(161, 161, 161);
+  -webkit-box-shadow: 3px 12px 35px 0px rgba(0, 0, 0, 0.54);
+  -moz-box-shadow: 3px 12px 35px 0px rgba(0, 0, 0, 0.54);
+  box-shadow: 3px 12px 35px 0px rgba(0, 0, 0, 0.54);
   overflow-y: scroll;
   overflow-x: hidden;
   border-radius: 1rem 0 1rem 1rem;
@@ -48,24 +50,6 @@
   font-size: 0.56rem;
 }
 
-/* .button-notification {
-  position: sticky;
-  width: 100%;
-  color: var(--orange);
-  border: 2px solid var(--orange);
-  bottom: 0;
-  padding: 8px;
-  border-radius: 0;
-  background: #fff;
-  background-color: #fff;
-  border-radius: 0 0 1rem 1rem;
-  margin-top: 2rem;
-}
-
-.button-notification:hover {
-  background-color: #fff;
-} */
-
 .notification-clear {
   position: sticky;
   display: flex;
@@ -82,4 +66,10 @@
 
 .notification-clear > svg {
   width: 2rem;
+  transition: all ease-in-out 0.2s;
+  
+}
+.notification-clear > svg:hover {
+  transform: scale(1.1);
+  
 }
