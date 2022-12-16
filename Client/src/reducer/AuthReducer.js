@@ -11,7 +11,7 @@ const authReducer = (state = initialState, action) => {
       return { ...state, loading: true, error: false, message: null };
 
     case "AUTH_SUCCESS":
-      localStorage.setItem("token", JSON.stringify(action?.payload.token));
+      localStorage.setItem("token", JSON.stringify(action.payload.token));
       return {
         ...state,
         authData: action.payload,
@@ -28,6 +28,7 @@ const authReducer = (state = initialState, action) => {
       };
 
     case "VERIFY_USER":
+      localStorage.setItem("token", JSON.stringify(action.payload.token));
       return {
         ...state,
         authData: {

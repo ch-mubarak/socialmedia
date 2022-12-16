@@ -57,9 +57,28 @@ export const registerUser = async (req, res) => {
     const info = await sendVerificationMail(user.id, user.email);
     console.log("Message sent: %s", info.messageId);
     user.password = undefined;
-    res
-      .status(201)
-      .json({ user, message: "account verification mail send successful" });
+    const token = jwt.sign(
+      {
+        username: user.username,
+        email: user.email,
+        userId: user._id,
+        isVerified: user.isVerified,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    //cookie section
+    const options = {
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      httpOnly: true,
+      secure: false,
+    };
+    res.status(201).cookie("token", token, options).json({
+      user,
+      token,
+      message: "account created and verification mail send successful",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -116,17 +135,48 @@ export const verifyAccount = async (req, res) => {
         .status(401)
         .json({ message: "verification link is not valid" });
     }
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(user);
-    if (!(user.isVerifying && userId === user.userId)) {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+    if (user.isVerified) {
+      return res.status(401).json({ message: "user already verified" });
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!(decoded.isVerifying && userId === decoded.userId)) {
       return res
         .status(401)
         .json({ message: "verification link is not valid" });
     }
-    await User.findByIdAndUpdate(userId, { isVerified: true });
-    return res
-      .status(201)
-      .json({ message: "account verified successfully", success: true });
+
+    //updating verified status
+    user.isVerified = true;
+    await user.save();
+    //generating new jwt token with to update user verification status
+    const newToken = jwt.sign(
+      {
+        username: user.username,
+        email: user.email,
+        userId: user._id,
+        isVerified: user.isVerified,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    //cookie section
+    const options = {
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      httpOnly: true,
+      secure: false,
+    };
+
+    return res.status(201).cookie("token", newToken, options).json({
+      message: "account verified successfully",
+      success: true,
+      token: newToken,
+    });
   } catch (err) {
     if (err.expiredAt) {
       return res.json(401).json({ message: "verification link expired" });
