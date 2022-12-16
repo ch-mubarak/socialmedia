@@ -122,18 +122,18 @@ const ProfileCard = ({ location }) => {
         </span>
         <span>{isUser ? user.about : userDetails?.about}</span>
         <div>
-          {!isUser && user.following.includes(userDetails._id) && (
+          {!isUser && user.following.includes(userDetails?._id) && (
             <button
               className="button unfollow-button"
-              onClick={() => handleUnFollow(userDetails._id)}
+              onClick={() => handleUnFollow(userDetails?._id)}
             >
               Unfollow
             </button>
           )}
-          {!isUser && !user.following.includes(userDetails._id) && (
+          {!isUser && !user.following.includes(userDetails?._id) && (
             <button
               className="button fc-button"
-              onClick={() => handleFollow(userDetails._id)}
+              onClick={() => handleFollow(userDetails?._id)}
             >
               follow
             </button>

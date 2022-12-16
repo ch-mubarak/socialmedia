@@ -67,7 +67,7 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  max-width:50rem;
+  max-width:30rem;
 }
 
 .previewImage > svg {

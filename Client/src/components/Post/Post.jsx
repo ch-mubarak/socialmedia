@@ -74,7 +74,7 @@ const Post = React.forwardRef(({ data }, ref) => {
       </div>
       {data.image && <img src={`${serverImages}/${data.image}`} alt="" />}
       {data.video && (
-        <video loop controls autoPlay="">
+        <video loop autoPlay={true} muted>
           <source src={`${serverVideos}/${data.video}`} type="video/mp4" />
         </video>
       )}
