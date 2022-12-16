@@ -20,7 +20,7 @@ const sendVerificationMail = async (userId, email) => {
     subject: "Account verification:", // Subject line
     html:
       "<h3>Please click on the below link to Verify your account </h3>" +
-      `<a style='font-weight:bold;' href=http://localhost:3000/verify?account=${user._id}&token=${token}>Verify account</a>`,
+      `<a style='font-weight:bold;' href=http://localhost:3000/verify?account=${userId}&token=${token}>Verify account</a>`,
   });
   console.log("mail send success");
   return info;
@@ -109,25 +109,29 @@ export const loginUser = async (req, res) => {
 };
 
 export const verifyAccount = async (req, res) => {
-  console.log("verify");
   try {
-    const { userId, token } = req.query;
+    const { userId, token } = req.body;
     if (!(userId && token)) {
       return res
         .status(401)
         .json({ message: "verification link is not valid" });
     }
     const user = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(user);
     if (!(user.isVerifying && userId === user.userId)) {
       return res
         .status(401)
         .json({ message: "verification link is not valid" });
     }
     await User.findByIdAndUpdate(userId, { isVerified: true });
+    return res
+      .status(201)
+      .json({ message: "account verified successfully", success: true });
   } catch (err) {
     if (err.expiredAt) {
       return res.json(401).json({ message: "verification link expired" });
     }
+    console.log(err);
     res.status(500).json({ message: "something went wrong" });
   }
 };

@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Auth.css";
 import Logo from "../../img/logo.png";
-import { logIn } from "../../actions/AuthAction";
-import { signUp } from "../../api/AuthRequest";
+import { logIn, signUp } from "../../actions/AuthAction";
 import { useNavigate } from "react-router-dom";
 import Alert from "../../components/Alert/Alert";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const navigate = useNavigate();
   const [passwordMatching, setPasswordMatching] = useState(true);
   const dispatch = useDispatch();
   const { loading, message } = useSelector((state) => state.authReducer);
@@ -41,15 +39,7 @@ const Auth = () => {
       if (data.confirmedPassword !== data.password) {
         return setPasswordMatching(false);
       }
-      try {
-        dispatch({ type: "AUTH_START" });
-        await signUp(data);
-        dispatch({ type: "RESET" });
-        navigate("/verify");
-      } catch (err) {
-        dispatch({ type: "AUTH_FAIL", payload: err.response.data });
-        console.log(err);
-      }
+      dispatch(signUp(data));
     } else {
       dispatch(logIn(data));
     }
@@ -165,7 +155,10 @@ const Auth = () => {
           </form>
         </div>
         {message && (
-          <Alert message={message} handleCloseAlert={() => dispatch({type:"RESET"})} />
+          <Alert
+            message={message}
+            handleCloseAlert={() => dispatch({ type: "RESET" })}
+          />
         )}
       </div>
     </div>

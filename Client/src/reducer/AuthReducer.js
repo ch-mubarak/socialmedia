@@ -27,6 +27,21 @@ const authReducer = (state = initialState, action) => {
         message: action.payload.message,
       };
 
+    case "VERIFY_USER":
+      return {
+        ...state,
+        authData: {
+          ...state.authData,
+          user: {
+            ...state.authData.user,
+            isVerified: action.payload.success,
+          },
+        },
+        loading: false,
+        error: false,
+        message: null,
+      };
+
     case "RESET":
       return {
         ...state,

@@ -3,9 +3,10 @@ import email from "../../img/email.png";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import FadeLoader from "react-spinners/FadeLoader";
 import { useEffect } from "react";
-import { resendVerification, verify } from "../../api/AuthRequest";
+import { resendVerification } from "../../api/AuthRequest";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { verifyAccount } from "../../actions/AuthAction";
 
 const override = {
   display: "block",
@@ -13,41 +14,30 @@ const override = {
 };
 const Verify = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isVerified, setIsVerified] = useState(false);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.authReducer);
+  const [pendingResend, setPendingResend] = useState(false);
+  const { user } = useSelector((state) => state.authReducer.authData);
+  const { loading, message } = useSelector((state) => state.authReducer);
+
   const userId = searchParams.get("account");
   const token = searchParams.get("token");
 
-  async function verifyUser() {
-    setLoading(true);
-    try {
-      const response = await verify(userId, token);
-      setLoading(false);
-      setIsVerified(response.data.isVerified);
-      setMessage(response.data.message);
-    } catch (err) {
-      setLoading(false);
-      setMessage(err.response.data.message);
-    }
-  }
   const handleResendVerification = async () => {
     try {
-      setLoading(true);
+      setPendingResend(true);
       await resendVerification(user._id);
-      setLoading(false);
+      setPendingResend(false);
+      dispatch({ type: "RESET" });
       navigate("/verify");
     } catch (err) {
-      setLoading(false);
+      setPendingResend(false);
       console.log(err);
-      setMessage(err.response.data.message);
     }
   };
   useEffect(() => {
     if (userId && token) {
-    //   verifyUser();
+      dispatch(verifyAccount(userId, token));
     }
   }, []);
   return (
@@ -65,13 +55,27 @@ const Verify = () => {
       )}
 
       <div>
-        {isVerified && <button className="button button-logout">Login</button>}
-        <button
-          className="button button-verify"
-          onClick={handleResendVerification}
-        >
-          send again
-        </button>
+        {
+          <button
+            className="button button-logout"
+            onClick={() => dispatch({ type: "LOGOUT" })}
+          >
+            Logout
+          </button>
+        }
+        {!pendingResend && (
+          <button
+            className="button button-verify"
+            onClick={handleResendVerification}
+          >
+            send again
+          </button>
+        )}
+        {pendingResend && (
+          <button disabled={pendingResend} className="button button-verify">
+            Sending...
+          </button>
+        )}
       </div>
     </div>
   );
