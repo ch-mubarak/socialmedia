@@ -1,7 +1,14 @@
 import express from "express";
-import { loginUser, registerUser } from "../Controllers/AuthController.js";
+import {
+  loginUser,
+  registerUser,
+  resendVerification,
+  verifyAccount,
+} from "../Controllers/AuthController.js";
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.post("/resendVerification/:id", resendVerification);
+router.get("/verify", verifyAccount);
 export default router;

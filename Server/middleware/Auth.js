@@ -12,6 +12,11 @@ const authenticate = (req, res, next) => {
   }
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);
+    if (!user.isVerified) {
+      return res
+        .status(401)
+        .json({ message: "account not verified", unverified: true });
+    }
     req.user = user;
     next();
   } catch (error) {

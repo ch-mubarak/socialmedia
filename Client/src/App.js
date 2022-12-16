@@ -3,10 +3,13 @@ import Profile from "./pages/profile/Profile";
 import Home from "./pages/home/Home";
 import Auth from "./pages/Auth/Auth";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Error } from "./pages/404/Error";
+import Verify from "./pages/Verify/Verify";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import PublicRoute from "./routes/PublicRoute";
+import { useSelector } from "react-redux";
 function App() {
-  const user = useSelector((state) => state.authReducer.authData);
+  const user = useSelector((state) => state?.authReducer?.authData?.user);
   return (
     <div className="App">
       <div className="blur blur-primary"></div>
@@ -14,23 +17,50 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={user ? <Navigate to="/home" /> : <Navigate to="/login" />}
+          element={
+            <ProtectedRoute>
+              <Navigate to="/home" />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/home"
-          element={user ? <Home /> : <Navigate to="/login" />}
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/profile/:id"
-          element={user ? <Profile /> : <Navigate to="/login" />}
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/profile"
-          element={user ? <Profile /> : <Navigate to="/login" />}
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/login"
-          element={!user ? <Auth /> : <Navigate to="/home" />}
+          element={
+            <PublicRoute>
+              <Auth />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/verify"
+          element={
+            user && !user.isVerified ? <Verify /> : <Navigate to="/home" />
+          }
         />
         <Route path="/error" element={<Error />} />
         <Route path="/*" element={<Navigate to="/error" />} />

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Post from "../Models/postModal.js";
 import User from "../Models/userModal.js";
+import Report from "../Models/reportModal.js";
 import { v4 as uuidv4 } from "uuid";
 
 export const createNewPost = async (req, res) => {
@@ -292,3 +293,24 @@ export const getTimelinePost = async (req, res) => {
   }
 };
 
+export const reportPost = async (req, res) => {
+  const postId = req.params.id;
+  const { userId } = req.user;
+  const { type, message } = req.body;
+  if (!postId) {
+    return res.status(401).json({ message: "please provide postId" });
+  }
+  try {
+    const newReport = new Report({
+      postId,
+      reporter: userId,
+      type,
+      message,
+    });
+
+    await newReport.save();
+    res.status(201).json({ message: "post reported successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" });
+  }
+};
