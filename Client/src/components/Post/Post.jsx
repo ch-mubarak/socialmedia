@@ -11,6 +11,7 @@ import Actions from "../Actions/Actions";
 import useComponentVisible from "../../hooks/useComponentVisible";
 import Comments from "../Comments/Comments";
 import { likePost } from "../../api/PostRequest";
+import ReportModal from "../ReportModal/ReportModal";
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverVideos = process.env.REACT_APP_PUBLIC_VIDEOS;
@@ -21,6 +22,7 @@ const Post = React.forwardRef(({ data }, ref) => {
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(data.likes.length);
   const [showComments, setShowComments] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const { dropdownRef, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
@@ -45,6 +47,10 @@ const Post = React.forwardRef(({ data }, ref) => {
 
   return (
     <div ref={ref} className="post">
+      <ReportModal
+        openReportModal={openModal}
+        closeReportModal={() => setOpenModal(false)}
+      />
       <div className="postAuthor">
         <img
           src={
@@ -68,6 +74,7 @@ const Post = React.forwardRef(({ data }, ref) => {
               ref={dropdownRef}
               userId={data?.userId}
               postId={data?._id}
+              openReportModal={() => setOpenModal((pre) => !pre)}
             />
           )}
         </div>

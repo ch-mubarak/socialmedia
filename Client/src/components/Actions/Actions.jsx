@@ -7,7 +7,7 @@ import {
 import "./Actions.css";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost } from "../../actions/PostAction";
-const Actions = React.forwardRef(({ postId, userId }, ref) => {
+const Actions = React.forwardRef(({ postId, userId, openReportModal }, ref) => {
   const currentUserId = useSelector(
     (state) => state.authReducer.authData.user._id
   );
@@ -16,6 +16,7 @@ const Actions = React.forwardRef(({ postId, userId }, ref) => {
     console.log("deleting");
     dispatch(deletePost(postId));
   };
+
   return (
     <div ref={ref} className="actions">
       <ul>
@@ -29,7 +30,7 @@ const Actions = React.forwardRef(({ postId, userId }, ref) => {
             <UilTrashAlt /> Delete
           </li>
         )}
-        <li>
+        <li onClick={openReportModal}>
           <UilExclamationOctagon />
           Report
         </li>
