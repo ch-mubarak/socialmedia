@@ -267,6 +267,30 @@ export const getTimelinePost = async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "reports",
+          localField: "allPosts._id",
+          foreignField: "postId",
+          as: "reports",
+        },
+      },
+      {
+        $project: {
+          allPosts: 1,
+          user: 1,
+          reports: {
+            $size: "$reports",
+          },
+        },
+      },
+      {
+        $match: {
+          reports: {
+            $lt: 5,
+          },
+        },
+      },
+      {
         $replaceRoot: {
           newRoot: {
             $mergeObjects: ["$allPosts", "$user"],
@@ -300,6 +324,12 @@ export const reportPost = async (req, res) => {
   if (!postId) {
     return res.status(401).json({ message: "please provide postId" });
   }
+  const isReported = await Report.findOne({ userId, postId });
+  if (isReported) {
+    return res
+      .status(401)
+      .json({ message: "You have already reported this post" });
+  }
   try {
     const newReport = new Report({
       postId,
@@ -307,7 +337,6 @@ export const reportPost = async (req, res) => {
       type,
       message,
     });
-
     await newReport.save();
     res.status(201).json({ message: "post reported successfully" });
   } catch (error) {

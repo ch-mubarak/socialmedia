@@ -47,10 +47,13 @@ const Post = React.forwardRef(({ data }, ref) => {
 
   return (
     <div ref={ref} className="post">
-      <ReportModal
-        openReportModal={openModal}
-        closeReportModal={() => setOpenModal(false)}
-      />
+      {openModal && (
+        <ReportModal
+          postId={data._id}
+          openReportModal={openModal}
+          closeReportModal={() => setOpenModal(false)}
+        />
+      )}
       <div className="postAuthor">
         <img
           src={

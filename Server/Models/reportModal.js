@@ -13,7 +13,6 @@ const reportSchema = new mongoose.Schema(
       ref: "User",
     },
     type: String,
-    message: String,
   },
   { timestamps: true }
 );

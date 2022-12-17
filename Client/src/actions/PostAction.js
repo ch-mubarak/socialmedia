@@ -29,3 +29,14 @@ export const deletePost = (id) => async (dispatch) => {
     console.log(err);
   }
 };
+
+export const reportPost = (id, type) => async (dispatch) => {
+  dispatch({ type: "POST_PENDING" });
+  try {
+    await PostApi.reportPost(id, type);
+    dispatch({ type: "REPORT_POST", payload: id });
+  } catch (err) {
+    dispatch({ type: "POST_FAIL" });
+    console.log(err);
+  }
+};

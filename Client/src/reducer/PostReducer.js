@@ -30,9 +30,7 @@ const postReducer = (state = initialState, action) => {
     case "POST_DELETE_SUCCESS":
       return {
         ...state,
-        posts: [
-          ...state.posts.filter((post) => post._id !== action.payload),
-        ],
+        posts: [...state.posts.filter((post) => post._id !== action.payload)],
         uploading: false,
         error: false,
       };
@@ -46,6 +44,14 @@ const postReducer = (state = initialState, action) => {
         uploading: false,
         error: false,
         posts: [...state.posts, ...action.payload],
+      };
+
+    case "REPORT_POST":
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        posts: [...state.posts.filter((post) => post._id !== action.payload)],
       };
     default:
       return state;
