@@ -12,6 +12,7 @@ import useComponentVisible from "../../hooks/useComponentVisible";
 import Comments from "../Comments/Comments";
 import { likePost } from "../../api/PostRequest";
 import ReportModal from "../ReportModal/ReportModal";
+import Map from "../Map/Map";
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverVideos = process.env.REACT_APP_PUBLIC_VIDEOS;
@@ -88,6 +89,7 @@ const Post = React.forwardRef(({ data }, ref) => {
           <source src={`${serverVideos}/${data.video}`} type="video/mp4" />
         </video>
       )}
+      {data.map && <Map lat={data.map.latitude} lng={data.map.longitude} />}
       <div className="postReact">
         <img
           onClick={() => handlePostLike(data._id)}

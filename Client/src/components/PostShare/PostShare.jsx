@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPost } from "../../actions/PostAction";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import axios from "axios";
+import { useEffect } from "react";
+import Map from "../Map/Map";
 const token = localStorage.getItem("token");
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
@@ -18,6 +20,9 @@ const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 const PostShare = () => {
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [showLocation, setShowLocation] = useState(false);
   const [postDescription, setPostDescription] = useState("");
   const { user } = useSelector((state) => state.authReducer.authData);
   const [uploading, setUploading] = useState(null);
@@ -40,6 +45,7 @@ const PostShare = () => {
     setImage(null);
     setVideo(null);
     setUploading(null);
+    setShowLocation(false);
     setPostDescription("");
   };
   const handlePostSubmit = async (event) => {
@@ -92,11 +98,26 @@ const PostShare = () => {
       } catch (err) {
         return console.log(err);
       }
+    } else if (showLocation && latitude && longitude) {
+      newPost.map = { latitude, longitude };
+      dispatch(createPost(newPost));
+      reset();
     } else {
       dispatch(createPost(newPost));
       reset();
     }
   };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      },
+      (err) => console.log(err)
+    );
+  }, []);
+
   return (
     <>
       <form onSubmit={handlePostSubmit}>
@@ -134,7 +155,11 @@ const PostShare = () => {
                 <UilPlayCircle />
                 Video
               </div>
-              <div className="option" style={{ color: "var(--location)" }}>
+              <div
+                className="option"
+                style={{ color: "var(--location)" }}
+                onClick={() => setShowLocation((pre) => !pre)}
+              >
                 <UilLocationPoint />
                 Location
               </div>
@@ -182,6 +207,7 @@ const PostShare = () => {
                 )}
               </div>
             )}
+            {showLocation && location && <Map lat={latitude} lng={longitude} />}
           </div>
         </div>
       </form>
