@@ -1,5 +1,5 @@
 import "./ReportModal.css";
-import { Modal } from "@mantine/core";
+import { Modal, createStyles } from "@mantine/core";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { reportPost } from "../../actions/PostAction";
@@ -15,12 +15,26 @@ function ReportModal({ openReportModal, closeReportModal, postId }) {
     closeReportModal();
     dispatch(reportPost(postId, reportType));
   };
+
   return (
     <Modal
       centered
       opened={openReportModal}
       onClose={closeReportModal}
       title="Report post"
+      // inline styling
+      styles={(theme) => ({
+        title: {
+          fontWeight: "700",
+          marginLeft: "33%",
+        },
+        inner: {
+          width: "100%",
+        },
+        modal: {
+          width: "20rem",
+        },
+      })}
     >
       <div className="report-post">
         <div className="report-input">

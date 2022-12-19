@@ -13,6 +13,7 @@ import ProgressBar from "../ProgressBar/ProgressBar";
 import axios from "axios";
 import { useEffect } from "react";
 import Map from "../Map/Map";
+import ScheduledModal from "../ScheduledModal/ScheduledModal";
 const token = localStorage.getItem("token");
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
@@ -120,6 +121,7 @@ const PostShare = () => {
 
   return (
     <>
+      <ScheduledModal />
       <form onSubmit={handlePostSubmit}>
         <div className="postShare">
           <img
