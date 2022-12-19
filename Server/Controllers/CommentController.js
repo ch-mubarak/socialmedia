@@ -148,18 +148,20 @@ export const likeComment = async (req, res) => {
       res.status(201).json({ message: "Comment unlike successfully" });
     } else {
       await comment.updateOne({ $push: { likes: userId } });
-      const user = await User.findById(userId);
-      const commentAuthor = await User.findById(comment.userId);
-      const notification = {
-        id: uuidv4(),
-        title: "Comment reaction",
-        profilePicture: user.profilePicture,
-        message: `${user.firstName} ${user.lastName} liked your comment`,
-        time: Date.now(),
-        link: `/profile/${user._id}`,
-      };
-      commentAuthor.notifications.unshift(notification);
-      await commentAuthor.save();
+      if (!userId == comment.userId) {
+        const user = await User.findById(userId);
+        const commentAuthor = await User.findById(comment.userId);
+        const notification = {
+          id: uuidv4(),
+          title: "Comment reaction",
+          profilePicture: user.profilePicture,
+          message: `${user.firstName} ${user.lastName} liked your comment`,
+          time: Date.now(),
+          link: `/profile/${user._id}`,
+        };
+        commentAuthor.notifications.unshift(notification);
+        await commentAuthor.save();
+      }
       res.status(201).json({ message: "Comment liked successful" });
     }
   } catch (err) {

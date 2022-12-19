@@ -7,16 +7,14 @@ export const createPost = (data) => async (dispatch) => {
     const response = await PostApi.createPost(data);
     dispatch({ type: "POST_SUCCESS", payload: response.data.newPost });
     dispatch({ type: "UPDATE_POST_COUNT", payload: 1 });
-    if (data.scheduledDate) {
-      toast("Post scheduled successfully", {
-        icon: "⌛",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-    }
+    toast(response.data.message, {
+      icon: "⌛",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
   } catch (err) {
     if (err.response?.data?.expired) {
       return dispatch({ type: "LOGOUT" });
@@ -41,7 +39,7 @@ export const deletePost = (id) => async (dispatch) => {
     dispatch({ type: "POST_DELETE_SUCCESS", payload: response.data.id });
     dispatch({ type: "UPDATE_POST_COUNT", payload: -1 });
     //toast
-    toast("Post deleted successfully", {
+    toast(response.data.message, {
       icon: "👏",
       style: {
         borderRadius: "10px",

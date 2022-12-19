@@ -21,7 +21,9 @@ export const createNewPost = async (req, res) => {
       lastName: post.userId.lastName,
       profilePicture: post.userId.profilePicture,
     };
-    res.status(201).json({ message: "new post created", newPost });
+    let message = "New post created successfully";
+    if (newPost.scheduledDate) message = "Post scheduled successful";
+    res.status(201).json({ message, newPost });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "something went wrong" });
