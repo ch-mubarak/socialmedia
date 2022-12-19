@@ -1,12 +1,4 @@
-import axios from "axios";
-const token = localStorage.getItem("token");
-const config = {
-  withCredentials: true,
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-};
-const API = axios.create(config);
+import API from "../config/axios";
 
 export const getFollowers = (id) => API.get(`/user/followers/${id}`);
 export const followUser = (id) => API.put(`/user/${id}/follow`);

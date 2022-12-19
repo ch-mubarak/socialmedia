@@ -62,3 +62,31 @@
 .detail > span {
   font-weight: bold;
 }
+
+.detail > div {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.detail > div > input {
+  padding: 0.4rem;
+  border: 2px solid #262424;
+  border-radius: 0.5rem;
+  flex: 1;
+}
+.edit-caption {
+  position: absolute;
+  right: 2.2rem;
+}
+.detail > div > div {
+  width: 1.2rem;
+  height: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #534e4e;
+}

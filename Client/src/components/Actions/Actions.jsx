@@ -7,38 +7,40 @@ import {
 import "./Actions.css";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost } from "../../actions/PostAction";
-const Actions = React.forwardRef(({ postId, userId, openReportModal }, ref) => {
-  const currentUserId = useSelector(
-    (state) => state.authReducer.authData.user._id
-  );
-  const dispatch = useDispatch();
-  const handleDelete = () => {
-    const confirm = window.confirm("Are you sure you ?");
-    console.log(confirm);
-    if (!confirm) return;
-    dispatch(deletePost(postId));
-  };
+const Actions = React.forwardRef(
+  ({ postId, userId, openReportModal, handleEdit }, ref) => {
+    const currentUserId = useSelector(
+      (state) => state.authReducer.authData.user._id
+    );
+    const dispatch = useDispatch();
+    const handleDelete = () => {
+      const confirm = window.confirm("Are you sure you ?");
+      console.log(confirm);
+      if (!confirm) return;
+      dispatch(deletePost(postId));
+    };
 
-  return (
-    <div ref={ref} className="actions">
-      <ul>
-        {currentUserId === userId && (
-          <li>
-            <UilEditAlt /> Edit
+    return (
+      <div ref={ref} className="actions">
+        <ul>
+          {currentUserId === userId && (
+            <li onClick={handleEdit}>
+              <UilEditAlt /> Edit
+            </li>
+          )}
+          {currentUserId === userId && (
+            <li onClick={handleDelete}>
+              <UilTrashAlt /> Delete
+            </li>
+          )}
+          <li onClick={openReportModal}>
+            <UilExclamationOctagon />
+            Report
           </li>
-        )}
-        {currentUserId === userId && (
-          <li onClick={handleDelete}>
-            <UilTrashAlt /> Delete
-          </li>
-        )}
-        <li onClick={openReportModal}>
-          <UilExclamationOctagon />
-          Report
-        </li>
-      </ul>
-    </div>
-  );
-});
+        </ul>
+      </div>
+    );
+  }
+);
 
 export default Actions;

@@ -44,6 +44,7 @@ export const getPost = async (req, res) => {
 export const updatePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.user;
+  const { description } = req.body;
   if (!(id && userId)) {
     res.status(401).json({ message: "all filed are required" });
   }
@@ -55,9 +56,10 @@ export const updatePost = async (req, res) => {
     if (post.userId.toString() !== userId) {
       return res.status(403).json({ message: "your not authorized" });
     }
-    await post.updateOne({ $set: req.body });
+    await post.updateOne({ description });
     res.status(201).json({ message: "Post updated successfully" });
-  } catch (error) {
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "something went wrong" });
   }
 };

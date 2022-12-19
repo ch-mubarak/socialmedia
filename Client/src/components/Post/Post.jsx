@@ -6,13 +6,15 @@ import Share from "../../img/share.png";
 import Comment from "../../img/comment.png";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { UilEllipsisH } from "@iconscout/react-unicons";
 import Actions from "../Actions/Actions";
 import useComponentVisible from "../../hooks/useComponentVisible";
 import Comments from "../Comments/Comments";
-import { likePost } from "../../api/PostRequest";
+import { editPost, likePost } from "../../api/PostRequest";
 import ReportModal from "../ReportModal/ReportModal";
+import { UilEdit, UilTimes, UilEllipsisH } from "@iconscout/react-unicons";
+
 import Map from "../Map/Map";
+import { useRef } from "react";
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverVideos = process.env.REACT_APP_PUBLIC_VIDEOS;
@@ -22,11 +24,14 @@ const Post = React.forwardRef(({ data }, ref) => {
   const { user } = useSelector((state) => state.authReducer.authData);
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likeCount, setLikeCount] = useState(data.likes.length);
+  const [caption, setCaption] = useState(data.description);
   const [showComments, setShowComments] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const { dropdownRef, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
+  const editRef = useRef();
   const handlePostLike = async (id) => {
     try {
       await likePost(id);
@@ -44,6 +49,24 @@ const Post = React.forwardRef(({ data }, ref) => {
       }
       console.log(err);
     }
+  };
+
+  const handleEdit = () => {
+    setShowEdit(true);
+    editRef?.current?.focus();
+  };
+
+  const handleSubmitEdit = async () => {
+    const newCaption = editRef.current.value;
+    const postId = data._id;
+    if (newCaption.trim().length === 0) return;
+    try {
+      await editPost(postId, newCaption);
+      setCaption(newCaption);
+    } catch (err) {
+      console.log(err);
+    }
+    setShowEdit(false);
   };
 
   return (
@@ -79,6 +102,7 @@ const Post = React.forwardRef(({ data }, ref) => {
               userId={data?.userId}
               postId={data?._id}
               openReportModal={() => setOpenModal((pre) => !pre)}
+              handleEdit={handleEdit}
             />
           )}
         </div>
@@ -107,7 +131,18 @@ const Post = React.forwardRef(({ data }, ref) => {
         {likeCount} Likes
       </span>
       <div className="detail">
-        <span> {data.description}</span>
+        {!showEdit && <span>{caption}</span>}
+        {showEdit && (
+          <div>
+            <input defaultValue={caption} type="text" ref={editRef} />
+            <div className="edit-caption" onClick={handleSubmitEdit}>
+              <UilEdit />
+            </div>
+            <div onClick={() => setShowEdit(false)}>
+              <UilTimes />
+            </div>
+          </div>
+        )}
       </div>
       {showComments && (
         <div>

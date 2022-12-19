@@ -1,12 +1,4 @@
-import axios from "axios";
-const token = localStorage.getItem("token");
-const config = {
-  withCredentials: true,
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-};
-const API = axios.create(config);
+import API from "../config/axios";
 
 export const fetchComments = (postId) => API.get(`/comment/${postId}`);
 export const postComment = (postId, comment) =>
