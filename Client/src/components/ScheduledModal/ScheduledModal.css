@@ -32,12 +32,22 @@
   justify-content: flex-end;
   gap: 0.5rem;
   margin-top: 0.5rem;
+  position: relative;
+  right: 5.4rem;
 }
 
-.schedule > div > button {
+.schedule-button {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.3rem;
+}
+
+.schedule > div > button,
+.schedule-button {
   border: none;
   color: #444141;
   cursor: pointer;
   padding: 0.5rem;
   font-weight: 600;
+  border-radius: 2px;
 }

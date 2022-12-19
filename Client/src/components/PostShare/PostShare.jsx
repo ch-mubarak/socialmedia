@@ -18,7 +18,7 @@ const token = localStorage.getItem("token");
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
-const PostShare = ({ isScheduling, scheduledDate }) => {
+const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
   const [latitude, setLatitude] = useState(null);
@@ -48,11 +48,16 @@ const PostShare = ({ isScheduling, scheduledDate }) => {
     setVideo(null);
     setUploading(null);
     setShowLocation(false);
-    setOpenSchedule(false);
     setPostDescription("");
   };
   const handlePostSubmit = async (event) => {
     event.preventDefault();
+
+    //closing schedule modal
+    closeSchedule();
+    
+    if (postDescription.trim().length === 0) return;
+
     const newPost = {
       description: postDescription,
       scheduledDate: scheduledDate,
@@ -183,7 +188,7 @@ const PostShare = ({ isScheduling, scheduledDate }) => {
                   Schedule
                 </div>
               )}
-              {(postDescription.trim() || image) && !isScheduling && (
+              {postDescription.trim() && !isScheduling && (
                 <button className="button ps-button" disabled={uploading}>
                   {uploading ? "Uploading..." : "Share"}
                 </button>
@@ -226,6 +231,15 @@ const PostShare = ({ isScheduling, scheduledDate }) => {
             {showLocation && location && <Map lat={latitude} lng={longitude} />}
           </div>
         </div>
+        {isScheduling && (
+          <button
+            className="schedule-button"
+            disabled={!postDescription.trim()}
+            onSubmit={handlePostSubmit}
+          >
+            Schedule
+          </button>
+        )}
       </form>
       <div className="spinner"></div>
     </>

@@ -14,12 +14,22 @@ const postReducer = (state = initialState, action) => {
         error: false,
       };
     case "POST_SUCCESS":
-      return {
-        ...state,
-        posts: [action.payload, ...state.posts],
-        uploading: false,
-        error: false,
-      };
+      //checking whether the post is scheduled or not
+      if (!action.payload.scheduledDate) {
+        return {
+          ...state,
+          posts: [action.payload, ...state.posts],
+          uploading: false,
+          error: false,
+        };
+      } else {
+        return {
+          ...state,
+          uploading: false,
+          error: false,
+        };
+      }
+
     case "POST_FAIL":
       return {
         ...state,
