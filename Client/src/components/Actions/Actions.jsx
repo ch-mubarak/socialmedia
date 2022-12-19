@@ -13,7 +13,9 @@ const Actions = React.forwardRef(({ postId, userId, openReportModal }, ref) => {
   );
   const dispatch = useDispatch();
   const handleDelete = () => {
-    console.log("deleting");
+    const confirm = window.confirm("Are you sure you ?");
+    console.log(confirm);
+    if (!confirm) return;
     dispatch(deletePost(postId));
   };
 
