@@ -15,6 +15,7 @@ import { UilEdit, UilTimes, UilEllipsisH } from "@iconscout/react-unicons";
 
 import Map from "../Map/Map";
 import { useRef } from "react";
+import { useEffect } from "react";
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverVideos = process.env.REACT_APP_PUBLIC_VIDEOS;
@@ -51,11 +52,6 @@ const Post = React.forwardRef(({ data }, ref) => {
     }
   };
 
-  const handleEdit = () => {
-    setShowEdit(true);
-    editRef?.current?.focus();
-  };
-
   const handleSubmitEdit = async () => {
     const newCaption = editRef.current.value;
     const postId = data._id;
@@ -68,6 +64,12 @@ const Post = React.forwardRef(({ data }, ref) => {
     }
     setShowEdit(false);
   };
+
+  useEffect(() => {
+    if (showEdit) {
+      editRef.current.focus();
+    }
+  }, [showEdit]);
 
   return (
     <div ref={ref} className="post">
@@ -102,7 +104,7 @@ const Post = React.forwardRef(({ data }, ref) => {
               userId={data?.userId}
               postId={data?._id}
               openReportModal={() => setOpenModal((pre) => !pre)}
-              handleEdit={handleEdit}
+              onEdit={() => setShowEdit(true)}
             />
           )}
         </div>

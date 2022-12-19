@@ -8,7 +8,7 @@ import "./Actions.css";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost } from "../../actions/PostAction";
 const Actions = React.forwardRef(
-  ({ postId, userId, openReportModal, handleEdit }, ref) => {
+  ({ postId, userId, openReportModal, onEdit }, ref) => {
     const currentUserId = useSelector(
       (state) => state.authReducer.authData.user._id
     );
@@ -24,7 +24,7 @@ const Actions = React.forwardRef(
       <div ref={ref} className="actions">
         <ul>
           {currentUserId === userId && (
-            <li onClick={handleEdit}>
+            <li onClick={onEdit}>
               <UilEditAlt /> Edit
             </li>
           )}
