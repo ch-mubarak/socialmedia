@@ -18,12 +18,13 @@ const token = localStorage.getItem("token");
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
-const PostShare = () => {
+const PostShare = ({ isScheduling, scheduledDate }) => {
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [showLocation, setShowLocation] = useState(false);
+  const [openSchedule, setOpenSchedule] = useState(false);
   const [postDescription, setPostDescription] = useState("");
   const { user } = useSelector((state) => state.authReducer.authData);
   const [uploading, setUploading] = useState(null);
@@ -47,12 +48,14 @@ const PostShare = () => {
     setVideo(null);
     setUploading(null);
     setShowLocation(false);
+    setOpenSchedule(false);
     setPostDescription("");
   };
   const handlePostSubmit = async (event) => {
     event.preventDefault();
     const newPost = {
       description: postDescription,
+      scheduledDate: scheduledDate,
     };
     if (image) {
       const data = new FormData();
@@ -121,7 +124,10 @@ const PostShare = () => {
 
   return (
     <>
-      <ScheduledModal />
+      <ScheduledModal
+        openSchedule={openSchedule}
+        closeSchedule={() => setOpenSchedule(false)}
+      />
       <form onSubmit={handlePostSubmit}>
         <div className="postShare">
           <img
@@ -165,11 +171,19 @@ const PostShare = () => {
                 <UilLocationPoint />
                 Location
               </div>
-              <div className="option" style={{ color: "var(--schedule)" }}>
-                <UilSchedule />
-                Schedule
-              </div>
-              {(postDescription.trim() || image) && (
+
+              {/* checking the whether its inside schedule modal or not */}
+              {!isScheduling && (
+                <div
+                  className="option"
+                  style={{ color: "var(--schedule)" }}
+                  onClick={() => setOpenSchedule((pre) => !pre)}
+                >
+                  <UilSchedule />
+                  Schedule
+                </div>
+              )}
+              {(postDescription.trim() || image) && !isScheduling && (
                 <button className="button ps-button" disabled={uploading}>
                   {uploading ? "Uploading..." : "Share"}
                 </button>

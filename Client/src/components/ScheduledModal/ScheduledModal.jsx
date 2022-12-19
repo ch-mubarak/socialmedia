@@ -1,18 +1,41 @@
-import { useState } from "react";
 import { Modal } from "@mantine/core";
-
-const ScheduledModal = () => {
-  const [opened, setOpened] = useState(true);
-
+import moment from "moment-timezone";
+import { useState } from "react";
+import "./ScheduledModal.css";
+import PostShare from "../PostShare/PostShare";
+const ScheduledModal = ({ openSchedule, closeSchedule }) => {
+  const currentDate = moment().tz("Asia/Kolkata").format("YYYY-MM-DDTHH:mm");
+  const [scheduledDate, setScheduledDate] = useState(
+    moment().tz("Asia/Kolkata").format("YYYY-MM-DDTHH:mm")
+  );
   return (
     <Modal
-      opened={opened}
-      onClose={() => setOpened(false)}
+      opened={openSchedule}
+      onClose={closeSchedule}
       title="Schedule your post"
+      overflow="inside"
+      styles={(theme) => ({
+        title: {
+          fontWeight: "700",
+        },
+        inner: {
+          width: "100%",
+        },
+      })}
     >
       <div className="schedule">
         <p>Select a date and time the future for your post to be published</p>
-        <input type="datetime-local" />
+        {/* checking whether the component inside schedule modal */}
+        <PostShare isScheduling={true} scheduledDate={scheduledDate} />
+        <input
+          type="datetime-local"
+          value={scheduledDate}
+          min={currentDate}
+          onChange={(e) => setScheduledDate(e.target.value)}
+        />
+        <div className="schedule-buttons">
+          <button onClick={closeSchedule}>Cancel</button>
+        </div>
       </div>
     </Modal>
   );

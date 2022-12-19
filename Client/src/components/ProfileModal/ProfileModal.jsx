@@ -2,6 +2,7 @@ import { Modal, useMantineTheme } from "@mantine/core";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../../actions/UserAction";
+import "./ProfileModal.css"
 
 const ProfileModal = ({ opened, onClose, handleClose }) => {
   const theme = useMantineTheme();
@@ -42,7 +43,7 @@ const ProfileModal = ({ opened, onClose, handleClose }) => {
       }
       overlayOpacity={0.55}
       overlayBlur={3}
-      size="50%"
+      size="40%"
     >
       <form className="infoForm" onSubmit={handleSubmit}>
         <h3>Your Info</h3>

@@ -168,6 +168,22 @@ export const getUserPosts = async (req, res) => {
         },
       },
       {
+        $match: {
+          $or: [
+            {
+              "posts.scheduledDate": {
+                $exists: false,
+              },
+            },
+            {
+              "posts.scheduledDate": {
+                $lt: new Date(),
+              },
+            },
+          ],
+        },
+      },
+      {
         $project: {
           _id: 0,
         },
@@ -242,6 +258,24 @@ export const getTimelinePost = async (req, res) => {
       {
         $unwind: {
           path: "$allPosts",
+        },
+      },
+
+      //matching posts that are not scheduled or whose scheduled time has passed,
+      {
+        $match: {
+          $or: [
+            {
+              "allPosts.scheduledDate": {
+                $exists: false,
+              },
+            },
+            {
+              "allPosts.scheduledDate": {
+                $lt: new Date(),
+              },
+            },
+          ],
         },
       },
       {
