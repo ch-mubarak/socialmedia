@@ -3,14 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import "./Auth.css";
 import Logo from "../../img/logo.png";
 import { logIn, signUp } from "../../actions/AuthAction";
-import { useNavigate } from "react-router-dom";
 import Alert from "../../components/Alert/Alert";
+const emailRegex =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const usernameRegex = /^[a-zA-Z0-9]{3,}$/;
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [passwordMatching, setPasswordMatching] = useState(true);
   const dispatch = useDispatch();
-  const { loading, message } = useSelector((state) => state.authReducer);
+  const { loading } = useSelector((state) => state.authReducer);
+  const [validationMessage, setValidationMessage] = useState("");
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -21,32 +23,55 @@ const Auth = () => {
   });
 
   const handleChange = (e) => {
-    dispatch({ type: "RESET" });
     const name = e.target.name;
     const value = e.target.value;
-    setPasswordMatching(true);
     setData((preData) => {
       return {
         ...preData,
         [name]: value,
       };
     });
+    setValidationMessage("");
+  };
+
+  const validate = () => {
+    if (data.email && !emailRegex.test(data.email)) {
+      setValidationMessage("Please enter a valid email");
+      return false;
+    }
+
+    if (!usernameRegex.test(data.username)) {
+      setValidationMessage(
+        "Enter a valid username no special character no whitespace"
+      );
+      return false
+    }
+
+    if (data.password.length < 3) {
+      setValidationMessage("Password minimum length is 3");
+      return false;
+    }
+
+    if (isSignUp && data.confirmedPassword !== data.password) {
+      setValidationMessage("password doesn't matching");
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isSignUp) {
-      if (data.confirmedPassword !== data.password) {
-        return setPasswordMatching(false);
-      }
-      dispatch(signUp(data));
-    } else {
-      dispatch(logIn(data));
+    if (!isSignUp && validate()) {
+      return dispatch(logIn(data));
+    }
+    if (validate()) {
+      return dispatch(signUp(data));
     }
   };
 
   const resetForm = () => {
-    dispatch({ type: "RESET" });
+    setValidationMessage("");
     setData({
       firstName: "",
       lastName: "",
@@ -55,7 +80,6 @@ const Auth = () => {
       password: "",
       confirmedPassword: "",
     });
-    setPasswordMatching(true);
   };
   return (
     <div className="auth">
@@ -132,9 +156,6 @@ const Auth = () => {
                 />
               )}
             </div>
-            {!passwordMatching && (
-              <span className="validation">* Password not matching *</span>
-            )}
             <div>
               <span
                 style={{ fontSize: "12px", cursor: "pointer" }}
@@ -154,10 +175,10 @@ const Auth = () => {
             </div>
           </form>
         </div>
-        {message && (
+        {validationMessage && (
           <Alert
-            message={message}
-            handleCloseAlert={() => dispatch({ type: "RESET" })}
+            message={validationMessage}
+            handleCloseAlert={() => setValidationMessage("")}
           />
         )}
       </div>

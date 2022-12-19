@@ -83,14 +83,6 @@
   width: 100%;
 }
 
-.validation {
-  color: red;
-  font-size: 12px;
-  align-self: flex-end;
-  margin-right: 15px;
-  margin-top: -10px;
-}
-
 .a-right {
   display: flex;
   flex-direction: column;

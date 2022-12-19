@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import * as AuthApi from "../api/AuthRequest";
 
 export const logIn = (formData) => async (dispatch) => {
@@ -7,6 +8,14 @@ export const logIn = (formData) => async (dispatch) => {
     dispatch({ type: "AUTH_SUCCESS", payload: data });
   } catch (err) {
     dispatch({ type: "AUTH_FAIL", payload: err.response.data });
+    toast(err.response.data.message, {
+      icon: "😢",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
     console.log(err);
   }
 };
@@ -18,6 +27,14 @@ export const signUp = (formData) => async (dispatch) => {
     dispatch({ type: "AUTH_SUCCESS", payload: data });
   } catch (err) {
     dispatch({ type: "AUTH_FAIL", payload: err.response.data });
+    toast(err.response.data.message, {
+      icon: "😢",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
     console.log(err);
   }
 };
