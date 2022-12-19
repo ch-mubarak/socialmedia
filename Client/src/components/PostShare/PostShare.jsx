@@ -54,8 +54,8 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
     event.preventDefault();
 
     //closing schedule modal
-    closeSchedule();
-    
+    isScheduling && closeSchedule();
+
     if (postDescription.trim().length === 0) return;
 
     const newPost = {

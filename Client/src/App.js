@@ -8,12 +8,14 @@ import Verify from "./pages/Verify/Verify";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import { useSelector } from "react-redux";
+import { Toaster } from "react-hot-toast";
 function App() {
   const user = useSelector((state) => state?.authReducer?.authData?.user);
   return (
     <div className="App">
       <div className="blur blur-primary"></div>
       <div className="blur blur-secondary"></div>
+      <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         <Route
           path="/"
