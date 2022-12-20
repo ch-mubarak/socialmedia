@@ -1,31 +1,37 @@
 .notification-list {
   position: absolute;
-  display: flex;
-  flex-direction: column;
   top: 2rem;
   right: 10px;
-  background-color: rgb(255, 254, 254);
   max-height: 30rem;
-  width: 14rem;
+  width: 15rem;
   -webkit-box-shadow: 3px 12px 35px 0px rgba(0, 0, 0, 0.54);
   -moz-box-shadow: 3px 12px 35px 0px rgba(0, 0, 0, 0.54);
   box-shadow: 3px 12px 35px 0px rgba(0, 0, 0, 0.54);
   overflow-y: scroll;
-  overflow-x: hidden;
   border-radius: 1rem 0 1rem 1rem;
+}
+
+.notification-list > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background-color: #ffffff;
+  padding: 0.4rem;
 }
 
 .notification-item {
   cursor: pointer;
+  background-color: #fff;
   position: relative;
   text-align: left;
   display: flex;
   gap: 0.5rem;
+  margin: 0;
   justify-content: flex-start;
   align-items: center;
   padding: 1rem;
-  box-shadow: 0 -1px 0 rgb(223, 210, 210);
-  width: 100%;
+  border-radius: 10px;
+  box-shadow: 3px 12px 35px 0px rgba(79, 76, 76, 0.54);
 }
 
 .notification-item > a > img {
@@ -61,15 +67,14 @@
   color: #808080;
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
+  width: 100%;
   box-shadow: 0px -1px 0px rgb(230, 216, 216);
 }
 
 .notification-clear > svg {
   width: 2rem;
   transition: all ease-in-out 0.2s;
-  
 }
 .notification-clear > svg:hover {
   transform: scale(1.1);
-  
 }

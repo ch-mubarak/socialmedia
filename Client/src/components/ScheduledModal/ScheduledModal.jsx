@@ -5,6 +5,7 @@ import "./ScheduledModal.css";
 import PostShare from "../PostShare/PostShare";
 
 const ScheduledModal = ({ openSchedule, closeSchedule }) => {
+  //converting default time to indian standerd time
   const currentDate = moment().tz("Asia/Kolkata").format("YYYY-MM-DDTHH:mm");
   const [scheduledDate, setScheduledDate] = useState(currentDate);
   return (
@@ -23,7 +24,7 @@ const ScheduledModal = ({ openSchedule, closeSchedule }) => {
       })}
     >
       <div className="schedule">
-        <p>Select a date and time the future for your post to be published</p>
+        <p>Select a date and time in the future for your post to be published</p>
         {/* checking whether the component inside schedule modal */}
         <PostShare
           isScheduling={true}

@@ -16,20 +16,22 @@ const Notifications = React.forwardRef(({ notifications }, ref) => {
 
   return (
     <div ref={ref} className="notification-list">
-      {notifications.map((notification) => {
-        return (
-          <div key={notification.id} className="notification-item">
-            <Link to={notification.link}>
-              <img src={`${serverImages}/${notification.profilePicture}`} />
-            </Link>
-            <div>
-              <h2>{notification.title}</h2>
-              <p>{notification.message}</p>
-              <p>{moment(notification.time).fromNow()}</p>
+      <div>
+        {notifications.map((notification) => {
+          return (
+            <div key={notification.id} className="notification-item">
+              <Link to={notification.link}>
+                <img src={`${serverImages}/${notification.profilePicture}`} />
+              </Link>
+              <div>
+                <h2>{notification.title}</h2>
+                <p>{notification.message}</p>
+                <p>{moment(notification.time).fromNow()}</p>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
       <div className="notification-clear" onClick={handleClearNotification}>
         <UilTrashAlt />
       </div>
