@@ -215,6 +215,7 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
                   onClick={() => {
                     setImage(null);
                     setVideo(null);
+                    setShowLocation(false);
                   }}
                 />
                 {image && <img src={URL.createObjectURL(image)} alt="" />}
@@ -228,7 +229,18 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
                 )}
               </div>
             )}
-            {showLocation && location && <Map lat={latitude} lng={longitude} />}
+            {showLocation && location && (
+              <div className="previewMap">
+                <UilTimes
+                  onClick={() => {
+                    setImage(null);
+                    setVideo(null);
+                    setShowLocation(false);
+                  }}
+                />
+                <Map lat={latitude} lng={longitude} />
+              </div>
+            )}
           </div>
         </div>
         {isScheduling && (
