@@ -11,6 +11,7 @@ import PostRoute from "./Routes/PostRoute.js";
 import UploadRoute from "./Routes/UploadRoute.js";
 import CommentRoute from "./Routes/CommentRoute.js";
 import ChatRoute from "./Routes/ChatRoute.js";
+import MessageRoute from "./Routes/MessageRoute.js";
 import { corsOptions } from "./config/cors.js";
 
 const app = express();
@@ -32,6 +33,7 @@ app.use("/post", PostRoute);
 app.use("/upload", UploadRoute);
 app.use("/comment", CommentRoute);
 app.use("/chat", ChatRoute);
+app.use("/message", MessageRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`server up and running on ${PORT.yellow}`));
