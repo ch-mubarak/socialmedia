@@ -198,7 +198,7 @@ export const clearNotifications = async (req, res) => {
     await User.findByIdAndUpdate(userId, {
       notifications: [],
     });
-    res.status(200).json("notification cleared successfully");
+    res.status(200).json({message:"notification cleared successfully"});
   } catch (error) {
     res.status(500).json("something went wrong");
   }

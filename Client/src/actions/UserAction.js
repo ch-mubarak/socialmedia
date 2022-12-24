@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import * as UserApi from "../api/UserRequest";
 
 export const getUserDetails = (id) => async (dispatch) => {
@@ -42,8 +43,16 @@ export const getNotifications = () => async (dispatch) => {
 
 export const clearNotifications = (id) => async (dispatch) => {
   try {
-    await UserApi.clearNotifications(id);
+    const response = await UserApi.clearNotifications(id);
     dispatch({ type: "CLEAR_NOTIFICATIONS" });
+    toast(response.data.message, {
+      icon: "👏",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
   } catch (err) {
     if (err.response?.data?.expired) {
       return dispatch({ type: "LOGOUT" });

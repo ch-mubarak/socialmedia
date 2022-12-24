@@ -98,12 +98,13 @@
 }
 
 .comment-box input {
-  padding: 10px 5px;
+  padding: 10px 40px 10px 10px;
   border: none;
   outline: 2px solid rgb(97, 96, 96);
   border-radius: 10px;
-  width: 98%;
+  width: 100%;
   text-align: left;
+  box-sizing: border-box;
 }
 .comment-box svg {
   position: absolute;
