@@ -1,9 +1,15 @@
 import express from "express";
-import { createChat, findChat, userChat } from "../Controllers/ChatController.js";
+import {
+  createChat,
+  findChat,
+  userChat,
+} from "../Controllers/ChatController.js";
+import authenticate from "../middleware/Auth.js";
 const router = express.Router();
 
+router.use(authenticate);
+router.get("/", userChat);
 router.post("/", createChat);
-router.get("/:userId", userChat);
-router.get("/find/:firstId/:secondId", findChat);
+router.get("/find/:receiverId", findChat);
 
 export default router;

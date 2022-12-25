@@ -7,13 +7,21 @@ import { v4 as uuidv4 } from "uuid";
 export const getUser = async (req, res) => {
   const id = req.params.id;
   try {
-    const user = await User.findById(id).lean();
+    const user = await User.findById(id)
+      .select({
+        password: 0,
+        isAdmin: 0,
+        createdAt: 0,
+        updatedAt: 0,
+        isVerified: 0,
+        notifications: 0,
+      })
+      .lean();
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     const totalPosts = await Post.find({ userId: user._id }).countDocuments();
     user.totalPosts = totalPosts;
-    user.password = undefined;
     res.status(200).json(user);
   } catch (err) {
     console.log(err);
@@ -198,7 +206,7 @@ export const clearNotifications = async (req, res) => {
     await User.findByIdAndUpdate(userId, {
       notifications: [],
     });
-    res.status(200).json({message:"notification cleared successfully"});
+    res.status(200).json({ message: "notification cleared successfully" });
   } catch (error) {
     res.status(500).json("something went wrong");
   }

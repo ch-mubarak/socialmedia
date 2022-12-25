@@ -1,16 +1,15 @@
 import Chat from "../Models/chatModal.js";
 
 export const createChat = async (req, res) => {
-  const { senderId, receiverId } = req.body;
+  const { receiverId } = req.body;
+  const { userId } = req.user;
 
-  if (!(senderId && receiverId)) {
-    return res
-      .status(401)
-      .json({ message: "both senderId and receiverId is required" });
+  if (!receiverId) {
+    return res.status(401).json({ message: "invalid receiver id" });
   }
 
   const newChat = new Chat({
-    members: [req.body.senderId, req.body.receiverId],
+    members: [userId, req.body.receiverId],
   });
 
   try {
@@ -22,9 +21,10 @@ export const createChat = async (req, res) => {
 };
 
 export const userChat = async (req, res) => {
+  const { userId } = req.user;
   try {
     const chat = await Chat.find({
-      members: { $in: [req.params.userId] },
+      members: { $in: userId },
     });
     res.status(200).json({ chat });
   } catch (error) {
@@ -33,10 +33,11 @@ export const userChat = async (req, res) => {
 };
 
 export const findChat = async (req, res) => {
-  const { firstId, secondId } = req.params;
+  const { receiverId } = req.params;
+  const { userId } = req.user;
   try {
     const chat = await Chat.findOne({
-      members: { $all: [firstId, secondId] },
+      members: { $all: [userId, receiverId] },
     });
     res.status(200).json({ chat });
   } catch (error) {

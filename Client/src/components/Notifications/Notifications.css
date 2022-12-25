@@ -2,7 +2,7 @@
   position: absolute;
   top: 2rem;
   right: 10px;
-  max-height: 30rem;
+  max-height: 25rem;
   width: 15rem;
   -webkit-box-shadow: 3px 12px 35px 0px rgba(0, 0, 0, 0.54);
   -moz-box-shadow: 3px 12px 35px 0px rgba(0, 0, 0, 0.54);
@@ -32,6 +32,9 @@
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 3px 12px 35px 0px rgba(79, 76, 76, 0.54);
+  opacity: 0;
+  transition: 350ms;
+  transform: translateX(100px);
 }
 
 .notification-item > a > img {
@@ -43,6 +46,11 @@
 .notification-item h2 {
   margin: 0;
   font-size: 0.75rem;
+}
+
+.notification-item.show{
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .notification-item p {

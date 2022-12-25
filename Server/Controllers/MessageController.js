@@ -1,14 +1,15 @@
 import Message from "../Models/messageModal.js";
 
 export const addMessage = async (req, res) => {
-  const { text, chatId, senderId } = req.body;
-  if (!(text && chatId && senderId)) {
+  const { text, chatId } = req.body;
+  const { userId } = req.user;
+  if (!(text && chatId)) {
     return res.status(401).json({ message: "all felids are required" });
   }
   try {
     const message = new Message({
+      senderId: userId,
       chatId,
-      senderId,
       text,
     });
     await message.save();

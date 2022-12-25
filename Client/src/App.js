@@ -9,6 +9,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
+import Chat from "./pages/Chat/Chat";
 function App() {
   const user = useSelector((state) => state?.authReducer?.authData?.user);
   return (
@@ -62,6 +63,14 @@ function App() {
           path="/verify"
           element={
             user && !user.isVerified ? <Verify /> : <Navigate to="/home" />
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
           }
         />
         <Route path="/error" element={<Error />} />
