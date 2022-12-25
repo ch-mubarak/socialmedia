@@ -35,7 +35,7 @@
   gap: 1rem;
 }
 
-.right-side-chat > div {
+.chat-notification {
   width: 20rem;
   align-self: flex-end;
 }

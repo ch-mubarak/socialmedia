@@ -43,7 +43,7 @@ const Chat = () => {
       </div>
 
       <div className="right-side-chat">
-        <div>
+        <div className="chat-notification">
           <RightSide isFromChat={true} />
         </div>
 
