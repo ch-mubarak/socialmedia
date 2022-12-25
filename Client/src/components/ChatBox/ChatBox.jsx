@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getUserDetails } from "../../api/UserRequest";
 import Messages from "../Messages/Messages";
-import { getMessages } from "../../api/MessageRequest";
+import { addNewMessage, getMessages } from "../../api/MessageRequest";
 import InputEmoji from "react-input-emoji";
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
-const ChatBox = ({ room }) => {
+const ChatBox = ({ room, receiveMessage, setSendMessage }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
   const [memberData, setMemberData] = useState(null);
   const memberId = room?.members?.find((id) => id !== user._id);
@@ -39,10 +39,41 @@ const ChatBox = ({ room }) => {
     if (room) getUserData();
   }, [room, user]);
 
+  useEffect(() => {
+    console.log("receiveMessage", receiveMessage);
+    if (receiveMessage && receiveMessage.chatId === room._id) {
+      setMessages((prevMessages) => {
+        return [...prevMessages, receiveMessage];
+      });
+    }
+  }, [receiveMessage]);
+
   const handleNewMessage = (value) => {
     setNewMessage(value);
   };
 
+  const handleSend = async (event) => {
+    event.preventDefault();
+    const message = {
+      text: newMessage,
+      chatId: room._id,
+      senderId: user._id,
+    };
+
+    //sending message to server
+    try {
+      const { data } = await addNewMessage(message);
+      setMessages((prevMessages) => {
+        return [...prevMessages, data];
+      });
+      setNewMessage("");
+      //send message to socket server
+      const receiverId = memberId;
+      setSendMessage({ ...data, receiverId });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="chatBox-container">
       {room ? (
@@ -76,7 +107,9 @@ const ChatBox = ({ room }) => {
           <div className="chat-sender">
             <div>+</div>
             <InputEmoji value={newMessage} onChange={handleNewMessage} />
-            <div className="send-button button">Send</div>
+            <div className="send-button button" onClick={handleSend}>
+              Send
+            </div>
           </div>
         </>
       ) : (
