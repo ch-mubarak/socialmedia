@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProgressBar = ({ bgColor, completed }) => {
+const ProgressBar = ({ completed }) => {
   const containerStyles = {
     height: 20,
     width: "100%",
@@ -12,7 +12,7 @@ const ProgressBar = ({ bgColor, completed }) => {
   const fillerStyles = {
     height: "100%",
     width: `${completed}%`,
-    backgroundColor: bgColor,
+    backgroundColor: "#f9a225",
     borderRadius: "inherit",
     textAlign: "right",
     transition: "width 1s ease-in-out",

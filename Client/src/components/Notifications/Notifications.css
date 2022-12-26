@@ -10,6 +10,7 @@
   overflow-y: scroll;
   overflow-x: hidden;
   border-radius: 1rem 0 1rem 1rem;
+  z-index: 100;
 }
 
 .notification-list > div {

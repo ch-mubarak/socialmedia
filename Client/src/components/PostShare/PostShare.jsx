@@ -118,7 +118,7 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
   };
 
   const handleSetLocation = () => {
-    navigator.geolocation.getCurrentPosition(
+    navigator?.geolocation?.getCurrentPosition(
       (position) => {
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);
@@ -231,7 +231,7 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
                   </video>
                 )}
                 {uploading && (
-                  <ProgressBar completed={uploading} bgColor={"#6a1b9a"} />
+                  <ProgressBar completed={uploading} />
                 )}
               </div>
             )}

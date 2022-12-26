@@ -1,12 +1,10 @@
 import "./Chat.css";
-import { useEffect, useRef } from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { userChats } from "../../api/ChatRequest";
 import ChatBox from "../../components/ChatBox/ChatBox";
 import Conversation from "../../components/Conversation/Conversation";
 import LogoSearch from "../../components/LogoSearch/LogoSearch";
-import { RightSide } from "../../components/RightSide/RightSide";
 import { io } from "socket.io-client";
 import NavBar from "../../components/NavBar/NavBar";
 
@@ -60,39 +58,46 @@ const Chat = () => {
     return isOnline ? true : false;
   };
   return (
-    <div className="chat">
-      <div className="left-side-chat">
-        <LogoSearch />
-        <div className="chat-container">
-          <h2>chats</h2>
-          <div className="chat-list">
-            {rooms.map((room) => {
-              return (
-                <div key={room._id} onClick={() => setCurrentRoom(room)}>
-                  <Conversation
-                    room={room}
-                    isOnline={checkOnlineStatus(room)}
-                  />
-                </div>
-              );
-            })}
-          </div>
+    <>
+      <div className="chat-navbar">
+        <div>
+          <LogoSearch />
         </div>
-      </div>
-
-      <div className="right-side-chat">
-        <div className="chat-notification">
+        <div>
           <NavBar />
         </div>
-
-        {/* chat body */}
-        <ChatBox
-          room={currentRoom}
-          setSendMessage={setSendMessage}
-          receiveMessage={receiveMessage}
-        />
       </div>
-    </div>
+      <div className="chat">
+        <div className="left-side-chat">
+          <div className="chat-container">
+            <h2>chats</h2>
+            <div className="chat-list">
+              {rooms.map((room) => {
+                return (
+                  <div key={room._id} onClick={() => setCurrentRoom(room)}>
+                    <Conversation
+                      room={room}
+                      isOnline={checkOnlineStatus(room)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="right-side-chat">
+          <div className="chat-notification"></div>
+
+          {/* chat body */}
+          <ChatBox
+            room={currentRoom}
+            setSendMessage={setSendMessage}
+            receiveMessage={receiveMessage}
+          />
+        </div>
+      </div>
+    </>
   );
 };
 

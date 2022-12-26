@@ -1,5 +1,5 @@
 .navIcons {
-  margin-top: 1rem;
+  position: relative;
   display: flex;
   justify-content: space-between;
 }
