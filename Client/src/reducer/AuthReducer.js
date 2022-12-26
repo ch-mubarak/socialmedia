@@ -24,7 +24,7 @@ const authReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: true,
-        message: action.payload.message,
+        message: action?.payload?.message,
       };
 
     case "VERIFY_USER":
