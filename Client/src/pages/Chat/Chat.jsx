@@ -8,6 +8,7 @@ import Conversation from "../../components/Conversation/Conversation";
 import LogoSearch from "../../components/LogoSearch/LogoSearch";
 import { RightSide } from "../../components/RightSide/RightSide";
 import { io } from "socket.io-client";
+import NavBar from "../../components/NavBar/NavBar";
 
 const Chat = () => {
   const { user } = useSelector((state) => state.authReducer.authData);
@@ -51,6 +52,13 @@ const Chat = () => {
       setReceiveMessage(data);
     });
   }, []);
+
+  const checkOnlineStatus = (room) => {
+    const roomMember = room.members.find((member) => member !== user._id);
+    const isOnline = onlineUsers.find((user) => user.userId === roomMember);
+    // returning true or false based on member is inside the onlineUsers
+    return isOnline ? true : false;
+  };
   return (
     <div className="chat">
       <div className="left-side-chat">
@@ -61,7 +69,10 @@ const Chat = () => {
             {rooms.map((room) => {
               return (
                 <div key={room._id} onClick={() => setCurrentRoom(room)}>
-                  <Conversation room={room} />
+                  <Conversation
+                    room={room}
+                    isOnline={checkOnlineStatus(room)}
+                  />
                 </div>
               );
             })}
@@ -71,7 +82,7 @@ const Chat = () => {
 
       <div className="right-side-chat">
         <div className="chat-notification">
-          <RightSide isFromChat={true} />
+          <NavBar />
         </div>
 
         {/* chat body */}

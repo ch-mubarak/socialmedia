@@ -6,7 +6,7 @@ import { getUserDetails } from "../../api/UserRequest";
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
-const Conversation = ({ room }) => {
+const Conversation = ({ room, isOnline }) => {
   const [memberData, setMemberData] = useState({});
   const { user } = useSelector((state) => state.authReducer.authData);
   useEffect(() => {
@@ -22,7 +22,7 @@ const Conversation = ({ room }) => {
     <>
       <div className="followers conversation">
         <div>
-          <div className="online-dot"></div>
+          {isOnline && <div className="online-dot"></div>}
           <img
             className="followerImg"
             src={
@@ -36,7 +36,7 @@ const Conversation = ({ room }) => {
             <span>
               {memberData?.firstName} {memberData?.lastName}
             </span>
-            <span>Online</span>
+            <span>{isOnline ? "Online" : "Offline"}</span>
           </div>
         </div>
       </div>
