@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.use(authenticate);
 router.get("/", userChat);
-router.post("/", createChat);
+router.post("/:memberId", createChat);
 router.get("/find/:receiverId", findChat);
 
 export default router;

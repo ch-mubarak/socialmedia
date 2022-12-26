@@ -1,4 +1,5 @@
 import "./App.css";
+import React, { Suspense } from "react";
 import Profile from "./pages/profile/Profile";
 import Home from "./pages/home/Home";
 import Auth from "./pages/Auth/Auth";
@@ -9,7 +10,14 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import Chat from "./pages/Chat/Chat";
+import FadeLoader from "react-spinners/FadeLoader";
+import LoadingScreen from "./components/LoadingScreen/LoadingScreen";
+const Chat = React.lazy(() => import("./pages/Chat/Chat"));
+
+const override = {
+  display: "block",
+  margin: "0 auto",
+};
 function App() {
   const user = useSelector((state) => state?.authReducer?.authData?.user);
   return (
@@ -69,7 +77,9 @@ function App() {
           path="/chat"
           element={
             <ProtectedRoute>
-              <Chat />
+              <Suspense fallback={<LoadingScreen />}>
+                <Chat />
+              </Suspense>
             </ProtectedRoute>
           }
         />

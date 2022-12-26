@@ -1,17 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import "./ProfileCard.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getUserDetails, updateProfile } from "../../actions/UserAction";
-import { UilPen } from "@iconscout/react-unicons";
+import { UilPen, UilEnvelopeAdd } from "@iconscout/react-unicons";
 import { uploadImage } from "../../api/UploadRequest";
 import { followUser, unFollowUser } from "../../api/FollowRequest";
+import { createRoom } from "../../api/ChatRequest";
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
   const { userDetails } = useSelector((state) => state.userReducer);
+  const navigate = useNavigate();
   const params = useParams();
   const dispatch = useDispatch();
   const coverRef = useRef();
@@ -62,6 +64,18 @@ const ProfileCard = ({ location }) => {
       dispatch({ type: "UN_FOLLOW_SUCCESS", payload: response.data.id });
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  //creating new chatroom with the user
+  const handleNewChatRoom = async () => {
+    try {
+      const memberId = userDetails._id;
+      const { data } = await createRoom(memberId);
+      console.log(data);
+      navigate("/chat");
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -123,12 +137,21 @@ const ProfileCard = ({ location }) => {
         <span>{isUser ? user.about : userDetails?.about}</span>
         <div>
           {!isUser && user.following.includes(userDetails?._id) && (
-            <button
-              className="button unfollow-button"
-              onClick={() => handleUnFollow(userDetails?._id)}
-            >
-              Unfollow
-            </button>
+            <div className="profile-buttons">
+              <button
+                className="button unfollow-button"
+                onClick={() => handleUnFollow(userDetails?._id)}
+              >
+                Unfollow
+              </button>
+              <button
+                className="button chat-button"
+                onClick={handleNewChatRoom}
+              >
+                <UilEnvelopeAdd />
+                Message
+              </button>
+            </div>
           )}
           {!isUser && !user.following.includes(userDetails?._id) && (
             <button
