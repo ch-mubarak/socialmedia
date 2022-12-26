@@ -117,15 +117,21 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
     }
   };
 
-  useEffect(() => {
+  const handleSetLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);
       },
-      (err) => console.log(err)
+      (err) => {
+        console.log(err);
+        if (err.code === 1) {
+          return alert("Please allow location service");
+        }
+      }
     );
-  }, []);
+    setShowLocation((pre) => !pre);
+  };
 
   return (
     <>
@@ -171,7 +177,7 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
               <div
                 className="option"
                 style={{ color: "var(--location)" }}
-                onClick={() => setShowLocation((pre) => !pre)}
+                onClick={handleSetLocation}
               >
                 <UilLocationPoint />
                 Location
@@ -229,7 +235,7 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
                 )}
               </div>
             )}
-            {showLocation && location && (
+            {showLocation && latitude && longitude && (
               <div className="previewMap">
                 <UilTimes
                   onClick={() => {
