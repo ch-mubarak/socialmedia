@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 const token = localStorage.getItem("token");
 
 const useSearchUsers = (query) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setUsers([]);
