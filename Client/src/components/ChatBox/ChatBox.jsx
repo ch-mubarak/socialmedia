@@ -52,8 +52,8 @@ const ChatBox = ({ room, receiveMessage, setSendMessage }) => {
     setNewMessage(value);
   };
 
-  const handleSend = async (event) => {
-    event.preventDefault();
+  const handleSend = async () => {
+    if (newMessage.trim().length === 0) return;
     const message = {
       text: newMessage,
       chatId: room._id,
@@ -106,7 +106,12 @@ const ChatBox = ({ room, receiveMessage, setSendMessage }) => {
           {/* chat input */}
           <div className="chat-sender">
             <div>+</div>
-            <InputEmoji value={newMessage} onChange={handleNewMessage} />
+            <InputEmoji
+              value={newMessage}
+              onEnter={handleSend}
+              placeholder="Type a message"
+              onChange={handleNewMessage}
+            />
             <div className="send-button button" onClick={handleSend}>
               Send
             </div>
