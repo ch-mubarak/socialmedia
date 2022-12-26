@@ -221,6 +221,8 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
                   onClick={() => {
                     setImage(null);
                     setVideo(null);
+                    imageRef.current.value = null;
+                    videoRef.current.value = null;
                     setShowLocation(false);
                   }}
                 />
@@ -230,9 +232,7 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
                     <source src={URL.createObjectURL(video)} />
                   </video>
                 )}
-                {uploading && (
-                  <ProgressBar completed={uploading} />
-                )}
+                {uploading && <ProgressBar completed={uploading} />}
               </div>
             )}
             {showLocation && latitude && longitude && (
