@@ -7,7 +7,7 @@ export const logIn = (formData) => async (dispatch) => {
     const { data } = await AuthApi.logIn(formData);
     dispatch({ type: "AUTH_SUCCESS", payload: data });
   } catch (err) {
-    dispatch({ type: "AUTH_FAIL", payload: err.response.data });
+    dispatch({ type: "AUTH_FAIL", payload: err.response?.data });
     toast(err.response.data.message, {
       icon: "😢",
       style: {

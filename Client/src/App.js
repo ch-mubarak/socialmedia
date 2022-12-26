@@ -10,14 +10,9 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import FadeLoader from "react-spinners/FadeLoader";
 import LoadingScreen from "./components/LoadingScreen/LoadingScreen";
 const Chat = React.lazy(() => import("./pages/Chat/Chat"));
 
-const override = {
-  display: "block",
-  margin: "0 auto",
-};
 function App() {
   const user = useSelector((state) => state?.authReducer?.authData?.user);
   return (
