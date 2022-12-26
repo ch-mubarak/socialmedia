@@ -2,7 +2,6 @@
   "name": "socialmedia",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://apihashtag.codestreak.in:5000",
   "dependencies": {
     "@iconscout/react-unicons": "^1.1.6",
     "@mantine/core": "^5.8.3",
