@@ -20,14 +20,15 @@ export const createPost = (data) => async (dispatch) => {
       return dispatch({ type: "LOGOUT" });
     }
     dispatch({ type: "POST_FAIL" });
-    toast(err.response.data.message, {
-      icon: "😢",
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
+    err.response?.data?.message &&
+      toast(err.response.data.message, {
+        icon: "😢",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     console.log(err);
   }
 };
@@ -53,14 +54,15 @@ export const deletePost = (id) => async (dispatch) => {
     }
     dispatch({ type: "POST_FAIL" });
     console.log(err);
-    toast(err.response.data.message, {
-      icon: "😢",
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
+    err.response?.data?.message &&
+      toast(err.response.data.message, {
+        icon: "😢",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
   }
 };
 
@@ -80,13 +82,14 @@ export const reportPost = (id, type) => async (dispatch) => {
   } catch (err) {
     dispatch({ type: "POST_FAIL" });
     console.log(err);
-    toast(err.response.data.message, {
-      icon: "😢",
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
+    err.response?.data?.message &&
+      toast(err.response.data.message, {
+        icon: "😢",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
   }
 };
