@@ -20,7 +20,7 @@ const sendVerificationMail = async (userId, email) => {
     subject: "Account verification:", // Subject line
     html:
       "<h3>Please click on the below link to Verify your account </h3>" +
-      `<a style='font-weight:bold;' href=http://localhost:3000/verify?account=${userId}&token=${token}>Verify account</a>`,
+      `<a style='font-weight:bold;' href=https://hash-tags.netlify.app/verify?account=${userId}&token=${token}>Verify account</a>`,
   });
   console.log("mail send success");
   return info;
