@@ -1,8 +1,9 @@
 const corsOptions = {
   origin: [
     "http://localhost:3000",
-    "https://master--fancy-kashata-ef7b14.netlify.app",
-    "https://hashnode.codestreak.in",
+    "https://fancy-kashata-ef7b14.netlify.app",
+    "http://hashtag.codestreak.in",
+    "https://hashtag.codestreak.in",
   ],
   credentials: true,
 };
