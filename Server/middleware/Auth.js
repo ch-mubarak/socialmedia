@@ -10,7 +10,6 @@ const authenticate = (req, res, next) => {
       .json({ message: "no token found", expired: true });
   }
   try {
-    console.log(process.env.JWT_SECRET)
     const user = jwt.verify(token, process.env.JWT_SECRET);
     if (!user.isVerified) {
       return res

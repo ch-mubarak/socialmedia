@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPost } from "../../actions/PostAction";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import axios from "axios";
-import { useEffect } from "react";
 import Map from "../Map/Map";
 import ScheduledModal from "../ScheduledModal/ScheduledModal";
 const storedToken = localStorage.getItem("token");
