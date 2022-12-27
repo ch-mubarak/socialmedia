@@ -2,7 +2,7 @@ const socketIO = require("socket.io");
 
 const io = socketIO(8080, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://hash-tags.netlify.app",
   },
 });
 
