@@ -14,7 +14,9 @@ import axios from "axios";
 import { useEffect } from "react";
 import Map from "../Map/Map";
 import ScheduledModal from "../ScheduledModal/ScheduledModal";
-const token = localStorage.getItem("token");
+const storedToken = localStorage.getItem("token");
+const token = JSON.parse(storedToken);
+
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
@@ -69,16 +71,20 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
       data.append("file", image);
 
       try {
-        await axios.post(`/upload/image`, data, {
-          withCredentials: true,
-          headers: `Bearer ${token}`,
-          onUploadProgress: (uploadEvent) =>
-            setUploading(
-              parseInt(
-                Math.round((uploadEvent.loaded * 100) / uploadEvent.total)
-              )
-            ),
-        });
+        await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/upload/image`,
+          data,
+          {
+            withCredentials: true,
+            headers: `Bearer ${token}`,
+            onUploadProgress: (uploadEvent) =>
+              setUploading(
+                parseInt(
+                  Math.round((uploadEvent.loaded * 100) / uploadEvent.total)
+                )
+              ),
+          }
+        );
         newPost.image = fileName;
         dispatch(createPost(newPost));
         reset();
@@ -91,16 +97,20 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
       data.append("name", fileName);
       data.append("file", video);
       try {
-        await axios.post(`/upload/video`, data, {
-          withCredentials: true,
-          headers: `Bearer ${token}`,
-          onUploadProgress: (uploadEvent) =>
-            setUploading(
-              parseInt(
-                Math.round((uploadEvent.loaded * 100) / uploadEvent.total)
-              )
-            ),
-        });
+        await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/upload/video`,
+          data,
+          {
+            withCredentials: true,
+            headers: `Bearer ${token}`,
+            onUploadProgress: (uploadEvent) =>
+              setUploading(
+                parseInt(
+                  Math.round((uploadEvent.loaded * 100) / uploadEvent.total)
+                )
+              ),
+          }
+        );
         newPost.video = fileName;
         dispatch(createPost(newPost));
         reset();

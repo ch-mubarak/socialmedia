@@ -1,5 +1,6 @@
 import axios from "axios";
-const token = localStorage.getItem("token");
+const storedToken = localStorage.getItem("token");
+const token = JSON.parse(storedToken);
 const config = {
   withCredentials: true,
   baseURL: process.env.REACT_APP_BASE_URL,

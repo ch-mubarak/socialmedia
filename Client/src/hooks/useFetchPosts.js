@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-const token = localStorage.getItem("token");
+const storedToken = localStorage.getItem("token");
+const token = JSON.parse(storedToken);
+
 const useFetchPosts = (id, isTimeline, skip, location) => {
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.authReducer.authData.user._id);
@@ -13,7 +15,9 @@ const useFetchPosts = (id, isTimeline, skip, location) => {
     dispatch({ type: "RESET_POSTS" });
   }, [id, isTimeline, location]);
 
-  const url = isTimeline ? `${process.env.REACT_APP_BASE_URL}/post/${userId}/timeline` : `${process.env.REACT_APP_BASE_URL}/post/user/${id}`;
+  const url = isTimeline
+    ? `${process.env.REACT_APP_BASE_URL}/post/${userId}/timeline`
+    : `${process.env.REACT_APP_BASE_URL}/post/user/${id}`;
 
   useEffect(() => {
     setLoading(true);
