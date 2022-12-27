@@ -7,7 +7,7 @@ const authenticate = (req, res, next) => {
   if (!token) {
     return res
       .status(401)
-      .json({ message: "your not authorized", expired: true });
+      .json({ message: "no token found", expired: true });
   }
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);

@@ -2,7 +2,7 @@ import axios from "axios";
 const token = localStorage.getItem("token");
 const config = {
   withCredentials: true,
-  baseURL: "https://apihashtag.codestreak.in",
+  baseURL: process.env.REACT_APP_BASE_URL,
   headers: {
     Authorization: `Bearer ${token}`,
   },

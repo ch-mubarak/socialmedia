@@ -7,7 +7,7 @@ import Conversation from "../../components/Conversation/Conversation";
 import LogoSearch from "../../components/LogoSearch/LogoSearch";
 import { io } from "socket.io-client";
 import NavBar from "../../components/NavBar/NavBar";
-const socket = io(process.env.REACT_APP_SOCKET);
+const socket = io(process.env.REACT_APP_SOCKET_URL);
 const Chat = () => {
   const { user } = useSelector((state) => state.authReducer.authData);
   const [rooms, setRooms] = useState([]);

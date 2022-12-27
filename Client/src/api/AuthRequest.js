@@ -1,6 +1,6 @@
 import axios from "axios";
 const API = axios.create({
-  baseURL: "https://apihashtag.codestreak.in:5000",
+  baseURL: process.env.REACT_APP_BASE_URL,
   withCredentials: true,
 });
 
