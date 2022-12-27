@@ -13,13 +13,13 @@ import ProgressBar from "../ProgressBar/ProgressBar";
 import axios from "axios";
 import Map from "../Map/Map";
 import ScheduledModal from "../ScheduledModal/ScheduledModal";
-const storedToken = localStorage.getItem("token");
-const token = JSON.parse(storedToken);
 
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
 const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
+  const storedToken = localStorage.getItem("token");
+  const token = JSON.parse(storedToken);
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
   const [latitude, setLatitude] = useState(null);
@@ -75,7 +75,9 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
           data,
           {
             withCredentials: true,
-            headers: `Bearer ${token}`,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
             onUploadProgress: (uploadEvent) =>
               setUploading(
                 parseInt(
@@ -101,7 +103,9 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
           data,
           {
             withCredentials: true,
-            headers: `Bearer ${token}`,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
             onUploadProgress: (uploadEvent) =>
               setUploading(
                 parseInt(
