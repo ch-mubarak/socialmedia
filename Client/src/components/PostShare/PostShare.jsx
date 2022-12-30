@@ -10,9 +10,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { createPost } from "../../actions/PostAction";
 import ProgressBar from "../ProgressBar/ProgressBar";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import Map from "../Map/Map";
 import ScheduledModal from "../ScheduledModal/ScheduledModal";
+import { toast } from "react-hot-toast";
 
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
@@ -64,11 +65,27 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
       scheduledDate: scheduledDate,
     };
     if (image) {
+      if (
+        !(
+          image.type === "image/png" ||
+          image.type === "image/webp" ||
+          image.type === "image/jpg" ||
+          image.type === "image/jpeg"
+        )
+      ) {
+        return toast("only support .png, .jpg, and .webp files", {
+          icon: "⌛",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
       const data = new FormData();
       const fileName = Date.now() + image.name;
       data.append("name", fileName);
       data.append("file", image);
-
       try {
         await axios.post(
           `${process.env.REACT_APP_BASE_URL}/upload/image`,
@@ -93,6 +110,16 @@ const PostShare = ({ isScheduling, scheduledDate, closeSchedule }) => {
         return console.log(err);
       }
     } else if (video) {
+      if (!(video.type === "video/mp4" || video.type === "video/mkv")) {
+        return toast("only support .mp4 and .mkv files", {
+          icon: "⌛",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
       const data = new FormData();
       const fileName = Date.now() + video.name.replaceAll(" ", "");
       data.append("name", fileName);

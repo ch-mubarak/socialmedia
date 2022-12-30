@@ -7,6 +7,7 @@ import { UilPen, UilEnvelopeAdd } from "@iconscout/react-unicons";
 import { uploadImage } from "../../api/UploadRequest";
 import { followUser, unFollowUser } from "../../api/FollowRequest";
 import { createRoom } from "../../api/ChatRequest";
+import { toast } from "react-hot-toast";
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
 const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
@@ -33,6 +34,23 @@ const ProfileCard = ({ location }) => {
   const handleImageChange = async (e) => {
     if (e.target.files && e.target.files[0]) {
       const img = e.target.files[0];
+      if (
+        !(
+          img.type === "image/png" ||
+          img.type === "image/webp" ||
+          img.type === "image/jpg" ||
+          img.type === "image/jpeg"
+        )
+      ) {
+        return toast("only support .png, .jpg, and .webp files", {
+          icon: "⌛",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
       const name = e.target.name;
       const data = new FormData();
       const fileName = Date.now() + img.name;
