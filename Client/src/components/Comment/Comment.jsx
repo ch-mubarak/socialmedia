@@ -35,11 +35,13 @@ const Comment = ({ comment, onDelete }) => {
         <img src={`${serverImages}/${comment.profilePicture}`} alt="" />
       </div>
       <div className="comment-content">
-        <Link to={`/profile/${comment.userId}`}>
-          <h2>@{comment.username}</h2>
-        </Link>
-        <span>{moment(comment.createdAt).fromNow()}</span>
-        <p>{comment.comment}</p>
+        <div className="comment-outline">
+          <Link to={`/profile/${comment.userId}`}>
+            <h2>@{comment.username}</h2>
+          </Link>
+          <span>{moment(comment.createdAt).fromNow()}</span>
+          <p>{comment.comment}</p>
+        </div>
         <div className="comment-like">
           <div onClick={() => handleLikeComment(comment._id)}>
             {liked ? <AiFillHeart /> : <AiOutlineHeart />}{" "}
