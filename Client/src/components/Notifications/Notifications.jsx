@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useRef } from "react";
 import { useEffect } from "react";
 const serverImages = process.env.REACT_APP_PUBLIC_IMAGES;
+const serverStatic = process.env.REACT_APP_STATIC_FOLDER;
 
 const Notifications = React.forwardRef(({ notifications }, ref) => {
   const dispatch = useDispatch();
@@ -46,7 +47,13 @@ const Notifications = React.forwardRef(({ notifications }, ref) => {
               className="notification-item"
             >
               <Link to={notification.link}>
-                <img src={`${serverImages}/${notification.profilePicture}`} />
+                <img
+                  src={
+                    notification.profilePicture
+                      ? `${serverImages}/${notification.profilePicture}`
+                      : `${serverStatic}/profile.jpg`
+                  }
+                />
               </Link>
               <div>
                 <h2>{notification.title}</h2>
