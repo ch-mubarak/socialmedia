@@ -41,7 +41,7 @@ const ChatBox = ({ room, receiveMessage, setSendMessage }) => {
 
   useEffect(() => {
     console.log("receiveMessage", receiveMessage);
-    if (receiveMessage && receiveMessage.chatId === room._id) {
+    if (receiveMessage && receiveMessage.chatId === room?._id) {
       setMessages((prevMessages) => {
         return [...prevMessages, receiveMessage];
       });
