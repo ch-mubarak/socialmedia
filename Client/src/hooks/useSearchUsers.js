@@ -2,14 +2,14 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-const storedToken = localStorage.getItem("token");
-const token = JSON.parse(storedToken);
 
 const useSearchUsers = (query) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(false);
   const dispatch = useDispatch();
+  const storedToken = localStorage.getItem("token");
+  const token = JSON.parse(storedToken);
 
   useEffect(() => {
     setUsers([]);

@@ -1,8 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-const storedToken = localStorage.getItem("token");
-const token = JSON.parse(storedToken);
 
 const useFetchPosts = (id, isTimeline, skip, location) => {
   const dispatch = useDispatch();
@@ -10,6 +8,8 @@ const useFetchPosts = (id, isTimeline, skip, location) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [hasMore, setHasMore] = useState(false);
+  const storedToken = localStorage.getItem("token");
+  const token = JSON.parse(storedToken);
 
   useEffect(() => {
     dispatch({ type: "RESET_POSTS" });
@@ -49,7 +49,7 @@ const useFetchPosts = (id, isTimeline, skip, location) => {
 
     //cleanup function
     return () => cancel();
-  }, [id, skip, isTimeline, location]);
+  }, [id, skip, isTimeline, location, token]);
 
   return { loading, error, hasMore };
 };
